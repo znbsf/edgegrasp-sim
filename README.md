@@ -19,6 +19,7 @@ Snapshot date: 2026-08-29, Asia/Shanghai.
 | Shared PlanningScene | The scene contract generated Gazebo's table/cube world; MoveIt runtime-confirmed both objects and a selective ACM where only the two distal-pad child links may contact the retained cube | The selective transition is still manual; parent links remain forbidden and no target-to-pad physics claim follows from ACM configuration |
 | Target-to-controller path | A reachable immutable pose ran through tf2, `/compute_ik`, MoveGroup `plan_only`, trajectory validation, EdgeGrasp gate, and arm FJT; controller returned status 4 | One simulated arm trajectory, not autonomous pick-and-place |
 | Four-stage sequence and physics observer | 60 dependency-free sequence tests and 45 Jazzy action/client tests pass. Candidate024 passed 10/10 isolated three-segment plan-only attempts, then produced 10 correlated simulation-physics grasp successes across 11 runtime attempts; the sole failure was a pre-motion stale-target SAFE_STOP. After the scheduling fix, r03-r11 passed 9/9 | Success is limited to one fixed proxy scene and target pose; it is not physics determinism or hardware grasp evidence |
+| Distinct-target plan-only matrix | A fixed Candidate024-derived matrix matched 20/20 hypotheses: ten shoulder-pan-symmetry targets passed all 30 arm segments, four invalid scenes were rejected before ROS startup, and six distant targets were rejected by MoveIt. False accept, false reject, unverified, and motion-side-effect counts were all zero | Each distinct target ran once and every trajectory was discarded; this is planning coverage, not execution or grasp evidence |
 | Camera/world/contact | Pinned world published color/depth/camera-info; generated primitives replaced 13 collision meshes. Candidate024's 11 runtime logs contained zero tracked DART mesh/geometry-construction diagnostics, and every successful run had both configured distal-pad contacts through lift retention | Log absence alone is not collision proof; only one base proxy has isolated behavior evidence and the robot still uses conservative primitive collision proxies |
 | MCAP | Jazzy ros_sim record and raw-input replay ran; 27 target records matched bag receive time within ±1 ms | Wrapper/gate replay only; no planner/backend/physics replay |
 | Real hardware | Not run | Hardware, calibration, camera extrinsics, and grasp success remain unverified |
@@ -124,6 +125,17 @@ met bilateral-pad contact, at least 20 mm lift, and 0.5 s retention; retained
 lift ranged 28.858-29.128 mm. See the machine-readable
 [Candidate024 observation](docs/observations/2026-08-29-candidate024-face-aligned-runtime.json).
 This is a scoped simulated grasp in one proxy scene, not real-robot evidence.
+The next distinct-target experiment first disproved a naive Cartesian generator:
+all ten rigid translations failed first-stage IK while the unchanged control
+passed. Inspection of the pinned URDF showed that `shoulder_pan` is offset from
+the base origin and its local +Z maps to base-frame -Z. The corrected generator
+uses that exact joint origin and axis. Its
+[20-case plan-only observation](docs/observations/2026-08-29-candidate024-target-matrix-plan-only.json)
+records 10/10 distinct reachable hypotheses, 10/10 matched rejection
+hypotheses, and zero motion side effects. The superseded translation result is
+kept in the
+[diagnostic observation](docs/observations/2026-08-29-candidate024-translation-matrix-plan-only.json)
+rather than being hidden or relabelled.
 The preceding histogram run is retained as physical-contact history but is
 explicitly excluded from proxy-planning evidence because it launched pinned
 upstream MoveGroup by operator mistake.

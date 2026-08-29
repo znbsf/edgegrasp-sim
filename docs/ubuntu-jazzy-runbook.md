@@ -940,6 +940,39 @@ bash scripts/cleanup_ros_domain.sh 51          # read-only listing
 bash scripts/cleanup_ros_domain.sh 51 --terminate
 ```
 
+### D8. Candidate024 distinct-target plan-only matrix
+
+This matrix is the next admission layer, not a batch execution command. It
+generates ten local targets through the pinned shoulder-pan joint transform,
+four deliberately invalid scene contracts, and six on-table distant targets.
+Every valid case gets a fresh ROS domain and an isolated Gazebo/MoveIt graph;
+all returned trajectories are validated and discarded.
+
+```bash
+cd /home/edgegrasp/ros2_ws/src/edgegrasp-sim
+source /opt/ros/jazzy/setup.bash
+source /home/edgegrasp/ros2_ws/install/setup.bash
+
+python3 scripts/run_candidate024_target_matrix_plan_only.py \
+  --matrix ros_ws/src/edgegrasp_ros/config/candidate024_target_matrix.json \
+  --artifact-dir /home/edgegrasp/ros2_ws/test_results/candidate024_target_matrix_UNIQUE \
+  --ros-domain-id-start 180
+```
+
+The starting domain plus 15 must remain at most 232. The artifact path must be
+fresh and remain under `/home/edgegrasp/ros2_ws/test_results`. A passing result
+requires `PLAN_ONLY_MATRIX_PASS`, 20 matched outcomes, zero false accepts,
+false rejects, unverified cases, and motion-side-effect violations. The
+2026-08-29 accepted artifact met those gates with 10/10 positive targets,
+4/4 scene-contract rejections, and 6/6 MoveIt rejections. See
+`docs/observations/2026-08-29-candidate024-target-matrix-plan-only.json`.
+
+Do not send all ten accepted trajectories. The next bounded step is to choose
+only three representative positives (both range endpoints and one near-control
+case), regenerate their exact scene/candidate/world files, then route each once
+through the existing typed sequence. Plan-only acceptance is not execution,
+contact, lift, retention, or grasp evidence.
+
 For repeatability, do not background `ros2 run`: that owns a CLI wrapper rather
 than reliably owning the child action-server process. The checked script
 resolves and starts the installed console-script entry points directly, uses a

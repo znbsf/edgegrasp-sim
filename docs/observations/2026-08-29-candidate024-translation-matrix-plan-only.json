@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "observation_id": "candidate024_translation_matrix_plan_only_20260829",
+  "recorded_at": "2026-08-29T19:32:24.624207+08:00",
+  "environment": {
+    "guest": "Ubuntu 24.04 WSL2",
+    "ros_distro": "jazzy",
+    "gazebo_major_minor": "8.11",
+    "runtime_mode": "isolated GetMotionPlan graphs with no EdgeGrasp motion node"
+  },
+  "source_snapshot": {
+    "matrix_sha256": "2e8c8d4e32af67f5c92ac1774fcae200a9bad706ce909b853a390a0e74460497",
+    "runner_sha256": "33e9f27de2a62aa4eb2794fdc888fd73721ae314b77cf40e9f4eda176379985a",
+    "scene_sha256": "e99ae900971772b33eed3707d189f1719b9a3a92c19c5875a6d0ac8675751701",
+    "candidate_sha256": "e1209fdea7a0e1d079f0d7d77025f30664f9fbad399a6d81a50b1b1cd70eb2c5",
+    "geometry_sha256": "19b44e2b56cc1841e073166e94125eca73579f44efc831514e4f169ef3ffe22e",
+    "world_sha256": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5"
+  },
+  "matrix": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_target_matrix_plan_only_20260829T191727",
+    "result_sha256": "8e75bf28c20bd32082c07ff2a18fa0f430b1fefa6559ab6fc5965cac6f6e8322",
+    "status": "PLAN_ONLY_MATRIX_HYPOTHESIS_MISMATCH",
+    "case_count": 20,
+    "matched_expected_outcome_count": 10,
+    "false_accept_count": 0,
+    "false_reject_count": 10,
+    "unverified_count": 0,
+    "motion_side_effect_violation_count": 0,
+    "planning_time_s": {
+      "sample_count": 16,
+      "p50_nearest_rank": 0.055504632,
+      "p95_nearest_rank": 0.062669494
+    },
+    "plan_response_wall_s": {
+      "sample_count": 16,
+      "p50_nearest_rank": 0.06072599200001605,
+      "p95_nearest_rank": 0.09358278399997744
+    },
+    "scene_contract_rejections": {
+      "target_cube bottom must equal table top": 2,
+      "target_cube footprint must stay inside table": 2
+    },
+    "moveit_runtime_rejections": {
+      "response_code": 99999,
+      "empty_trajectory_validator_boundary": "joint_order_mismatch",
+      "positive_case_logs_with_explicit_NO_IK_SOLUTION": "10/10",
+      "far_negative_logs_with_explicit_NO_IK_SOLUTION": "6/6",
+      "failed_segment": "home_to_approach"
+    }
+  },
+  "baseline_control": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_baseline_control_20260829T1933",
+    "result_sha256": "b7d748b11fb43f5f2cbae07f0859aaf9aa6407361a28fbcb0678152f02d7ae94",
+    "status": "PLAN_ONLY_PASS",
+    "all_segments_accepted": true,
+    "attempts_completed": 1,
+    "moveit_error_codes": [1, 1, 1],
+    "planning_time_s": [0.001784526, 0.000583579, 0.000616641],
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "execution_attempted": false,
+    "motion_boundary_absent_throughout": true
+  },
+  "diagnosis": {
+    "observed": "The unchanged Candidate024 control planned all three segments, while all ten rigid XYZ translations failed the first full-pose IK request.",
+    "inference": "The five-axis arm plus tight six-DoF pose constraints leaves a narrow local feasible manifold; arbitrary fixed-orientation Cartesian translation is not a valid reachable-case generator.",
+    "next_experiment": "Generate distinct positive targets by a base-yaw symmetry transform or collision-valid joint-space FK samples, then plan-only verify them before any execution."
+  },
+  "claim_boundary": [
+    "This observation rejects the proposed Cartesian-translation positive-case generator; it does not invalidate the fixed Candidate024 control.",
+    "Every returned or empty trajectory remained behind the zero-execution boundary.",
+    "No action execution, contact, lift, retention, physics-grasp, or hardware claim is made."
+  ]
+}

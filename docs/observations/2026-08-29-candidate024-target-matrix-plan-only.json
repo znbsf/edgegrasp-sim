@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "observation_id": "candidate024_shoulder_pan_target_matrix_plan_only_20260829",
+  "recorded_at": "2026-08-29T19:59:35.472170+08:00",
+  "environment": {
+    "guest": "Ubuntu 24.04 WSL2",
+    "ros_distro": "jazzy",
+    "gazebo_major_minor": "8.11",
+    "runtime_mode": "one isolated Gazebo and MoveIt GetMotionPlan graph per runtime case"
+  },
+  "source_snapshot": {
+    "matrix_sha256": "1bc8aecf6ebf3d8eba785b93c765f43d6f27ffbbd89f5270e7a1add090ae7f03",
+    "runner_sha256": "724948fdc41d9b642701521277b7baecb3e1b7d6b6285b3786bdd3889d4ea081",
+    "scene_sha256": "e99ae900971772b33eed3707d189f1719b9a3a92c19c5875a6d0ac8675751701",
+    "candidate_sha256": "e1209fdea7a0e1d079f0d7d77025f30664f9fbad399a6d81a50b1b1cd70eb2c5",
+    "geometry_sha256": "19b44e2b56cc1841e073166e94125eca73579f44efc831514e4f169ef3ffe22e",
+    "world_sha256": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5"
+  },
+  "reachable_generator": {
+    "type": "shoulder_pan_symmetry",
+    "joint_origin_base_m": [0.0388353, -8.97657e-09, 0.0624],
+    "joint_axis_base": [0.0, 0.0, -1.0],
+    "joint_deltas_rad": [-0.005, -0.04, -0.03, -0.02, -0.01, 0.01, 0.02, 0.03, 0.04, 0.005],
+    "derivation": "Apply the pinned shoulder_pan transform to the cube and all Candidate024 arm positions and orientations, preserving target-to-gripper geometry.",
+    "source": "adoodevv/so101_ros2@0305e03ab54e64aae9263fcbf339622e654012f3/so101_description/urdf/so101_robot.urdf.xacro"
+  },
+  "runtime": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_target_matrix_pan_plan_only_20260829T2000",
+    "result_sha256": "940b61feb47ac53f1a5674a0349b67f1535bad238e2e3d10987f9329acb2a2c1",
+    "status": "PLAN_ONLY_MATRIX_PASS",
+    "case_count": 20,
+    "matched_expected_outcome_count": 20,
+    "false_accept_count": 0,
+    "false_reject_count": 0,
+    "unverified_count": 0,
+    "motion_side_effect_violation_count": 0,
+    "reachable_hypotheses": {
+      "count": 10,
+      "plan_only_pass_count": 10,
+      "accepted_segment_count": 30,
+      "unique_trajectory_digest_count": 30,
+      "planning_time_s_p50_nearest_rank": 0.000974519,
+      "planning_time_s_p95_nearest_rank": 0.002369745,
+      "plan_response_wall_s_p50_nearest_rank": 0.008480264999889187,
+      "plan_response_wall_s_p95_nearest_rank": 0.018506640000168773
+    },
+    "rejection_hypotheses": {
+      "count": 10,
+      "matched_count": 10,
+      "scene_contract_rejection_count": 4,
+      "moveit_rejection_count": 6,
+      "scene_contract_reasons": {
+        "target_cube bottom must equal table top": 2,
+        "target_cube footprint must stay inside table": 2
+      },
+      "moveit_response_code": 99999,
+      "moveit_log_reason": "NO_IK_SOLUTION"
+    },
+    "dart_collision_mesh_diagnostic_count_across_runtime_cases": 0,
+    "geometry_creation_failure_count_across_runtime_cases": 0,
+    "runtime_case_installed_file_cleanup_pass": true,
+    "post_run_matching_ros_gazebo_process_count": 0,
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "execution_attempted": false
+  },
+  "method_correction": {
+    "superseded_observation": "docs/observations/2026-08-29-candidate024-translation-matrix-plan-only.json",
+    "old_method": "Rigid XYZ translation around the base_link origin while keeping full orientation fixed.",
+    "old_result": "10/10 proposed positive cases failed first-stage IK; the unchanged Candidate024 control passed all three segments.",
+    "root_cause": "The shoulder_pan joint is offset from the base origin and its local +Z maps to base-frame -Z. The old transform therefore did not follow the robot's FK manifold.",
+    "corrected_result": "Using the pinned joint origin and axis produced 10/10 distinct positive plan-only passes."
+  },
+  "claim_boundary": [
+    "This is repeatable configuration, scene-contract, IK and MoveIt trajectory-validation evidence for twenty distinct target cases.",
+    "Each positive target was run once in this matrix; the earlier fixed Candidate024 control, not each distinct target, has a ten-attempt repeatability result.",
+    "All trajectories were discarded and no ExecuteTrajectory or FollowJointTrajectory goal was sent.",
+    "This is not execution, contact, lift, retention, physics-grasp, real-camera, or hardware evidence."
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "experiment_id": "candidate024_target_matrix_plan_only",
+  "mode": "moveit_get_motion_plan_zero_execution",
+  "planning": {
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "attempts_per_case": 1,
+    "velocity_scaling": 0.1,
+    "acceleration_scaling": 0.1,
+    "allowed_planning_time_s": 2.0
+  },
+  "reachable_case_generator": {
+    "type": "shoulder_pan_symmetry",
+    "joint_origin_base_m": [0.0388353, -8.97657e-09, 0.0624],
+    "joint_axis_base": [0.0, 0.0, -1.0],
+    "source": "adoodevv/so101_ros2@0305e03ab54e64aae9263fcbf339622e654012f3/so101_description/urdf/so101_robot.urdf.xacro",
+    "contract": "A shoulder_pan joint delta rotates world poses about the joint origin by the opposite signed base-frame yaw because the joint-frame +Z axis maps to base-frame -Z."
+  },
+  "baseline": {
+    "scene": {
+      "filename": "scene_candidate024_face_aligned.json",
+      "sha256": "e99ae900971772b33eed3707d189f1719b9a3a92c19c5875a6d0ac8675751701"
+    },
+    "world": {
+      "filename": "table_cube_candidate024_face_aligned.sdf",
+      "sha256": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5"
+    },
+    "candidate": {
+      "filename": "so101_side_grasp_candidate024_face_aligned.json",
+      "sha256": "e1209fdea7a0e1d079f0d7d77025f30664f9fbad399a6d81a50b1b1cd70eb2c5"
+    },
+    "geometry": {
+      "filename": "so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+      "sha256": "19b44e2b56cc1841e073166e94125eca73579f44efc831514e4f169ef3ffe22e"
+    }
+  },
+  "required_case_counts": {
+    "reachable_hypothesis": 10,
+    "rejection_hypothesis": 10
+  },
+  "cases": [
+    {
+      "case_id": "reachable_pan_n005",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": -0.005,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by -0.005 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_n040",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": -0.04,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by -0.04 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_n030",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": -0.03,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by -0.03 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_n020",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": -0.02,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by -0.02 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_n010",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": -0.01,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by -0.01 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_p010",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": 0.01,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by +0.01 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_p020",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": 0.02,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by +0.02 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_p030",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": 0.03,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by +0.03 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_p040",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": 0.04,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by +0.04 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reachable_pan_p005",
+      "hypothesis": "reachable_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "shoulder_pan_delta_rad": 0.005,
+      "expected_status": "PLAN_ONLY_PASS",
+      "rationale": "Shift shoulder_pan by +0.005 rad and transform the complete Candidate024 scene and arm poses through the pinned joint axis."
+    },
+    {
+      "case_id": "reject_below_table",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "scene_contract",
+      "translation_world_m": [0.0, 0.0, -0.005],
+      "expected_status": "SCENE_CONTRACT_REJECTED",
+      "expected_reason": "target_cube bottom must equal table top",
+      "rationale": "The target cube penetrates the table by 5 mm."
+    },
+    {
+      "case_id": "reject_floating_above_table",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "scene_contract",
+      "translation_world_m": [0.0, 0.0, 0.005],
+      "expected_status": "SCENE_CONTRACT_REJECTED",
+      "expected_reason": "target_cube bottom must equal table top",
+      "rationale": "The first-stage scene contract rejects an unsupported floating cube."
+    },
+    {
+      "case_id": "reject_near_table_x_edge",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "scene_contract",
+      "translation_world_m": [-0.01, 0.0, 0.0],
+      "expected_status": "SCENE_CONTRACT_REJECTED",
+      "expected_reason": "target_cube footprint must stay inside table",
+      "rationale": "The rotated cube footprint crosses the near X table edge."
+    },
+    {
+      "case_id": "reject_outside_table_y",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "scene_contract",
+      "translation_world_m": [0.0, 0.3, 0.0],
+      "expected_status": "SCENE_CONTRACT_REJECTED",
+      "expected_reason": "target_cube footprint must stay inside table",
+      "rationale": "The target cube footprint lies outside the table in positive Y."
+    },
+    {
+      "case_id": "reject_far_x_070_y_000",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "translation_world_m": [0.45891571158666817, -0.12958666029737353, 0.0],
+      "expected_status": "PLAN_ONLY_REJECTED",
+      "rationale": "On-table pose at world [0.70, 0.00, 0.205], expected outside the arm workspace."
+    },
+    {
+      "case_id": "reject_far_x_070_y_030",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "translation_world_m": [0.45891571158666817, 0.17041333970262647, 0.0],
+      "expected_status": "PLAN_ONLY_REJECTED",
+      "rationale": "On-table pose at world [0.70, 0.30, 0.205], expected outside the arm workspace."
+    },
+    {
+      "case_id": "reject_far_x_060_y_n030",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "translation_world_m": [0.35891571158666815, -0.42958666029737354, 0.0],
+      "expected_status": "PLAN_ONLY_REJECTED",
+      "rationale": "On-table pose at world [0.60, -0.30, 0.205], expected outside the arm workspace."
+    },
+    {
+      "case_id": "reject_far_x_040_y_n030",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "translation_world_m": [0.15891571158666818, -0.42958666029737354, 0.0],
+      "expected_status": "PLAN_ONLY_REJECTED",
+      "rationale": "On-table pose at world [0.40, -0.30, 0.205], expected outside the arm workspace."
+    },
+    {
+      "case_id": "reject_far_x_075_y_000",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "translation_world_m": [0.5089157115866682, -0.12958666029737353, 0.0],
+      "expected_status": "PLAN_ONLY_REJECTED",
+      "rationale": "On-table pose at world [0.75, 0.00, 0.205], expected outside the arm workspace."
+    },
+    {
+      "case_id": "reject_far_x_060_y_030",
+      "hypothesis": "rejection_hypothesis",
+      "admission_layer": "moveit_plan_only",
+      "translation_world_m": [0.35891571158666815, 0.17041333970262647, 0.0],
+      "expected_status": "PLAN_ONLY_REJECTED",
+      "rationale": "On-table pose at world [0.60, 0.30, 0.205], expected outside the arm workspace."
+    }
+  ],
+  "claim_boundary": [
+    "Each reachable hypothesis applies the pinned shoulder_pan joint transform to the target cube and all Candidate024 arm poses and orientations; each rejection hypothesis uses an explicit invalid or distant target translation.",
+    "Relative target-to-gripper geometry, grasp geometry, gripper command, planner, scaling, and collision proxies remain fixed.",
+    "Scene-contract rejection and MoveIt plan-only rejection are reported separately.",
+    "No returned trajectory is published or sent to ExecuteTrajectory or FollowJointTrajectory.",
+    "A matching matrix is planning evidence only, not execution, contact, lift, retention, physics-grasp, or hardware evidence."
+  ]
+}

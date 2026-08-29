@@ -208,3 +208,13 @@
   and all three 100-run core replays; the five EdgeGrasp Jazzy packages build
   and pass 118/118 package-scoped tests (`core=1`, `interfaces=0`, `ROS=49`,
   `adapter=23`, `sequence=45`) with zero XML errors, failures, or skips.
+- Add one Candidate024 target-matrix contract and one zero-execution runner
+  without adding test cases. The retained first run disproves rigid Cartesian
+  translation as a positive-case generator: 10/10 proposals fail first-stage
+  IK while the unchanged control passes all three segments.
+- Correct the generator from the pinned URDF: `shoulder_pan` is offset from the
+  base origin and its local +Z maps to base-frame -Z. Applying that exact joint
+  transform yields 10/10 distinct three-segment plan-only passes; four invalid
+  scenes and six distant targets are rejected as declared. The 20-case matrix
+  has zero false accepts, false rejects, unverified cases, motion dispatches,
+  tracked DART mesh diagnostics, or geometry-construction failures.

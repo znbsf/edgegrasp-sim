@@ -516,22 +516,28 @@ Completed on the dedicated Ubuntu 24.04 WSL2/Jazzy workspace:
    direct diagnostics, gated arm/gripper commands, watchdog cancellation,
    MoveIt plan service, target-to-gate adapter, camera topics, and MCAP
    record/raw replay.
+5. Completed a zero-execution distinct-target matrix. Ten targets generated
+   through the pinned `shoulder_pan` joint origin/axis passed all 30 chained
+   arm segments; four invalid scenes and six distant targets were rejected at
+   their declared layer. All 20 outcomes matched with zero mis-forward,
+   unverified, or motion-side-effect counts. See
+   [the matrix observation](observations/2026-08-29-candidate024-target-matrix-plan-only.json).
 
 Remaining gates, in order:
 
 1. Preserve Candidate024 as the fixed simulation control. Do not continue
    blind friction, close-angle, or pad-length sweeps; any new scene or grasp
    pose must again pass the isolated plan-only gate before typed execution.
-2. Exercise at least ten distinct nonzero reachable poses through `PlanTarget`,
-   record P50/P95 target-to-command latency and endpoint error, and add
-   repeatable fixture-based MCAP comparison. Candidate024 supplies repeated
-   one-pose physics evidence, not diverse-target coverage.
+2. Select three representative matrix positives (two range endpoints and one
+   near-control pose) for one bounded typed execution each. They must go
+   through `PlanTarget` -> `ExecuteTrajectory` -> FJT, with P50/P95
+   target-to-command and execution timing reported separately. Do not execute
+   all ten merely because their plans were accepted.
 3. Exercise MoveIt cancel/timeout and late-result paths against the real
    move_group process, not only fake servers.
-4. Convert the Candidate024 result into a small distinct-target matrix and
-   report collision/unreachable rejection, planning latency, execution time,
-   contact/lift, and zero mis-forward counts without claiming physics
-   determinism.
+4. For the selected executed targets, record endpoint error, bilateral contact,
+   lift, and retention independently. A sequence terminal without correlated
+   contact and retained cube lift remains sequence-only evidence.
 5. Investigate the move_group Ctrl-C shutdown segmentation fault and the
    `use_camera=false` SRDF torso warnings.
 6. Begin a real follower-arm bring-up only with calibration, conservative

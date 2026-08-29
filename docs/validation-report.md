@@ -188,6 +188,62 @@ ID. The physics core now accepts that shape only when
 wrapper construction exception. A successful completion still requires the
 exact non-empty lift command ID.
 
+### Candidate024 distinct-target plan-only matrix
+
+Recorded 2026-08-29 19:45-19:59 Asia/Shanghai in the isolated Ubuntu 24.04
+Jazzy/Harmonic WSL workspace. The final command was:
+
+```bash
+cd /home/edgegrasp/ros2_ws/src/edgegrasp-sim
+python3 scripts/run_candidate024_target_matrix_plan_only.py \
+  --matrix ros_ws/src/edgegrasp_ros/config/candidate024_target_matrix.json \
+  --artifact-dir /home/edgegrasp/ros2_ws/test_results/candidate024_target_matrix_pan_plan_only_20260829T2000 \
+  --ros-domain-id-start 210
+```
+
+The first proposed positive generator was deliberately retained as a failed
+hypothesis. It translated the cube and all three arm positions by the same XYZ
+delta while keeping full orientations fixed. All ten proposed positives failed
+`home_to_approach` with MoveIt's explicit `NO_IK_SOLUTION`, while an immediate
+unchanged Candidate024 control passed all three segments. The error was not a
+random planner or environment failure: the pinned URDF places the
+`shoulder_pan` origin at `[0.0388353, -8.97657e-09, 0.0624]` m, and its joint
+frame maps local +Z onto base-frame -Z. Rotating about the base origin with the
+same sign therefore did not follow the robot's FK manifold.
+
+The corrected matrix applies the exact pinned shoulder-pan origin and axis to
+the cube and every arm position/orientation. It keeps target-to-gripper
+geometry, planner, scaling, gripper command, collision proxies, and contact
+policy fixed.
+
+| Metric | Observed |
+| --- | ---: |
+| Matrix cases | 20 |
+| Distinct reachable hypotheses | 10/10 plan-only PASS |
+| Accepted positive arm segments | 30/30 |
+| Rejection hypotheses | 10/10 matched |
+| Scene-contract rejections | 4 |
+| MoveIt distant-target rejections | 6 |
+| False accepts / false rejects | 0 / 0 |
+| Unverified cases | 0 |
+| Motion-side-effect violations | 0 |
+| Positive planning P50 / P95 | 0.975 / 2.370 ms |
+| Positive service-response wall P50 / P95 | 8.480 / 18.507 ms |
+| Unique positive trajectory digests | 30/30 segments |
+| Tracked DART mesh / geometry diagnostics | 0 / 0 across 16 runtime cases |
+
+Each runtime case used a fresh ROS domain and graph. The graph contained no
+EdgeGrasp motion node, and the probe created no publisher or action client.
+Trajectory publication, ExecuteTrajectory goals, FJT goals, and execution were
+zero. Generated install-share files were removed after every case; the final
+process check found no matching ROS/Gazebo process. This is distinct-target
+scene/IK/MoveIt validation, not typed execution or physics-grasp evidence.
+
+The authoritative records are
+`docs/observations/2026-08-29-candidate024-target-matrix-plan-only.json` and the
+retained failed-method record
+`docs/observations/2026-08-29-candidate024-translation-matrix-plan-only.json`.
+
 ### Candidate009-011 admission and physics runtime
 
 Candidate009 introduced an isolated chained plan-only harness. The graph

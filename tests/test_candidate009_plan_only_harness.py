@@ -1,11 +1,16 @@
+import json
 from pathlib import Path
+import subprocess
+import sys
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = PROJECT_ROOT / "scripts"
 
 
-def test_chained_candidate_probe_is_service_only_and_fail_closed() -> None:
+def test_chained_candidate_probe_is_service_only_and_fail_closed(
+    tmp_path: Path,
+) -> None:
     source = (SCRIPTS / "probe_grasp_candidate_plan_only.py").read_text(
         encoding="utf-8"
     )
@@ -37,6 +42,62 @@ def test_chained_candidate_probe_is_service_only_and_fail_closed() -> None:
         "PlanTarget.Goal",
     ):
         assert forbidden not in source
+
+    matrix_path = (
+        PROJECT_ROOT
+        / "ros_ws"
+        / "src"
+        / "edgegrasp_ros"
+        / "config"
+        / "candidate024_target_matrix.json"
+    )
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+    assert matrix["mode"] == "moveit_get_motion_plan_zero_execution"
+    assert matrix["required_case_counts"] == {
+        "reachable_hypothesis": 10,
+        "rejection_hypothesis": 10,
+    }
+    assert len({item["case_id"] for item in matrix["cases"]}) == 20
+
+    matrix_runner = SCRIPTS / "run_candidate024_target_matrix_plan_only.py"
+    runner_source = matrix_runner.read_text(encoding="utf-8")
+    compile(runner_source, matrix_runner.name, "exec")
+    for required in (
+        "SCENE_CONTRACT_REJECTED",
+        "MATERIALIZED_FOR_PLAN_ONLY",
+        "motion_side_effect_violation_count",
+        "trajectory_publication_count",
+        "execute_trajectory_goal_count",
+        "fjt_goal_count",
+        "motion_boundary_absent_throughout",
+    ):
+        assert required in runner_source
+    output_dir = tmp_path / "candidate024_matrix"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(matrix_runner),
+            "--matrix",
+            str(matrix_path),
+            "--artifact-dir",
+            str(output_dir),
+            "--materialize-only",
+        ],
+        cwd=PROJECT_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    materialization = json.loads(
+        (output_dir / "matrix_materialization.json").read_text(encoding="utf-8")
+    )
+    assert materialization["status"] == "MATERIALIZATION_PASS"
+    assert materialization["case_count"] == 20
+    assert materialization["runtime_case_count"] == 16
+    assert materialization["scene_contract_rejection_count"] == 4
+    assert materialization["unexpected_contract_result_count"] == 0
+    assert materialization["zero_execution_contract"] is True
 
 
 def test_plan_only_harness_launches_no_edgegrasp_motion_node() -> None:
