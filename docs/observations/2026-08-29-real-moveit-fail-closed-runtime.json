@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-08-29",
+  "timezone": "Asia/Shanghai",
+  "capability": "real_move_group_local_process_interruption_fail_closed",
+  "status": "EDGEGRASP_FAIL_CLOSED__MOVE_GROUP_RUNTIME_FAILED",
+  "overall_pass": false,
+  "environment": {
+    "host": "Windows with Ubuntu-24.04 WSL",
+    "ros_distribution": "Jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "moveit_version_at_capture": "2.12.4",
+    "robot": "SO-101 simulation proxy",
+    "pinned_so101_ros2_sha": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "scope": {
+    "local_simulation_only": true,
+    "real_move_group_process": true,
+    "remote_host_or_network_target": false,
+    "credentials_involved": false,
+    "physical_robot": false,
+    "hardware_evidence": false,
+    "historical_existing_artifact_only": true,
+    "os_process_interruption_reproduction_enabled": false,
+    "fault_mechanism": "temporary interruption of one identity-checked local MoveGroup process followed by resume",
+    "purpose": "observe cancellation, goal-response timeout, late terminal state, motion-side effects, upstream process survival, and cleanup"
+  },
+  "evidence_freeze": {
+    "evidence_frozen_from_wsl": true,
+    "copy_direction": "WSL evidence source to Windows project",
+    "wsl_artifacts_modified": false,
+    "manifest_files_byte_identical": true,
+    "windows_hashes_required_to_match_manifest": true,
+    "windows_hashes_match_manifest": true,
+    "historical_fault_injection_reproduced_during_freeze": false
+  },
+  "fixed_safety_contract": {
+    "target_freshness_timeout_ms": 200.0,
+    "target_freshness_timeout_changed": false,
+    "future_skew_tolerance_ms": 1000.0,
+    "source_future_offset_ms": 700.0,
+    "target_frame": "base_link",
+    "clock_domain": "ros_sim",
+    "clock_epoch": 0,
+    "typed_reject_only_gate": true,
+    "direct_move_group_execution_enabled": false
+  },
+  "source_sync": {
+    "windows_source_root": "C:\\Users\\huang\\Documents\\githubsss\\incubator\\edgegrasp-sim",
+    "wsl_source_root": "/home/edgegrasp/ros2_ws/src/edgegrasp-sim",
+    "probe": {
+      "relative_path": "scripts/probe_real_moveit_fail_closed.py",
+      "sha256": "39f8615370cf73199699a8ddb0905ab55f8dd28d3d74ae41094ba50dbbde87cd",
+      "line_count": 983,
+      "windows_wsl_match": true,
+      "windows_wsl_match_scope": "capture_time_and_current_windows_recheck",
+      "current_windows_file_present": true,
+      "current_windows_file_verifiable": true,
+      "current_windows_sha256": "39f8615370cf73199699a8ddb0905ab55f8dd28d3d74ae41094ba50dbbde87cd",
+      "current_windows_hash_matches_capture": true
+    },
+    "runner": {
+      "relative_path": "scripts/run_real_moveit_fail_closed.sh",
+      "sha256": "f67d55539780c70b2c5ab51e2d1b212bc4691b9e9ab8693e4207250a845d77e2",
+      "line_count": 778,
+      "windows_wsl_match": true,
+      "windows_wsl_match_scope": "capture_time_and_current_windows_recheck",
+      "current_windows_file_present": true,
+      "current_windows_file_verifiable": true,
+      "current_windows_sha256": "f67d55539780c70b2c5ab51e2d1b212bc4691b9e9ab8693e4207250a845d77e2",
+      "current_windows_hash_matches_capture": true
+    },
+    "current_windows_active_source_status": "historical_os_signal_real_process_harness_present_and_hash_verified",
+    "current_windows_active_source_verifiable": true,
+    "current_windows_active_source_note": "Both historical files are currently present in the Windows incubator checkout and their current SHA-256 values match the WSL capture hashes. They are an OS-signal real-process fault-injection harness, retained for historical evidence only.",
+    "independent_private_repo_migration": {
+      "included_in_migration_allowlist": false,
+      "reason": "Exclude the OS-signal real-process fault-injection harness from the independent private-repository migration.",
+      "executed_in_this_update": false
+    },
+    "capture_adapter_import_realpath": "/home/edgegrasp/ros2_ws/src/edgegrasp-sim/ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+    "capture_adapter_sha256": "1b238393b12f86d076c82303970f9d35824931bbf38d3a8af054cf07b0ab2658",
+    "current_adapter_sha256": "48c6dac25294e3754dae60b9b73b4b3191b12f493c8f83d0907e8bbae682c7cf",
+    "current_adapter_differs_from_capture": true,
+    "current_adapter_change_boundary": "A later in-process injected test found and fixed a late send-future cancellation race. The P2 claims remain bound to the capture adapter hash.",
+    "candidate_scene_world_installed_overlay_match": true,
+    "overlay_rebuild_required": false,
+    "overlay_rebuild_reason": "Only source scripts changed; installed Python adapter and installed candidate, scene, and world matched the current source hashes."
+  },
+  "correlation_contract": {
+    "kind": "runtime_inference_fresh_graph_baseline_empty_first_new_uuid_after_planning",
+    "fresh_graph_per_scenario": true,
+    "baseline_move_group_goal_set_empty": true,
+    "strong_request_id_correlation": false,
+    "terminal_must_follow_plan_target_terminal": true,
+    "interpretation": "The adapter's internal MoveGroup goal UUID is not exposed through PlanTarget. Each scenario therefore uses an independent fresh graph and treats the first new /move_action UUID after planning as the correlated runtime observation."
+  },
+  "aggregate": {
+    "scenario_count": 2,
+    "independent_ros_domain_count": 2,
+    "edgegrasp_fail_closed_count": 2,
+    "move_group_survived_count": 0,
+    "overall_pass_count": 0,
+    "reject_only_gate_goal_count": 0,
+    "actual_motion_goal_counts": {
+      "real_execute_trajectory": 0,
+      "arm_fjt": 0,
+      "gripper_fjt": 0
+    },
+    "maximum_joint_delta_rad": 9.714448921889736e-19,
+    "move_group_sigsegv_count": 2,
+    "move_group_exit_codes": [
+      -11,
+      -11
+    ],
+    "cleanup_success_count": 2,
+    "remaining_process_count": 0,
+    "clock_publisher_count_after_cleanup": 0
+  },
+  "scenarios": [
+    {
+      "scenario": "explicit_cancel",
+      "injected_fault_subtype": "explicit_cancel",
+      "timeout_kind": null,
+      "ros_domain_id": 222,
+      "task_id": "candidate024-real-moveit-fault-20260829T2250P2-explicit_cancel",
+      "started_at": "2026-08-29T22:58:17.108049464+08:00",
+      "ended_at_before_cleanup": "2026-08-29T22:59:25.042968386+08:00",
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_explicit_cancel_20260829T2250P2",
+      "status": "UPSTREAM_PROCESS_EXITED",
+      "scenario_exit_code": 1,
+      "overall_pass": false,
+      "edgegrasp_fail_closed": true,
+      "move_group_survived": false,
+      "plan_target_terminal": {
+        "wrapper_status": 5,
+        "wrapper_status_name": "CANCELED",
+        "reason": "plan_target_cancel_requested",
+        "monotonic_ns": 94339363439,
+        "wall_time": "2026-08-29T22:59:08.783149+08:00"
+      },
+      "move_group_runtime_correlation": {
+        "baseline_empty": true,
+        "correlated_goal_id": "714a7cd07336492682a6f1f60eb3f971",
+        "first_observed_status": 2,
+        "first_observed_monotonic_ns": 94250216387,
+        "first_observed_wall_time": "2026-08-29T22:59:08.694001+08:00",
+        "terminal_status": 4,
+        "terminal_monotonic_ns": 94353850280,
+        "terminal_wall_time": "2026-08-29T22:59:08.797641+08:00",
+        "terminal_after_plan_target": true,
+        "terminal_after_plan_target_delta_ns": 14464841,
+        "strong_request_id_correlation": false
+      },
+      "motion_side_effects": {
+        "reject_only_gate_goal_count": 0,
+        "actual_motion_goal_counts": {
+          "real_execute_trajectory": 0,
+          "arm_fjt": 0,
+          "gripper_fjt": 0
+        },
+        "maximum_joint_delta_rad": 6.2449966191115345e-19
+      },
+      "move_group_process_evidence": {
+        "pid": 1018,
+        "initial_executable": "/opt/ros/jazzy/lib/moveit_ros_move_group/move_group",
+        "initial_start_time_ticks": 6668,
+        "initial_state": "S (sleeping)",
+        "identity_contract_valid": true,
+        "state_after_late_window": "missing",
+        "identity_matches_initial_after_late_window": false,
+        "sigsegv_count": 1,
+        "exit_code": -11,
+        "crash_context": "MoveIt 2.12.4 libmoveit_plan_execution.so.2.12.4 plan_execution::PlanExecution::stop(), address 0x5c, after planning/cancel race"
+      },
+      "cleanup": {
+        "success": true,
+        "remaining_process_count": 0,
+        "clock_state": "unknown_topic",
+        "clock_publisher_count": 0,
+        "completed_at": "2026-08-29T22:59:35.466182885+08:00"
+      },
+      "evidence": {
+        "summary_json_sha256": "07cf6429bb6cee798ff7da4320e40710e4b3a81a874102b42c1cd20e7a2f47a1",
+        "cleanup_json_sha256": "1f07f6c4e9064c05834c2d75d8b407e4af0c756fc73204b6071b108e6cfcce24",
+        "move_group_log_sha256": "ab7fabfe00da71f16ec90bc4ecf7685b307351186e38c3acee483e1d0f566c51",
+        "gazebo_launch_log_sha256": "c652e7174f668a413ac72a9cfad348558713ef282812e0bf85b50dcc7798548f",
+        "gazebo_server_console_log_sha256": "9a0e3cfb1597cc7f6adfe65dd683a5981d37cb2d7c0541434640b396f66369f7",
+        "source_overlay_manifest_sha256": "c88bfbda2dd749affffb47ff0b5b8e9ca5e38cb3f65f8ba20dd01d8159b762a9"
+      }
+    },
+    {
+      "scenario": "move_group_goal_response_timeout",
+      "injected_fault_subtype": "move_group_goal_response_timeout",
+      "timeout_kind": "goal_response",
+      "adapter_reason": "move_group_timeout",
+      "accepted_goal_result_timeout_verified": false,
+      "ros_domain_id": 223,
+      "task_id": "candidate024-real-moveit-fault-20260829T2302P2-move_group_goal_response_timeout",
+      "started_at": "2026-08-29T23:00:10.376852837+08:00",
+      "ended_at_before_cleanup": "2026-08-29T23:01:22.012676261+08:00",
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_goal_response_timeout_20260829T2302P2",
+      "status": "UPSTREAM_PROCESS_EXITED",
+      "scenario_exit_code": 1,
+      "overall_pass": false,
+      "edgegrasp_fail_closed": true,
+      "move_group_survived": false,
+      "plan_target_terminal": {
+        "wrapper_status": 6,
+        "wrapper_status_name": "ABORTED",
+        "reason": "move_group_timeout",
+        "monotonic_ns": 215271712175,
+        "wall_time": "2026-08-29T23:01:02.745182+08:00"
+      },
+      "move_group_runtime_correlation": {
+        "baseline_empty": true,
+        "correlated_goal_id": "dbc101cf66bb48c9a37b88ce70f66760",
+        "first_observed_status": 2,
+        "first_observed_monotonic_ns": 215097692561,
+        "first_observed_wall_time": "2026-08-29T23:01:02.571163+08:00",
+        "terminal_status": 4,
+        "terminal_monotonic_ns": 215297161396,
+        "terminal_wall_time": "2026-08-29T23:01:02.770629+08:00",
+        "terminal_after_plan_target": true,
+        "terminal_after_plan_target_delta_ns": 25449221,
+        "strong_request_id_correlation": false
+      },
+      "motion_side_effects": {
+        "reject_only_gate_goal_count": 0,
+        "actual_motion_goal_counts": {
+          "real_execute_trajectory": 0,
+          "arm_fjt": 0,
+          "gripper_fjt": 0
+        },
+        "maximum_joint_delta_rad": 9.714448921889736e-19
+      },
+      "move_group_process_evidence": {
+        "pid": 902,
+        "initial_executable": "/opt/ros/jazzy/lib/moveit_ros_move_group/move_group",
+        "initial_start_time_ticks": 18761,
+        "initial_state": "S (sleeping)",
+        "identity_contract_valid": true,
+        "state_after_late_window": "missing",
+        "identity_matches_initial_after_late_window": false,
+        "sigsegv_count": 1,
+        "exit_code": -11,
+        "crash_context": "MoveIt 2.12.4 libmoveit_plan_execution.so.2.12.4 plan_execution::PlanExecution::stop(), address 0x5c, after planning/cancel race"
+      },
+      "cleanup": {
+        "success": true,
+        "remaining_process_count": 0,
+        "clock_state": "unknown_topic",
+        "clock_publisher_count": 0,
+        "completed_at": "2026-08-29T23:01:32.861826977+08:00"
+      },
+      "evidence": {
+        "summary_json_sha256": "64e557d5292a59c8cea48eacaecb1f8bf916eee9d7e94245674a6b54cb98d73b",
+        "cleanup_json_sha256": "0da387f79f1e8c5e222e4051829973dc0f72c4fda1da6b9b40638e375792c0fb",
+        "move_group_log_sha256": "65a9e02a2ed352d00accb4f67356d8b585bc47a7199d81dffed9e198c8dc76bc",
+        "gazebo_launch_log_sha256": "5a016c213b1f7ab0ac4ac0be45bb0be795a93eebed26febac037867c1d687ceb",
+        "gazebo_server_console_log_sha256": "359e348c73f1bd2473cea9346272c022c87dfaeb897f4115482e557ebe8ddef9",
+        "source_overlay_manifest_sha256": "c88bfbda2dd749affffb47ff0b5b8e9ca5e38cb3f65f8ba20dd01d8159b762a9"
+      }
+    }
+  ],
+  "claim_boundary": {
+    "edgegrasp_fail_closed_observed": true,
+    "move_group_runtime_health_passed": false,
+    "move_group_runtime_failure_observed": true,
+    "late_move_group_goal_or_result_observation": true,
+    "reject_only_gate_prevented_motion_on_race": false,
+    "accepted_goal_result_future_timeout_verified": false,
+    "goal_response_timeout_with_late_goal_response_verified": true,
+    "strong_move_group_request_id_correlation": false,
+    "hardware_grasp_verified": false,
+    "historical_existing_artifact_only": true,
+    "os_process_interruption_reproduction_enabled": false,
+    "interpretation": "Both EdgeGrasp requests terminated fail closed with zero real motion goals and negligible joint drift, but the real MoveGroup process crashed after resume. These are local simulation/process-interruption observations, not a healthy-runtime PASS and not hardware evidence."
+  }
+}

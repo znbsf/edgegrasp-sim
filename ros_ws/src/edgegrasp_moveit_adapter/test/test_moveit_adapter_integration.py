@@ -64,6 +64,7 @@ class FakeMoveIt(Node):
         ik_error: int = MoveItErrorCodes.SUCCESS,
         ik_delay_s: float = 0.0,
         move_group_mode: str = "success",
+        move_group_goal_response_delay_s: float = 0.0,
         gate_mode: str = "success",
         cancel_response: CancelResponse = CancelResponse.ACCEPT,
         publish_gate_subscriber: bool = True,
@@ -77,6 +78,7 @@ class FakeMoveIt(Node):
         self.ik_error = ik_error
         self.ik_delay_s = ik_delay_s
         self.move_group_mode = move_group_mode
+        self.move_group_goal_response_delay_s = move_group_goal_response_delay_s
         self.gate_mode = gate_mode
         self.cancel_response = cancel_response
         self.move_group_goals: list[MoveGroup.Goal] = []
@@ -255,6 +257,8 @@ class FakeMoveIt(Node):
 
     def _accept_move_group(self, request) -> GoalResponse:
         self.move_group_goals.append(request)
+        if self.move_group_goal_response_delay_s > 0.0:
+            time.sleep(self.move_group_goal_response_delay_s)
         if self.move_group_mode == "reject":
             return GoalResponse.REJECT
         return GoalResponse.ACCEPT
@@ -309,11 +313,13 @@ class AdapterHarness:
         *,
         ik_error: int = MoveItErrorCodes.SUCCESS,
         move_group_mode: str = "success",
+        move_group_goal_response_delay_s: float = 0.0,
         gate_mode: str = "success",
         publish_gate_subscriber: bool = True,
         target_timeout_ms: float = 2_000.0,
         ik_delay_s: float = 0.0,
         ik_response_timeout_ms: float = 200.0,
+        goal_response_timeout_ms: float = 200.0,
     ) -> None:
         self.context = Context()
         rclpy.init(context=self.context, domain_id=next(DOMAIN_IDS))
@@ -322,6 +328,7 @@ class AdapterHarness:
             ik_error=ik_error,
             ik_delay_s=ik_delay_s,
             move_group_mode=move_group_mode,
+            move_group_goal_response_delay_s=move_group_goal_response_delay_s,
             gate_mode=gate_mode,
             publish_gate_subscriber=publish_gate_subscriber,
             context=self.context,
@@ -341,7 +348,9 @@ class AdapterHarness:
                     "ik_response_timeout_ms", value=ik_response_timeout_ms
                 ),
                 Parameter("move_group_discovery_timeout_ms", value=100.0),
-                Parameter("goal_response_timeout_ms", value=200.0),
+                Parameter(
+                    "goal_response_timeout_ms", value=goal_response_timeout_ms
+                ),
                 Parameter("cancel_response_timeout_ms", value=200.0),
                 Parameter("result_timeout_margin_ms", value=200.0),
             ]
@@ -728,7 +737,7 @@ def test_plan_target_cancel_cancels_typed_gate_and_returns_correlated_terminal()
         harness.close()
 
 
-def test_stale_during_planning_cancels_move_group_and_never_publishes() -> None:
+def test_injected_planning_failures_cancel_and_never_publish() -> None:
     harness = AdapterHarness(move_group_mode="hold", target_timeout_ms=100.0)
     try:
         harness.publish_inputs()
@@ -747,8 +756,58 @@ def test_stale_during_planning_cancels_move_group_and_never_publishes() -> None:
     finally:
         harness.close()
 
+    # A dedicated in-process fake MoveGroup ActionServer delays only the goal
+    # response.  This exercises send_future timeout plus late accepted-goal
+    # cancellation without pausing or signalling an operating-system process.
+    harness = AdapterHarness(
+        move_group_mode="hold",
+        move_group_goal_response_delay_s=0.35,
+        goal_response_timeout_ms=50.0,
+    )
+    try:
+        harness.publish_inputs()
+        goal_handle = harness.send(harness.goal("delayed-goal-response"))
+        assert goal_handle.accepted
+        wrapped = wait_future(goal_handle.get_result_async())
+        assert wrapped.status == GoalStatus.STATUS_ABORTED
+        assert wrapped.result.reason == "move_group_timeout"
+        wait_until(
+            lambda: harness.dependencies.cancel_requests == 1,
+            reason="late fake MoveGroup goal cancellation",
+        )
+        assert harness.dependencies.published_trajectories == []
+        assert harness.dependencies.gate_goals == []
 
-def test_concurrent_plan_request_is_rejected_and_old_result_cannot_publish() -> None:
+        class AcceptedLateGoal:
+            accepted = True
+
+            def __init__(self) -> None:
+                self.cancel_requests = 0
+
+            def cancel_goal_async(self):
+                self.cancel_requests += 1
+
+        class CompletedLateFuture:
+            def __init__(self, goal) -> None:
+                self.goal = goal
+
+            def result(self):
+                return self.goal
+
+        accepted_late_goal = AcceptedLateGoal()
+        with harness.adapter._state_lock:
+            harness.adapter._active_request_id = "late-callback-still-active"
+        harness.adapter._late_cancel_callback(
+            CompletedLateFuture(accepted_late_goal)
+        )
+        assert accepted_late_goal.cancel_requests == 1
+        with harness.adapter._state_lock:
+            harness.adapter._active_request_id = None
+    finally:
+        harness.close()
+
+
+def test_injected_explicit_cancel_cannot_publish_old_result() -> None:
     harness = AdapterHarness(move_group_mode="hold")
     try:
         harness.publish_inputs()
@@ -760,6 +819,8 @@ def test_concurrent_plan_request_is_rejected_and_old_result_cannot_publish() -> 
         wait_future(first.cancel_goal_async())
         wrapped = wait_future(first.get_result_async())
         assert wrapped.status == GoalStatus.STATUS_CANCELED
+        assert wrapped.result.reason == "plan_target_cancel_requested"
+        assert harness.dependencies.cancel_requests == 1
         assert not wrapped.result.trajectory_dispatched
         assert harness.dependencies.published_trajectories == []
     finally:

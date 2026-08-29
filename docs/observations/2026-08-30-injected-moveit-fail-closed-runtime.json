@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "observation_id": "injected_moveit_fail_closed_runtime_20260830T001525",
+  "recorded_date": "2026-08-30",
+  "timezone": "Asia/Shanghai",
+  "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+  "status": "PASS",
+  "overall_pass": true,
+  "environment": {
+    "host": "Ubuntu-24.04 WSL",
+    "ros_distribution": "Jazzy",
+    "runtime_mode": "in-process fake MoveGroup ActionServer dependency injection",
+    "physical_robot": false,
+    "remote_host_or_network_target": false
+  },
+  "scope": {
+    "injected_runtime_only": true,
+    "real_move_group_process": false,
+    "os_process_signal_injection": false,
+    "real_controller_motion_observation": false,
+    "hardware_evidence": false
+  },
+  "artifact": {
+    "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525",
+    "summary_json_sha256": "65690cc93192bb27896edd88c4ebcd8ed671e5e88fe8814c6974d75adf293100",
+    "junit_xml_sha256": "9bb22f292e3814c432895bbc386e7fd460d0e03af8717467280a021c3f0b22b3",
+    "pytest_log_sha256": "a650735684a1f4a7dbac661094a52cfcd0936e188817412c9637d36b82e88e2e"
+  },
+  "source": {
+    "source_root": "/home/edgegrasp/ros2_ws/src/edgegrasp-sim",
+    "runner": {
+      "relative_path": "scripts/run_injected_moveit_fail_closed.sh",
+      "sha256": "8bc5df971dc023af78255b7564207beb0c866c1a694399afee026afb6a7f30ce",
+      "line_count": 156
+    },
+    "integration_test": {
+      "relative_path": "ros_ws/src/edgegrasp_moveit_adapter/test/test_moveit_adapter_integration.py",
+      "sha256": "7e3cd290361dcaf156a37c5f6eeb06c5db1570f76ce70ed6cb4365e72ae77d3d",
+      "line_count": 827
+    },
+    "adapter": {
+      "relative_path": "ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+      "sha256": "48c6dac25294e3754dae60b9b73b4b3191b12f493c8f83d0907e8bbae682c7cf",
+      "line_count": 1665
+    }
+  },
+  "capture": {
+    "started_at": "2026-08-30T00:15:39,810583585+08:00",
+    "ended_at": "2026-08-30T00:15:42,756864625+08:00",
+    "scenario_exit_code": 0
+  },
+  "injection": {
+    "mechanism": "dedicated in-process fake MoveGroup ActionServer goal callback delay",
+    "goal_response_delay_s": 0.35,
+    "adapter_goal_response_timeout_s": 0.05
+  },
+  "pytest": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_s": 2.044,
+    "test_cases": [
+      "test_injected_planning_failures_cancel_and_never_publish",
+      "test_injected_explicit_cancel_cannot_publish_old_result"
+    ]
+  },
+  "verified": {
+    "explicit_plan_target_cancel_is_fail_closed": true,
+    "goal_response_timeout_reason_is_move_group_timeout": true,
+    "late_accepted_fake_move_group_goal_is_cancelled": true,
+    "trajectory_publication_count": 0,
+    "fake_gate_goal_count": 0,
+    "accepted_goal_result_future_timeout": false
+  },
+  "claim_boundary": {
+    "injected_runtime_only": true,
+    "accepted_goal_result_timeout_verified": false,
+    "real_move_group_runtime_health": false,
+    "real_controller_motion_observation": false,
+    "hardware_evidence": false,
+    "interpretation": "The focused in-process fake MoveGroup tests kept explicit PlanTarget cancellation and goal-response timeout handling fail closed, cancelled a late accepted fake goal, and published no trajectory or fake gate goal. This does not establish real MoveGroup health, controller behavior, accepted-goal result-future timeout coverage, or hardware evidence."
+  }
+}

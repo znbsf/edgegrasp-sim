@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+- Split MoveIt evidence into three non-interchangeable classes:
+  `REAL_MOVEGROUP_NORMAL` for scoped plan-only/zero-execution responses,
+  `INJECTED_CANCEL_TIMEOUT` for fake/in-process cancellation and timeout
+  contracts, and `REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` for
+  the frozen P2 upstream-process failures.
+- Record the actually executed WSL P2 probe/runner hashes only as historical
+  artifact provenance. Both 2026-08-29 runs kept EdgeGrasp fail closed with
+  zero actual motion goals but have `summary.status=UPSTREAM_PROCESS_EXITED`, not
+  PASS: each
+  real MoveGroup run recorded one SIGSEGV and exit `-11` in
+  `PlanExecution::stop()`, so `overall_pass=false` and
+  `move_group_survived=false`. The signal-injection scripts are not active
+  release commands.
+- Stop rerunning OS-process interruption. Add an injected-only runner using the
+  existing in-process fake MoveGroup ActionServer; two existing tests cover
+  explicit cancel, goal-response timeout, late accepted-goal cancel, and zero
+  trajectory/gate publication without increasing test count. Accepted-goal
+  result-future timeout remains unverified.
+- Record the 2026-08-30 safe in-process artifact at
+  `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525`:
+  `summary.status=PASS`, `overall_pass=true`, and 2 tests passed in 2.04 s, covering
+  explicit cancel and goal-response timeout; the late accepted fake goal was
+  canceled and trajectory/fake-gate goal counts were zero. This is not real
+  MoveGroup, controller, or hardware evidence.
+- Fix a late send-future cancellation race in the MoveIt adapter. A goal
+  accepted after the wrapper has already failed closed is now canceled even
+  when request cleanup has not yet cleared the active request identity; apply
+  the same rule to a late accepted typed-gate goal.
 - Add a zero-runtime-dependency deterministic grasp-pipeline core.
 - Add timestamped `Target3D`, constant-velocity prediction, a 200 ms stale
   source gate, active receive-stream watchdog, explicit frame/clock epoch,

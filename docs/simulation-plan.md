@@ -14,7 +14,9 @@ This project uses five non-interchangeable states:
   runtime or integration test was unavailable.
 - **Hardware-only**: simulation cannot establish the claim.
 
-Snapshot on 2026-08-29:
+Snapshot on 2026-08-30. The core and simulator counts below remain from the
+2026-08-29 snapshot; the 2026-08-30 addition is limited to the in-process
+fail-closed artifact in the MoveIt matrix:
 
 | Capability | Status | Defensible claim |
 | --- | --- | --- |
@@ -22,9 +24,9 @@ Snapshot on 2026-08-29:
 | Core deterministic replay | Verified locally | 100 identical replays for each synthetic 0/20/40 mm/s scenario |
 | Four-stage grasp sequence | Runtime verified (scoped) | 60 dependency-free tests plus 45 Jazzy action/client tests pass; the fixed Candidate024 control produced 10 simulation-physics successes across 11 attempts, and three selected distinct target poses each completed one bounded typed run |
 | Standard Python install/import | Verified locally | The root package installs into a clean target and imports without source `PYTHONPATH` |
-| ROS packages and safety/trajectory gate | Runtime verified (scoped) | Jazzy colcon plus 49 ROS tests; typed target publication/correlation, selective PlanningScene/ACM confirmation, all-pad physics observation, fake-clock and live permission/watchdog/cancel paths observed |
+| ROS packages and safety/trajectory gate | Runtime verified (scoped) | Jazzy colcon plus 49 ROS tests; typed target publication/correlation, selective PlanningScene/ACM confirmation, all-pad physics observation, and dependency-injected fake-clock/permission/watchdog/cancel paths observed |
 | Correlated target observation | Runtime verified (mock scope) | `TrackedTarget` and legacy `PointStamped` were emitted with matching stamp/point; target ID/domain/epoch were preserved |
-| MoveIt plan-only adapter | Runtime verified (scoped) | 23 Jazzy tests plus reachable target-to-gate-to-controller runs |
+| MoveIt plan-only adapter | Runtime verified (scoped) | 23 Jazzy tests with fake IK/MoveGroup failure dependencies, plus separately classified real-process normal planning and historical-negative evidence |
 | Gazebo SO-101 control | Runtime verified (scoped) | Three active controllers, six joint states, two FJT endpoints and gated results observed |
 | Pinned upstream MoveIt configuration | Static and runtime planning verified | The EdgeGrasp thin overlay uses pinned move_group, adds Pilz `ValidateSolution`, exposes two distal-pad links, disables direct MoveGroup execution, and completed candidate005 through the typed path |
 | Shared Gazebo/MoveIt table/cube scene | Runtime verified (scoped) | One contract generates the Gazebo SDF; MoveIt confirmed table+cube and a selective ACM that permits target contact only for two dedicated pad child links while keeping both parent links forbidden |
@@ -34,6 +36,21 @@ Snapshot on 2026-08-29:
 | Primitive-proxy contact | Runtime verified (narrow scope) | Generated primitives replaced 13 collision meshes; Candidate024's 14 fixed-plus-selected runtime logs had zero tracked DART mesh/geometry diagnostics, and 13 successful runs retained both configured pad contacts through lift |
 | Physics grasp observer | Runtime verified (scoped positive evidence) | Candidate024 produced 13 correlated `physics_grasp_verified=true` results: ten at the fixed control and one at each of three selected distinct poses, with 28.858-29.128 mm retained lift and the configured 0.5 s retention; one fixed-control pre-fix attempt stopped before motion on stale target |
 | Full collision fidelity and real hardware | Unverified/future | Three selected shoulder-pan-symmetry target poses and conservative proxy geometry are covered; per-pose repeatability, workspace-wide behavior, all-link fidelity, force calibration, real stops, and hardware remain unverified |
+
+MoveIt runtime evidence uses three additional non-interchangeable classes. The
+two fail-closed tracks are shown explicitly because their results answer
+different questions:
+
+| Evidence class | Status | Defensible claim |
+| --- | --- | --- |
+| `REAL_MOVEGROUP_NORMAL` | `PASS_SCOPED` | The Candidate024 target matrix used the real MoveGroup process under the EdgeGrasp proxy overlay for normal `GetMotionPlan`; 20/20 outcomes matched, accepted trajectories were validated/discarded, and all execution counters were zero. This is normal planning only, not cancel health. |
+| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true` | The 2026-08-30 artifact `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525` ran two existing tests with an in-process fake MoveGroup ActionServer: 2 passed in 2.04 s. Explicit cancel and goal-response timeout stayed fail closed; the late accepted fake goal was canceled, and trajectory/fake-gate goals were zero. This is not real MoveGroup, controller, or hardware evidence. `accepted_goal_result_timeout_verified=false` remains unverified. |
+| `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false` | The two frozen 2026-08-29 P2 runs kept `edgegrasp_fail_closed=true` and sent zero actual motion goals, but each real MoveGroup run recorded one SIGSEGV and exit `-11` in `PlanExecution::stop()`; `move_group_survived=false`. `accepted_goal_result_timeout_verified=false` and `strong_move_group_request_id_correlation=false` remain boundaries. Preserve only as historical negative evidence; do not reproduce OS-process interruption. |
+
+Exact P2 hashes and claim flags are in the
+[MoveIt evidence matrix](observations/2026-08-29-moveit-evidence-matrix.json).
+The 2026-08-30 safe artifact is a separate WSL result path in the table above;
+it must remain classified as in-process fake-dependency evidence.
 
 The dependency-free sequence core is now wrapped by `GraspSequence.action`.
 A task freezes one finite normalized approach orientation for collision routing
@@ -533,8 +550,11 @@ Remaining gates, in order:
 1. Preserve Candidate024 as the fixed simulation control. Do not continue
    blind friction, close-angle, or pad-length sweeps; any new scene or grasp
    pose must again pass the isolated plan-only gate before typed execution.
-2. Exercise MoveIt cancel/timeout and late-result paths against the real
-   move_group process, not only fake servers.
+2. Keep real MoveGroup validation to normal plan-only/zero-execution artifacts.
+   Exercise cancel, goal-response timeout, and late-result contracts only with
+   in-process dependency injection or a dedicated fake MoveGroup ActionServer.
+   Retain the two real-process P2 cancel-race crashes as negative artifacts and
+   do not reproduce OS-process interruption.
 3. If a per-pose repeatability claim is needed, pre-register a small repeat
    count and rerun the three selected poses; the current one-run-per-pose result
    must not be converted into a workspace success percentage.

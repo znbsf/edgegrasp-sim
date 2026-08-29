@@ -1,6 +1,8 @@
 # EdgeGrasp validation report
 
-Current stable snapshot: 2026-08-29, Asia/Shanghai (`+08:00`).
+Current stable snapshot: 2026-08-30, Asia/Shanghai (`+08:00`). The core and
+package counts in this report are from the 2026-08-29 snapshot; the
+2026-08-30 addition is limited to the in-process fail-closed artifact below.
 
 This report separates the ROS-independent core, EdgeGrasp ROS packages,
 pinned-upstream tests, scoped simulator observations, and unverified claims.
@@ -111,6 +113,70 @@ reported permission errors, and was interrupted before any build or test. A
 literal-path dry run then showed only the intended project files, and the
 literal-path sync plus the build/test result above supersede that operator
 error.
+
+### MoveIt evidence classes and delivery addendum
+
+The following evidence classes are non-interchangeable. Package-test success
+does not expand the real MoveGroup runtime claim:
+
+| Evidence class | Result | Evidence and boundary |
+| --- | --- | --- |
+| `REAL_MOVEGROUP_NORMAL` | `PASS_SCOPED` | The independent Candidate024 target-matrix artifact ran the real MoveGroup process under the EdgeGrasp proxy overlay for normal `GetMotionPlan`. It matched 20/20 declared outcomes, validated and discarded 30 accepted trajectories, and recorded zero trajectory publications, ExecuteTrajectory goals, FJT goals, or execution attempts. This proves only normal planning/validation, not cancel or process health. |
+| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true` | `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525` ran the two existing integration tests with an in-process fake MoveGroup ActionServer: 2 passed in 2.04 s. Explicit cancel and goal-response timeout remained fail closed; the late accepted fake goal was canceled, and trajectory-publication/fake-gate goal counts were zero. This is injected runtime, not real MoveGroup, controller, or hardware evidence. |
+| `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false` | The two frozen 2026-08-29 P2 artifacts kept `edgegrasp_fail_closed=true` with zero actual motion goals, but each real MoveGroup run recorded one SIGSEGV and exit `-11` in `libmoveit_plan_execution.so.2.12.4` `PlanExecution::stop()` at address `0x5c`; both have `move_group_survived=false`. They are historical negative artifacts and the process-interruption injection is not rerun. |
+
+Track A consists of these two read-only WSL artifacts:
+
+```text
+/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_explicit_cancel_20260829T2250P2
+/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_goal_response_timeout_20260829T2302P2
+```
+
+The 2026-08-30 safe artifact's summary SHA-256 is
+`65690cc93192bb27896edd88c4ebcd8ed671e5e88fe8814c6974d75adf293100` and its
+focused two-test JUnit SHA-256 is
+`9bb22f292e3814c432895bbc386e7fd460d0e03af8717467280a021c3f0b22b3`.
+It ran after the concrete late send-future race fix; the adapter now cancels a
+late accepted goal even if `_finish()` has not yet cleared the active request
+identity. The existing test count remains 23; the focused safe artifact has two
+passes and zero failures/errors/skips.
+After the production fix and focused package rebuild, the complete
+`edgegrasp_moveit_adapter` Jazzy package rerun remained 23/23 with zero
+failures/errors/skips; its `pytest.xml` SHA-256 is
+`4d3a5bee82ee9c27c006d3a70c5d87fc8ef9433fc3224f86b8be1ef7cfac46cf`.
+Accepted-goal `result_future` timeout remains
+`accepted_goal_result_timeout_verified=false`. The P2 observations also retain
+`strong_move_group_request_id_correlation=false`; their late status was
+observed from a fresh graph after the wrapper terminal, not established by a
+strong request-ID join. The safe in-process artifact covers goal-response
+timeout and late accepted-goal cancellation, not accepted-goal result-future
+timeout or real MoveGroup health.
+
+The P2 capture manifests record byte identity between the WSL capture and a
+Windows incubator recheck. This standalone repository preserves the actually
+executed probe and runner only as historical provenance with exact SHA-256
+`39f8615370cf73199699a8ddb0905ab55f8dd28d3d74ae41094ba50dbbde87cd`
+(983 lines) and
+`f67d55539780c70b2c5ab51e2d1b212bc4691b9e9ab8693e4207250a845d77e2`
+(778 lines); the capture adapter SHA is
+`1b238393b12f86d076c82303970f9d35824931bbf38d3a8af054cf07b0ab2658`.
+The executable historical signal-injection files are deliberately excluded;
+the current standalone checkout uses the in-process safe runner. Both P2 runs
+report `edgegrasp_fail_closed=true`, all three actual-motion goal counts
+zero, joint drift `6.2449966191115345e-19` /
+`9.714448921889736e-19` rad, and late MoveGroup status 4 occurring
+14,464,841 / 25,449,221 ns after the wrapper terminal. Cleanup succeeded with
+zero remaining scoped processes and `/clock` unknown. Correlation is explicitly
+fresh-graph runtime inference, so
+`strong_move_group_request_id_correlation=false`; accepted-goal result timeout
+is also unverified. See the machine-readable
+[MoveIt evidence matrix](observations/2026-08-29-moveit-evidence-matrix.json)
+and [frozen negative observation](observations/2026-08-29-real-moveit-fail-closed-runtime.json).
+
+The separate 212 ms `stale_target` rejection against the unchanged 200 ms gate
+and `planning_scene:safety_false` after the MoveGroup crash/service loss are
+correct fail-closed outcomes, not false positives. Neither the 200 ms stale
+gate nor frame, epoch, future-skew, or typed-gate constraints were relaxed.
 
 ### Candidate024 face-aligned simulation grasp and freshness fix
 
@@ -1150,7 +1216,8 @@ colcon test-result --test-result-base \
 | `edgegrasp_moveit_adapter` | 13 | 13 | 0 | 0 |
 | **Total** | **25** | **25** | **0** | **0** |
 
-The ROS tests genuinely instantiate nodes and fake action/service servers.
+The ROS tests genuinely instantiate nodes and fake action/service servers; this
+section is injected/fake contract evidence and not real MoveGroup health.
 They cover invalid/out-of-order targets, rollback/reset, downstream readiness,
 send/result failures, cancel accept/reject/exception/timeout, accepted-cancel
 without terminal result, bounded three-attempt escalation, exact arm/gripper
@@ -1362,9 +1429,10 @@ Using `empty.world`, camera/RViz disabled, and simulated time:
   observed run.
 
 A cancel request or status code is not proof that physical hardware stopped.
-The new gate state machine treats rejected/exception/timeout cancels and an
-accepted cancel without terminal result as faults, retries no more than three
-times, then publishes explicit controller-stop escalation status.
+In dependency-injected fake-action tests, the gate state machine treats
+rejected/exception/timeout cancels and an accepted cancel without terminal
+result as faults, retries no more than three times, then publishes explicit
+controller-stop escalation status.
 
 ### MoveIt planning and target adapter
 
@@ -1724,8 +1792,10 @@ current claims:
   target-position drift, and preserves exact command/digest correlation. Epoch
   reset coordination across the safety monitor, adapter, gate, and sequence
   wrapper is still locally managed rather than one atomic distributed reset.
-- No physical-stop guarantee. ROS cancel/timeout/escalation behavior is tested,
-  but no motor power cut, torque stop, or real controller was measured.
+- No physical-stop guarantee. ROS cancel/timeout/escalation contracts are
+  tested with dependency-injected fake action servers; no healthy real
+  MoveGroup cancel claim, motor power cut, torque stop, or real-controller stop
+  was measured.
 - Candidate024 reuses one fixed target pose. Its per-stage P50/P95 timing is
   measured, but no ten-distinct-target endpoint-error or grasp study exists yet.
 - MCAP record/raw replay ran once per fresh epoch; deterministic repeated bag
@@ -1741,8 +1811,11 @@ current claims:
   dynamics evidence.
 - No real SO-101, calibration, EEPROM/udev, thermal, camera extrinsics, force
   calibration/closure, or hardware pick/place evidence exists.
-- The meta-repository still has no first commit and all current files are
-  untracked. No commit, push, release, or GitHub Actions run was performed.
+- The Windows meta-repository still has no first commit, has zero tracked files,
+  and presents the project tree as untracked; it must not be called clean. The
+  WSL `edgegrasp-sim` source directory has no `.git` metadata and likewise has
+  no clean/dirty Git claim. Only the two pinned upstream checkouts are assessed
+  separately for clean state. No GitHub Actions workflow is used.
 
 At the final candidate008 shutdown, exact `ROS_DOMAIN_ID=52` cleanup reported
 zero matching simulator/controller/MoveIt/EdgeGrasp processes at

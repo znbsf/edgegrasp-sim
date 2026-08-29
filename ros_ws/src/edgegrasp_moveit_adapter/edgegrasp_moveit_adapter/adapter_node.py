@@ -921,11 +921,12 @@ class MoveItPlanOnlyAdapter(Node):
         self._publish_status("cancelled_move_group", reason, request_id)
         return True
 
-    def _late_cancel_callback(self, request_id: str, future) -> None:
-        with self._state_lock:
-            still_active = self._active_request_id == request_id
-        if still_active:
-            return
+    def _late_cancel_callback(self, future) -> None:
+        # This callback is installed only after the send future has already
+        # timed out or the wrapper request has failed closed.  The future can
+        # become ready before _execute() reaches its finally block, so active
+        # request identity is not evidence that normal goal handling continues.
+        # Always cancel a late accepted planning goal.
         try:
             goal = future.result()
             if goal is not None and goal.accepted:
@@ -998,11 +999,9 @@ class MoveItPlanOnlyAdapter(Node):
         self._publish_status("cancelled_gate_command", "accepted", request_id)
         return True
 
-    def _late_gate_cancel_callback(self, request_id: str, future) -> None:
-        with self._state_lock:
-            still_active = self._active_request_id == request_id
-        if still_active:
-            return
+    def _late_gate_cancel_callback(self, future) -> None:
+        # As above, a late accepted gate goal belongs to an already failed
+        # send path even if _finish() has not yet cleared the request identity.
         try:
             goal = future.result()
             if goal is not None and goal.accepted:
@@ -1108,7 +1107,7 @@ class MoveItPlanOnlyAdapter(Node):
         )
         if send_reason is not None:
             send_future.add_done_callback(
-                lambda future: self._late_gate_cancel_callback(request_id, future)
+                self._late_gate_cancel_callback
             )
             return _GateOutcome(
                 trajectory_digest=digest,
@@ -1388,7 +1387,7 @@ class MoveItPlanOnlyAdapter(Node):
             )
             if send_reason is not None:
                 send_future.add_done_callback(
-                    lambda future: self._late_cancel_callback(request_id, future)
+                    self._late_cancel_callback
                 )
                 if goal_handle.is_cancel_requested:
                     goal_handle.canceled()

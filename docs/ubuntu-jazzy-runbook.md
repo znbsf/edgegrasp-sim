@@ -17,6 +17,19 @@ that bypass the EdgeGrasp trajectory gate are labeled explicitly.
 7. None of the above proves collision fidelity, grasp success, or real hardware
    safety.
 
+MoveIt evidence must be labeled with one of these non-interchangeable classes.
+The two fail-closed tracks below must not be combined into a single health
+claim:
+
+| Evidence class | Allowed procedure | Claim boundary |
+| --- | --- | --- |
+| `REAL_MOVEGROUP_NORMAL` | Real MoveGroup under the EdgeGrasp proxy overlay, normal `GetMotionPlan`, trajectory validation/discard, and explicit zero execution counters | Normal planning only; no cancel, timeout, late-result, or whole-process-health claim |
+| `B · INJECTED_CANCEL_TIMEOUT` | The existing ROS integration tests run through the in-process fake MoveGroup ActionServer or delayed future | The 2026-08-30 safe artifact has `summary.status=PASS`, `overall_pass=true`, and 2 passed in 2.04 s: explicit cancel and goal-response timeout, late accepted fake-goal cancellation, and zero trajectory/fake-gate goals. This is injected runtime only, never real MoveGroup, controller, or hardware evidence; accepted-goal result-future timeout remains unverified |
+| `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | Read-only inspection of the two frozen 2026-08-29 P2 directories | Historical `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false` evidence only: EdgeGrasp fail closed with zero actual motion goals, while each MoveGroup run recorded one SIGSEGV and exit `-11`; `move_group_survived=false`. Do not rerun OS-process interruption; request-ID correlation is not strong |
+
+The historical P2 hashes and outcome flags are in
+`docs/observations/2026-08-29-moveit-evidence-matrix.json`.
+
 ## Windows host boundary
 
 Safe read-only inventory:
@@ -278,7 +291,11 @@ ros2 service call /plan_kinematic_path moveit_msgs/srv/GetMotionPlan \
 
 Success requires `error_code.val == 1`, a nonempty exact-order trajectory,
 finite vectors, increasing time, and empty fixed-base multi-DOF points. It is
-planning evidence only and must never auto-execute the response.
+planning evidence only and must never auto-execute the response. A
+`REAL_MOVEGROUP_NORMAL` claim additionally requires an independent artifact
+with validated/discarded trajectories and explicit zero trajectory-publication,
+ExecuteTrajectory, FJT, and execution counters; an interactive success alone
+is not that artifact.
 
 ### C1. Load and confirm the shared PlanningScene
 
@@ -448,6 +465,11 @@ downstream slot and refuses reset; client cancellation is serialized ahead of
 any late success callback. Even a successful result means
 `sequence_completed=true` and `physics_grasp_verified=false` until contact,
 cube lift, and retention are independently observed.
+
+The SAFE_STOP/cancel statement above is sequence-wrapper evidence from that
+recorded graph. It is not a healthy real MoveGroup cancel/timeout claim; the
+general cancel/timeout/late-callback contract is exercised with fake/injected
+servers.
 
 ### D2. Cube-scoped sequence plus read-only physics evidence
 
@@ -926,6 +948,10 @@ terminal whose reason, task, target, source timestamp, clock domain, and epoch
 all match. Timeout, rejection, exception, late feedback from an older attempt,
 or any identity mismatch terminates with zero motion.
 
+This restart is the physics-observer client contract, not MoveGroup cancel
+health. Timeout/rejection/exception and older-attempt late-feedback branches
+are otherwise covered by fake/injected action dependencies.
+
 The accepted observation contains 10 scoped physics-grasp results across 11
 runs; the one failure was the pre-fix stale-target SAFE_STOP before motion, and
 post-fix r03-r11 passed 9/9. r04 exercised the actual correlated observer
@@ -1000,6 +1026,46 @@ Because all ten final trajectory digests differ, report this only as protocol
 outcome repeatability. Exact retained failure/invalid batches are in
 `docs/observations/2026-08-27-grasp-sequence-repeatability.json`.
 
+### D9. Injected MoveGroup cancel/goal-response timeout contract
+
+Do not rerun the historical OS-process interruption procedure. The frozen WSL
+P2 artifacts retain the hashes of the probe/runner used at the time, but those
+signal-injection scripts are historical provenance, not current runbook
+commands. The current safe path uses only the in-process runner below.
+
+Use the in-process fake MoveGroup ActionServer instead:
+
+```bash
+cd /home/edgegrasp/ros2_ws/src/edgegrasp-sim
+bash scripts/run_injected_moveit_fail_closed.sh \
+  /home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_UNIQUE
+```
+
+This runs two existing integration tests without adding a test case. The
+validated 2026-08-30 artifact was
+`/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525`.
+Require `evidence_class=INJECTED_CANCEL_TIMEOUT`, `summary.status=PASS`, 2 passed in
+2.04 s, zero failures/errors/skips, explicit-cancel fail-closed, adapter reason
+`move_group_timeout` for the goal-response timeout, late accepted fake goal
+canceled, and zero trajectory-publication/fake-gate goals. It deliberately does
+not start a real MoveGroup process. Accepted-goal `result_future` timeout
+remains unverified.
+
+The two P2 directories remain read-only historical negative evidence:
+
+```text
+/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_explicit_cancel_20260829T2250P2
+/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_goal_response_timeout_20260829T2302P2
+```
+
+Both are `UPSTREAM_PROCESS_EXITED`, not PASS: EdgeGrasp sent zero actual motion
+goals, while each MoveGroup run recorded one SIGSEGV and exited `-11` in
+`PlanExecution::stop()` without surviving. `overall_pass=false`,
+`accepted_goal_result_timeout_verified=false`, and
+`strong_move_group_request_id_correlation=false` remain fixed boundaries.
+The late status was observed from a fresh graph after the wrapper terminal; it
+is not a strong request-ID join.
+
 ## E. MCAP record/replay modes
 
 Recording intentionally includes raw inputs plus derived/status/command topics,
@@ -1020,7 +1086,8 @@ python3 scripts/validate_mcap_time_domain.py /path/to/bag
 
 Default `SAFETY_REPLAY` is raw-input-only:
 
-1. Stop Gazebo, MoveIt, controllers, and every other `/clock` publisher.
+1. Stop Gazebo, MoveIt, controllers, and every other `/clock` publisher. This
+   is replay graph isolation, not a MoveGroup cancellation test.
 2. Start wrapper/gate only: `ros2 launch edgegrasp_ros edgegrasp_replay.launch.py`.
 3. In another shell run `bash scripts/replay_mcap.sh /path/to/bag`.
 

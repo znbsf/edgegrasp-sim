@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-08-29",
+  "timezone": "Asia/Shanghai",
+  "observation_id": "moveit_evidence_matrix_20260829",
+  "status": "MIXED_SCOPED_EVIDENCE",
+  "rows": [
+    {
+      "evidence_class": "REAL_MOVEGROUP_NORMAL",
+      "status": "PASS_SCOPED",
+      "runtime": {
+        "real_move_group_process": true,
+        "edgegrasp_proxy_overlay": true,
+        "operation": "GetMotionPlan",
+        "plan_only": true,
+        "fault_injection": false
+      },
+      "artifact": {
+        "observation": "docs/observations/2026-08-29-candidate024-target-matrix-plan-only.json",
+        "directory": "/home/edgegrasp/ros2_ws/test_results/candidate024_target_matrix_pan_plan_only_20260829T2000",
+        "result_sha256": "940b61feb47ac53f1a5674a0349b67f1535bad238e2e3d10987f9329acb2a2c1"
+      },
+      "observed": {
+        "case_count": 20,
+        "matched_expected_outcome_count": 20,
+        "reachable_plan_only_pass_count": 10,
+        "accepted_segment_count": 30,
+        "trajectory_publication_count": 0,
+        "execute_trajectory_goal_count": 0,
+        "fjt_goal_count": 0,
+        "execution_attempted": false
+      },
+      "claim_boundary": {
+        "normal_plan_response_and_trajectory_validation": true,
+        "trajectories_validated_and_discarded": true,
+        "cancel_timeout_or_late_result_health": false,
+        "whole_move_group_runtime_health": false,
+        "controller_execution": false,
+        "hardware_evidence": false
+      }
+    },
+    {
+      "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+      "status": "PASS",
+      "runtime": {
+        "in_process_dependency_injection": true,
+        "fake_move_group_action_server": true,
+        "real_move_group_process": false,
+        "os_process_signal_injection": false,
+        "physical_robot": false
+      },
+      "artifact": {
+        "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260829T2337P3",
+        "summary_sha256": "e0772aeafe8f32be2c80b2f64b9cd56556dd1f276b17f045ced8d6c42eee6a5d",
+        "junit_sha256": "b5abacb6f275d56336d050d75e7f31555df28fc1eda98963b51b0146df59ca60",
+        "pytest_log_sha256": "29c520c65a394b740a9dd8b7c8d57c95695c8ce60c5bbc7bb7478b55f0a30070"
+      },
+      "source": {
+        "runner": "scripts/run_injected_moveit_fail_closed.sh",
+        "runner_sha256": "8bc5df971dc023af78255b7564207beb0c866c1a694399afee026afb6a7f30ce",
+        "integration_test_sha256": "7e3cd290361dcaf156a37c5f6eeb06c5db1570f76ce70ed6cb4365e72ae77d3d",
+        "adapter_sha256": "48c6dac25294e3754dae60b9b73b4b3191b12f493c8f83d0907e8bbae682c7cf"
+      },
+      "observed": {
+        "pytest_tests": 2,
+        "pytest_failures": 0,
+        "pytest_errors": 0,
+        "pytest_skipped": 0,
+        "full_adapter_package_tests": 23,
+        "full_adapter_package_failures": 0,
+        "full_adapter_package_errors": 0,
+        "full_adapter_package_skipped": 0,
+        "full_adapter_package_pytest_xml_sha256": "4d3a5bee82ee9c27c006d3a70c5d87fc8ef9433fc3224f86b8be1ef7cfac46cf",
+        "explicit_plan_target_cancel_is_fail_closed": true,
+        "goal_response_timeout_reason": "move_group_timeout",
+        "goal_response_delay_s": 0.35,
+        "adapter_goal_response_timeout_s": 0.05,
+        "late_accepted_fake_move_group_goal_cancelled": true,
+        "active_request_identity_race_regression_checked": true,
+        "trajectory_publication_count": 0,
+        "fake_gate_goal_count": 0
+      },
+      "claim_boundary": {
+        "injected_runtime_only": true,
+        "accepted_goal_result_timeout_verified": false,
+        "real_move_group_runtime_health": false,
+        "real_controller_motion_observation": false,
+        "hardware_evidence": false
+      }
+    },
+    {
+      "evidence_class": "REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT",
+      "status": "UPSTREAM_PROCESS_EXITED",
+      "runtime": {
+        "real_move_group_process": true,
+        "historical_existing_artifact_only": true,
+        "evidence_frozen_from_wsl": true,
+        "fault_injection_reproduced_during_freeze": false,
+        "future_os_process_interruption_reproduction_enabled": false
+      },
+      "artifact": {
+        "observation": "docs/observations/2026-08-29-real-moveit-fail-closed-runtime.json",
+        "directories": [
+          "/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_explicit_cancel_20260829T2250P2",
+          "/home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_goal_response_timeout_20260829T2302P2"
+        ],
+        "capture_probe_sha256": "39f8615370cf73199699a8ddb0905ab55f8dd28d3d74ae41094ba50dbbde87cd",
+        "capture_runner_sha256": "f67d55539780c70b2c5ab51e2d1b212bc4691b9e9ab8693e4207250a845d77e2",
+        "capture_adapter_sha256": "1b238393b12f86d076c82303970f9d35824931bbf38d3a8af054cf07b0ab2658"
+      },
+      "observed": {
+        "scenario_count": 2,
+        "edgegrasp_fail_closed_count": 2,
+        "overall_pass_count": 0,
+        "move_group_survived_count": 0,
+        "move_group_sigsegv_count": 2,
+        "move_group_exit_codes": [
+          -11,
+          -11
+        ],
+        "crash_site": "MoveIt 2.12.4 libmoveit_plan_execution.so.2.12.4 plan_execution::PlanExecution::stop(), address 0x5c",
+        "actual_motion_goal_counts": {
+          "real_execute_trajectory": 0,
+          "arm_fjt": 0,
+          "gripper_fjt": 0
+        },
+        "maximum_joint_delta_rad": [
+          6.2449966191115345e-19,
+          9.714448921889736e-19
+        ],
+        "late_move_group_terminal_status": [
+          4,
+          4
+        ],
+        "late_terminal_after_wrapper_delta_ns": [
+          14464841,
+          25449221
+        ],
+        "cleanup_success_count": 2,
+        "remaining_process_count": 0,
+        "clock_state_after_cleanup": "unknown_topic"
+      },
+      "claim_boundary": {
+        "edgegrasp_fail_closed": true,
+        "overall_pass": false,
+        "move_group_survived": false,
+        "accepted_goal_result_timeout_verified": false,
+        "strong_move_group_request_id_correlation": false,
+        "healthy_move_group_runtime": false,
+        "hardware_evidence": false
+      }
+    }
+  ],
+  "fixed_safety_interpretation": {
+    "target_freshness_timeout_ms": 200.0,
+    "target_freshness_timeout_changed": false,
+    "stale_target_212_ms_is_expected_fail_closed": true,
+    "planning_scene_unavailable_after_move_group_crash_is_expected_fail_closed": true,
+    "neither_event_is_a_false_positive": true
+  },
+  "workspace_claim_boundary": {
+    "windows_meta_repository_has_first_commit": false,
+    "windows_meta_repository_tracked_file_count": 0,
+    "windows_meta_repository_clean_claim_allowed": false,
+    "wsl_edgegrasp_sim_has_git_metadata": false,
+    "wsl_edgegrasp_sim_clean_claim_allowed": false,
+    "pinned_upstream_clean_claim_requires_separate_verification": true
+  },
+  "hardware_evidence": false
+}

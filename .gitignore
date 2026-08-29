@@ -12,7 +12,14 @@ dist/
 ros_ws/build/
 ros_ws/install/
 ros_ws/log/
+test_results/
 evidence/generated/
+
+# Historical real-process OS-signal fault-injection harnesses are retained only
+# in the incubator evidence workspace. The standalone repository uses the
+# in-process fake MoveGroup runner instead.
+scripts/probe_real_moveit_fail_closed.py
+scripts/run_real_moveit_fail_closed.sh
 
 # Local credentials and machine-only configuration
 .env
