@@ -1,0 +1,238 @@
+{
+  "observation_id": "candidate008_q0p50_runtime_20260827",
+  "recorded_timezone": "Asia/Shanghai",
+  "evidence_status": "SEQUENCE_COMPLETE_STRONGER_TRANSIENT_CONTACT_PHYSICS_GRASP_FAILED",
+  "environment": {
+    "ros_distro": "jazzy",
+    "gazebo": "Harmonic / Gazebo Sim 8.11",
+    "physics_engine": "gz-physics-dartsim-plugin",
+    "robot_model": "EdgeGrasp Gazebo collision proxy plus anchored base",
+    "moveit_model": "pinned SO-101 MoveIt model plus two EdgeGrasp distal-pad links",
+    "upstream_sha": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "observer_contract": {
+    "read_only": true,
+    "motion_authority": "none",
+    "source_clock_domain": "ros_sim",
+    "source_clock_epoch": 0,
+    "success_gate_unchanged": "correlated sequence completion plus contact plus at least 0.02 m cube lift plus clearance plus 0.5 s retention",
+    "contact_quality_and_timing_fields_are_diagnostic_only": true,
+    "force_semantics": "Gazebo/DART contact-solver wrench magnitudes and absolute normal projections; not calibrated hardware force, sustained grip, or force closure"
+  },
+  "invocation": {
+    "command": "bash scripts/run_candidate005_contact_quality.sh 52 /home/edgegrasp/ros2_ws/test_results/candidate008_q0p50_20260827_2105 candidate008-q0p50-001 so101_grasp_geometry_candidate008_q0p50.json 0.50",
+    "ros_domain_id": 52,
+    "task_id": "candidate008-q0p50-001",
+    "started_at": "2026-08-27T20:56:50.285840973+08:00",
+    "capture_finished_at": "2026-08-27T20:58:57.710491697+08:00",
+    "cleanup_finished_at": "2026-08-27T20:59:08.856480762+08:00",
+    "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate008_q0p50_20260827_2105",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T20:56:54.847215789/server_console.log"
+  },
+  "candidate": {
+    "source_profile": "ros_ws/src/edgegrasp_ros/config/so101_grasp_geometry_candidate008_q0p50.json",
+    "profile_generated_from_fixed_sha_kinematics": true,
+    "gripper_closed_position_rad": 0.5,
+    "prior_gripper_closed_position_rad": 0.6,
+    "predicted_inner_gap_m": 0.03770846055627684,
+    "prior_predicted_inner_gap_m": 0.042170540912,
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "velocity_scaling": 0.1,
+    "acceleration_scaling": 0.1,
+    "single_changed_variable": "generated moving-pad geometry and commanded gripper closure at 0.50 rad"
+  },
+  "preflight": {
+    "status": "PASS",
+    "grasp_geometry_filename": "so101_grasp_geometry_candidate008_q0p50.json",
+    "gripper_contact_position_rad": 0.5,
+    "target_id": "target_cube",
+    "target_position_m": [
+      0.24695465627174787,
+      0.1218646928533295,
+      0.205
+    ],
+    "target_matches_scene_contract": true,
+    "motion_allowed_true_observed": true,
+    "interface_ready_true_observed": true,
+    "typed_gripper_preparation_succeeded": true,
+    "direct_fjt_bypass": false,
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "edgegrasp_actions_present": [
+      "/edgegrasp/execute_trajectory",
+      "/edgegrasp/plan_target",
+      "/edgegrasp/grasp_sequence",
+      "/edgegrasp/grasp_physics_evidence"
+    ],
+    "clock_publisher_count": 1,
+    "clock_publisher_node": "ros_gz_bridge"
+  },
+  "sequence_result": {
+    "client_exit_code": 11,
+    "exit_code_contract": "sequence complete but independent physics evidence did not pass",
+    "wrapper_status": 4,
+    "sequence_completed": true,
+    "terminal_phase": "COMPLETE",
+    "reason": "correlated_sequence_completed;physics_unverified",
+    "source_timestamp_ns": 33590000000,
+    "last_terminal_command_id": "candidate008-q0p50-001|lift|3",
+    "last_trajectory_digest": "4e4f0e5f8594876c2cb554234876de4fa133518a81f9eddc577f4942e9bed888"
+  },
+  "physics_result": {
+    "wrapper_status": 6,
+    "phase": "FAULT",
+    "reason": "observation_wall_timeout",
+    "physics_grasp_verified": false,
+    "gripper_contact_observed": true,
+    "gripper_contact_count": 1161,
+    "gripper_contact_counts_by_token": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": 966,
+      "edgegrasp_grasp_proxy_moving_finger_pad": 195
+    },
+    "all_gripper_tokens_observed": true,
+    "simultaneous_gripper_contact_sample_count": 98,
+    "per_pad_contact_quality": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": {
+        "max_penetration_depth_m": 0.000033170425414318867,
+        "max_force_magnitude_n": 66.9712758814034,
+        "max_abs_normal_force_n": 56.364345152984555
+      },
+      "edgegrasp_grasp_proxy_moving_finger_pad": {
+        "max_penetration_depth_m": 0.00007613523491330441,
+        "max_force_magnitude_n": 32.088169611481554,
+        "max_abs_normal_force_n": 31.707804179635826
+      }
+    },
+    "same_sample_weak_side_maxima": {
+      "max_min_penetration_depth_m": 0.0000030572781667329953,
+      "max_min_force_magnitude_n": 32.088169611481554,
+      "max_min_abs_normal_force_n": 31.707804179635826
+    },
+    "contact_timing_by_token": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": {
+        "first_source_timestamp_ns": 29218000000,
+        "last_source_timestamp_ns": 31802000000,
+        "observed_span_ns": 2584000000,
+        "ended_before_sequence_completion_ns": 1788000000
+      },
+      "edgegrasp_grasp_proxy_moving_finger_pad": {
+        "first_source_timestamp_ns": 31550000000,
+        "last_source_timestamp_ns": 32068000000,
+        "observed_span_ns": 518000000,
+        "ended_before_sequence_completion_ns": 1522000000
+      }
+    },
+    "simultaneous_contact_timing": {
+      "first_source_timestamp_ns": 31550000000,
+      "last_source_timestamp_ns": 31802000000,
+      "observed_span_ns": 252000000,
+      "ended_before_sequence_completion_ns": 1788000000,
+      "sample_count_at_sequence_completion": 98,
+      "last_source_timestamp_ns_at_sequence_completion": 31802000000
+    },
+    "gripper_effort": {
+      "joint_name": "gripper",
+      "sample_count": 2125,
+      "peak_abs": 1.4389524863446082,
+      "latest": -0.0001551375481683219,
+      "at_sequence_completion": -0.00015646887556150166,
+      "peak_abs_at_sequence_completion": 1.4389524863446082,
+      "units": "simulated joint effort as published by /joint_states"
+    },
+    "table_contact_count": 8175,
+    "pose_sample_count": 2125,
+    "baseline_z_m": 0.20499999990200096,
+    "peak_z_m": 0.20766662566799868,
+    "peak_lift_m": 0.00266662576599772,
+    "required_lift_m": 0.02,
+    "final_z_m": 0.20499997869969466,
+    "lift_observed": false,
+    "retention_observed": false,
+    "evidence_digest": "4c37ed1c981512ecce82164630b59fff61fa04d119d8518cffed799bf12a83db"
+  },
+  "runtime_health": {
+    "robot_pose_xyz_rpy": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_cube_pose_xyz": [
+      0.24695465627174787,
+      0.1218646928533295,
+      0.205
+    ],
+    "final_cube_pose_xyz_rpy_cli_precision": [
+      0.25546,
+      0.136085,
+      0.205,
+      0.0,
+      0.0,
+      0.43814
+    ],
+    "approximate_final_xy_drift_m": 0.016569792010805887,
+    "approximation_reason": "final Gazebo CLI pose is printed to six decimal places",
+    "controllers_still_active": true,
+    "dart_mesh_construction_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "contact_topics_present": [
+      "/edgegrasp/table_contacts",
+      "/edgegrasp/target_cube_contacts"
+    ],
+    "cleanup_exact_domain_processes_remaining": 0,
+    "clock_topic_after_cleanup": "unknown"
+  },
+  "comparison_to_candidate007": {
+    "candidate007_observation": "docs/observations/2026-08-27-candidate007-contact-timing-runtime.json",
+    "simultaneous_sample_count": {
+      "candidate007": 39,
+      "candidate008": 98,
+      "candidate008_over_candidate007_ratio": 2.5128205128205128
+    },
+    "simultaneous_span_ns": {
+      "candidate007": 99000000,
+      "candidate008": 252000000,
+      "candidate008_over_candidate007_ratio": 2.5454545454545454
+    },
+    "peak_abs_gripper_effort": {
+      "candidate007": 0.610797739467835,
+      "candidate008": 1.4389524863446082
+    },
+    "peak_lift_m": {
+      "candidate007": 0.000359390144894218,
+      "candidate008": 0.00266662576599772,
+      "candidate008_over_candidate007_ratio": 7.419863354301515
+    },
+    "physics_grasp_verified": {
+      "candidate007": false,
+      "candidate008": false
+    }
+  },
+  "hashes": {
+    "gazebo_server_log_sha256": "fe12f6c81b8e90358eeefaeedf9a03528107d1e642a2090ef87a1607dbec131b",
+    "trial_log_sha256": "dd95900d9c58014d2488dd33524b5223f33e36cd8bd0d1c30ca87866d4db5498",
+    "cleanup_log_sha256": "3b78088211f0ae07bc7323358cbfbe310ec939b6c1f8557b06c77688addde49b",
+    "joint_states_final_sha256": "cbe1161a53d6cf900b4a2bf8ac0bd1383c4ea9c5fc5d5adb725b1bef3951eb92"
+  },
+  "interpretation": {
+    "observed": "Compared with candidate007, the tighter generated 0.50 rad profile produced more and longer simultaneous pad-contact samples, higher simulated moving-pad normal-force and gripper-effort diagnostics, and a 2.667 mm transient peak lift.",
+    "failed_gate": "Bilateral contact ended 1.788 simulated seconds before sequence completion, the cube returned to table height, retention was false, and peak lift remained below the 20 mm threshold.",
+    "inference": "The tighter closure improved engagement but likely increased lateral push or slip; the 16.57 mm final XY displacement and 0.438 rad yaw make another blind closure-angle reduction a weak next experiment.",
+    "next_controlled_variable": "First improve pose/contact symmetry or run a bounded friction/contact-parameter study while preserving the unchanged success gate."
+  },
+  "claim_boundary": {
+    "sequence_completed": true,
+    "typed_gate_and_both_fjt_controllers_observed": true,
+    "stronger_transient_contact_than_candidate007_observed": true,
+    "physics_grasp_verified": false,
+    "force_closure_verified": false,
+    "simulator_determinism_verified": false,
+    "real_hardware_verified": false
+  }
+}

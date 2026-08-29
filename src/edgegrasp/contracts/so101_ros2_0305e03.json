@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "contract_name": "adoodevv_so101_ros2",
+  "repository": "https://github.com/adoodevv/so101_ros2",
+  "commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+  "license": "BSD-3-Clause",
+  "verification": {
+    "observed_at": "2026-08-26T17:40:00+08:00",
+    "local_checkout_relative_to_repository_root": "workspaces/forks/so101_ros2",
+    "local_checkout_static_verified": true,
+    "static_path_and_text_verified": true,
+    "ros_build_verified": true,
+    "runtime_verified": true,
+    "runtime_full_stack_verified": false,
+    "verified_runtime_scopes": [
+      "Gazebo Harmonic empty.world controller activation and six-joint /joint_states",
+      "arm and gripper FollowJointTrajectory action discovery and conservative gated execution",
+      "MoveIt move_group startup and GetMotionPlan joint-space planning",
+      "EdgeGrasp PlanTarget through IK, MoveGroup plan_only, trajectory gate, and arm controller",
+      "simulated camera topic publication in pick_and_place.world"
+    ],
+    "status": "PARTIAL_RUNTIME_VERIFIED_COLLISION_GRASP_UNVERIFIED"
+  },
+  "robot": {
+    "robot_name": "so101",
+    "prefix": "",
+    "joint_states_topic": "/joint_states",
+    "camera_topics": {
+      "color_image": "/camera_head/color/image_raw",
+      "depth_image": "/camera_head/depth/image_rect_raw",
+      "camera_info": "/camera_head/depth/camera_info",
+      "points": "/camera_head/depth/color/points"
+    }
+  },
+  "controllers": {
+    "manager_update_rate_hz": 100,
+    "controller_load_delay_s": 10.0,
+    "load_order": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "joint_state_broadcaster": {
+      "type": "joint_state_broadcaster/JointStateBroadcaster"
+    },
+    "arm_controller": {
+      "type": "joint_trajectory_controller/JointTrajectoryController",
+      "joints": [
+        "shoulder_pan",
+        "shoulder_lift",
+        "elbow_flex",
+        "wrist_flex",
+        "wrist_roll"
+      ],
+      "command_interfaces": ["position"],
+      "controller_state_interfaces": ["position"],
+      "action": "/arm_controller/follow_joint_trajectory",
+      "action_type": "control_msgs/action/FollowJointTrajectory",
+      "probable_direct_topic_diagnostic_only": "/arm_controller/joint_trajectory"
+    },
+    "gripper_controller": {
+      "type": "joint_trajectory_controller/JointTrajectoryController",
+      "joints": ["gripper"],
+      "command_interfaces": ["position"],
+      "controller_state_interfaces": ["position"],
+      "hardware_state_interfaces_from_xacro": ["position", "velocity", "effort"],
+      "action": "/gripper_controller/follow_joint_trajectory",
+      "action_type": "control_msgs/action/FollowJointTrajectory",
+      "probable_direct_topic_diagnostic_only": "/gripper_controller/joint_trajectory"
+    }
+  },
+  "moveit": {
+    "groups": {
+      "arm": [
+        "shoulder_pan",
+        "shoulder_lift",
+        "elbow_flex",
+        "wrist_flex",
+        "wrist_roll"
+      ],
+      "gripper": ["gripper"],
+      "arm_with_gripper": ["arm", "gripper"]
+    },
+    "virtual_joint": {
+      "type": "fixed",
+      "parent_frame": "world",
+      "child_link": "base_link"
+    },
+    "end_effector": {
+      "name": "gripper",
+      "parent_link": "gripper_frame_link",
+      "group": "gripper"
+    },
+    "planning_pipelines": [
+      "ompl",
+      "pilz_industrial_motion_planner",
+      "stomp"
+    ],
+    "planning_pipeline_labels": ["OMPL", "Pilz", "STOMP"],
+    "static_configuration_present": true,
+    "runtime_verified": true,
+    "planning_runtime_verified": true,
+    "execution_via_edgegrasp_gate_verified": true,
+    "collision_and_grasp_runtime_verified": false
+  },
+  "integration_profile": {
+    "robot_name": "so101",
+    "prefix": "",
+    "use_gazebo": true,
+    "use_camera": true,
+    "use_sim_time": true,
+    "use_rviz": true
+  },
+  "edgegrasp_admission_profile": {
+    "profile_kind": "conservative_project_gate_not_upstream_limits",
+    "max_trajectory_duration_s": 10.0,
+      "max_segment_velocity_rad_s": 1.0,
+      "max_commanded_acceleration_rad_s2": 2.5,
+      "max_gripper_feedforward_effort_nm": 0.5,
+    "joint_state_timeout_ms": 250.0,
+    "interface_readiness_timeout_ms": 500.0,
+    "joint_position_bounds_rad": {
+      "shoulder_pan": [-1.8, 1.8],
+      "shoulder_lift": [-1.6, 1.6],
+      "elbow_flex": [-1.55, 1.55],
+      "wrist_flex": [-1.5, 1.5],
+      "wrist_roll": [-2.5, 2.5],
+      "gripper": [0.0, 1.5]
+    }
+  },
+  "source_paths": [
+    "so101_description/urdf/control/so101_ros2_control.urdf.xacro",
+    "so101_description/launch/robot_state_publisher.launch.py",
+    "so101_moveit_config/config/so101/so101.srdf",
+    "so101_moveit_config/config/so101/moveit_controllers.yaml",
+    "so101_moveit_config/config/so101/ros2_controllers.yaml",
+    "so101_moveit_config/config/so101/joint_limits.yaml",
+    "so101_moveit_config/config/so101/kinematics.yaml",
+    "so101_moveit_config/config/so101/initial_positions.yaml",
+    "so101_moveit_config/launch/move_group.launch.py",
+    "so101_moveit_config/launch/load_ros2_controllers.launch.py",
+    "so101_bringup/launch/so101_gazebo_moveit.launch.py"
+  ],
+  "known_limitations": [
+    "The recorded runtime evidence proves the listed controller, planning, camera-topic, and gated-execution scopes only; it does not prove collision fidelity, grasp success, or real hardware behavior.",
+    "The pinned MoveIt README describes a ForwardCommandController and Float64MultiArray gripper path that conflicts with the pinned controller and MoveIt YAML; EdgeGrasp follows the YAML FollowJointTrajectory contract.",
+    "Direct JointTrajectoryController topics are static inferences and diagnostic-only; EdgeGrasp motion commands must use its safety gate.",
+    "robot_name other than so101 and a non-empty prefix are not verified. use_camera=false starts move_group but produces missing torso_link SRDF warnings.",
+    "The upstream robot_state_publisher launch expands templates into hard-coded workspace/install paths and must only be run in a disposable, inspected workspace."
+  ]
+}

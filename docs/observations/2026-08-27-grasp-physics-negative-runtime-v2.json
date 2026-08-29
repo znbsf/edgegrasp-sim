@@ -1,0 +1,61 @@
+{
+  "observation_id": "grasp-physics-negative-runtime-v2-2026-08-27",
+  "started_at": "2026-08-27T06:38:11.795760+08:00",
+  "finished_at": "2026-08-27T06:38:15.314223+08:00",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_workspace": "/home/edgegrasp/ros2_ws"
+  },
+  "launch": {
+    "command": "ros2 launch edgegrasp_ros edgegrasp_proxy_gazebo.launch.py use_camera:=false launch_edgegrasp_nodes:=false launch_physics_observer:=true",
+    "ros_log_directory": "/home/edgegrasp/.ros/log/2026-08-27-06-37-55-554703-DESKTOP-MGV04IT-46465",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T06:37:56.413392000/server_console.log"
+  },
+  "scene_digest": "54fabe93f95b57379c2579775e9c0d45117460c6eed578071f7b68f9177cb55d",
+  "runtime_observations": {
+    "controllers_reported_active_by_launch": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "dart_collision_construction_diagnostic_count": 0,
+    "bounded_same_domain_future_sample_buffering_enabled": true,
+    "shutdown_observer_future_warning_count": 0,
+    "post_shutdown_matching_process_count": 0,
+    "post_shutdown_clock_topic": "unknown"
+  },
+  "negative_action_check": {
+    "command": "python3 /home/edgegrasp/ros2_ws/src/edgegrasp-sim/scripts/check_grasp_physics_observer.py",
+    "command_capability": "none_read_only_observer",
+    "exit_code": 0,
+    "goal_accepted": true,
+    "action_goal_status": 6,
+    "action_goal_status_name": "STATUS_ABORTED",
+    "terminal_phase": "FAULT",
+    "reason": "observation_sim_timeout",
+    "pose_sample_count": 75,
+    "sequence_completed": false,
+    "gripper_contact_observed": false,
+    "lift_observed": false,
+    "retention_observed": false,
+    "physics_grasp_verified": false,
+    "evidence_digest": "8be99a6c090967bcc0513015cadcb7623df455527e7b700f3ab2154a76056821"
+  },
+  "claim_boundary": {
+    "verified": [
+      "The live observer receives timestamped target-cube pose samples without misclassifying bounded same-domain bridge skew as future input.",
+      "The read-only action terminates fail-closed when correlated sequence, gripper contact, lift and retention evidence are absent.",
+      "The observer process exits without an unobserved Future or Destroyable warning in this run.",
+      "After shutdown no matching ROS or Gazebo process remained and /clock was unknown."
+    ],
+    "not_verified": [
+      "gripper-to-cube contact",
+      "cube lift",
+      "retention after lift",
+      "physics grasp success"
+    ]
+  }
+}

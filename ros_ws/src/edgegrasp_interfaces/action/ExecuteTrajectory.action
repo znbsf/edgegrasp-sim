@@ -1,0 +1,41 @@
+# Immutable, correlated command accepted only at the EdgeGrasp motion boundary.
+string task_id
+string command_id
+string target_id
+string stage
+uint64 sequence_no
+string controller
+trajectory_msgs/JointTrajectory trajectory
+int64 source_timestamp_ns
+string clock_domain
+uint64 clock_epoch
+---
+# A returned result is terminal for this gate command, not proof of a physical stop.
+# downstream_terminal_observed is true only when a correlated FJT terminal result
+# was observed before this immutable result was returned. A later terminal result
+# never upgrades a failed command; recovery still requires an explicit gate reset.
+string task_id
+string command_id
+string target_id
+string stage
+uint64 sequence_no
+string controller
+string trajectory_digest
+bool accepted
+bool terminal
+bool downstream_terminal_observed
+bool cancel_requested
+int8 action_goal_status
+int32 fjt_error_code
+string fjt_error_string
+bool success
+string reason
+int64 source_timestamp_ns
+int64 completed_timestamp_ns
+string clock_domain
+uint64 clock_epoch
+---
+string task_id
+string command_id
+string stage
+string state

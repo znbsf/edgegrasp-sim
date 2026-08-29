@@ -1,0 +1,90 @@
+{
+  "observation_id": "candidate011_q0p40_plan_only_20260827",
+  "observation_window": {
+    "started_at": "2026-08-27T22:04:56.558184643+08:00",
+    "finished_at": "2026-08-27T22:05:46.224703824+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "evidence_status": "RUNTIME_PLAN_ONLY_PASS_ZERO_EXECUTION",
+  "environment": {
+    "ros_domain_id": 63,
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "candidate": {
+    "profile": "so101_grasp_geometry_candidate011_q0p40.json",
+    "profile_sha256": "50f2fbc4758806c9c9eaaf64fcce25b6c189a82cc771db139803a3ebec5ba1e6",
+    "gripper_contact_position_rad": 0.4,
+    "predicted_inner_gap_m": 0.03314530015699046,
+    "target_center_x_offset_m": 0.0,
+    "arm_stage_poses_unchanged": true
+  },
+  "plan_only": {
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "attempts_requested": 10,
+    "attempts_completed": 10,
+    "all_segments_accepted": true,
+    "segments": {
+      "home_to_approach": {
+        "accepted": "10/10",
+        "source_point_count": 83,
+        "gate_ready_point_count": 82,
+        "unique_trajectory_digest_count": 1,
+        "planning_time_p50_s": 0.0012318925,
+        "planning_time_p95_s": 0.002892185,
+        "planning_time_max_s": 0.003507456
+      },
+      "approach_to_descend": {
+        "accepted": "10/10",
+        "source_point_count": 32,
+        "gate_ready_point_count": 31,
+        "unique_trajectory_digest_count": 1,
+        "planning_time_p50_s": 0.0007932365,
+        "planning_time_p95_s": 0.001221792,
+        "planning_time_max_s": 0.001296522
+      },
+      "descend_to_lift_closed": {
+        "accepted": "10/10",
+        "source_point_count": 22,
+        "gate_ready_point_count": 21,
+        "unique_trajectory_digest_count": 1,
+        "planning_time_p50_s": 0.000667812,
+        "planning_time_p95_s": 0.00110341,
+        "planning_time_max_s": 0.001316264
+      }
+    }
+  },
+  "motion_boundary": {
+    "edgegrasp_motion_nodes_launched": false,
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "execution_attempted": false
+  },
+  "runtime_health": {
+    "controllers_active_count": 3,
+    "dart_mesh_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0
+  },
+  "artifacts": {
+    "directory": "/home/edgegrasp/ros2_ws/test_results/candidate011_q0p40_plan_only_20260827_2310",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T22:04:59.619274620/server_console.log",
+    "plan_only_result_sha256": "f7aa3c5fe20cf83040990cf97d1f3cb8f9085e283330c28915bfd3fd8b6ea991",
+    "move_group_log_sha256": "aa563bde7b8067739d558d1dd8396582f4061711fbdc4e14fcdaa8a610b888ec",
+    "planning_scene_status_sha256": "45d624901f880fd5f46207863648330b6ea043575ccb7212de5d0debf162ae72",
+    "cleanup_log_sha256": "2f3363d6c4196718296165a72707216b3123c74c4f1ee813c454ad88be3ae80c"
+  },
+  "cleanup": {
+    "matching_domain_process_count_after_cleanup": 0,
+    "clock_after_cleanup": "Unknown topic /clock"
+  },
+  "claim_boundary": {
+    "moveit_plan_only_runtime_verified": true,
+    "execution_attempted": false,
+    "contact_verified": false,
+    "physics_grasp_verified": false
+  }
+}

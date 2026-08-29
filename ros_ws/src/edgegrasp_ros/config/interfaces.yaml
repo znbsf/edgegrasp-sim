@@ -1,0 +1,18 @@
+/**:
+  ros__parameters:
+    target_topic: /edgegrasp/target_3d
+    motion_allowed_topic: /edgegrasp/motion_allowed
+    arm_trajectory_request_topic: /edgegrasp/arm_joint_trajectory_request
+    gripper_trajectory_request_topic: /edgegrasp/gripper_joint_trajectory_request
+    trajectory_gate_status_topic: /edgegrasp/trajectory_gate_status
+    joint_states_topic: /joint_states
+    arm_downstream_action: /arm_controller/follow_joint_trajectory
+    gripper_downstream_action: /gripper_controller/follow_joint_trajectory
+    camera_color_topic: /camera_head/color/image_raw
+    camera_depth_topic: /camera_head/depth/image_rect_raw
+    camera_info_topic: /camera_head/depth/camera_info
+    require_camera: false
+    stale_after_ms: 200.0
+    watchdog_timeout_ms: 200.0
+    future_skew_tolerance_ms: 500.0
+    permission_timeout_ms: 100.0

@@ -1,0 +1,42 @@
+# Immutable request snapshot.  The adapter rejects plan_only=false and groups
+# other than arm; gripper sequencing remains a separate milestone.
+string task_id
+string stage
+uint64 sequence_no
+geometry_msgs/PoseStamped target_pose
+string target_id
+int64 source_timestamp_ns
+string clock_domain
+uint64 clock_epoch
+string planning_group
+string pipeline_id
+string planner_id
+float64 planning_timeout_s
+float64 velocity_scaling
+float64 acceleration_scaling
+bool plan_only
+---
+string task_id
+string command_id
+string target_id
+string stage
+uint64 sequence_no
+bool accepted
+bool success
+string reason
+int32 moveit_error_code
+builtin_interfaces/Time requested_at
+int64 source_timestamp_ns
+string clock_domain
+uint64 clock_epoch
+bool trajectory_dispatched
+string trajectory_digest
+bool gate_accepted
+bool gate_terminal
+bool downstream_terminal_observed
+bool cancel_requested
+int8 action_goal_status
+int32 fjt_error_code
+string fjt_error_string
+---
+string stage

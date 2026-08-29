@@ -1,0 +1,156 @@
+{
+  "observation_id": "candidate005-routed-plan-only-2026-08-27",
+  "observation_window": {
+    "started_at": "2026-08-27T17:37:37.4906645+08:00",
+    "finished_at": "2026-08-27T17:56:48.4001277+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 232,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "logs": {
+    "gazebo_launch": "/home/edgegrasp/.ros/log/2026-08-27-17-37-37-4906645-DESKTOP-MGV04IT-451",
+    "move_group_launch": "/home/edgegrasp/.ros/log/2026-08-27-17-37-53-2837720-DESKTOP-MGV04IT-740",
+    "planning_scene_launch": "/home/edgegrasp/.ros/log/2026-08-27-17-38-16-4414477-DESKTOP-MGV04IT-804",
+    "gazebo_server": "/home/edgegrasp/.gz/sim/log/2026-08-27T17:37:38.39445710/server_console.log",
+    "gazebo_server_sha256": "e9437b8f0d6ba691172156c7642eb3dc75c3235af1f26d9a6ccc60c519839826",
+    "captured_gazebo_stdout": "/home/edgegrasp/ros2_ws/test_results/candidate005_lin_plan_20260827_1745/gazebo.log",
+    "captured_gazebo_stdout_sha256": "379f5eac3b7062f5551a3606a1dbfd4b00fe41ef25620f8caa9d8e473b284763",
+    "captured_move_group_stdout": "/home/edgegrasp/ros2_ws/test_results/candidate005_lin_plan_20260827_1745/move_group.log",
+    "captured_move_group_stdout_sha256": "2e7f09ff102d92ca13a67d03cd964b8dff14abf6f4456679e6b512c89d0ad7c3",
+    "captured_scene_stdout": "/home/edgegrasp/ros2_ws/test_results/candidate005_lin_plan_20260827_1745/scene.log",
+    "captured_scene_stdout_sha256": "6b4726cf3cae9c61d115c184d50fad7b9399afb4f5c99a7563b92324a457a835"
+  },
+  "runtime_preconditions": {
+    "controllers_active": ["joint_state_broadcaster", "arm_controller", "gripper_controller"],
+    "action_endpoints": {
+      "/arm_controller/follow_joint_trajectory": "control_msgs/action/FollowJointTrajectory",
+      "/gripper_controller/follow_joint_trajectory": "control_msgs/action/FollowJointTrajectory"
+    },
+    "edgegrasp_motion_nodes_launched": false,
+    "planning_scene_target_cube_retained": true,
+    "selective_pad_contact_policy_confirmed": true,
+    "forbidden_parent_links_remained_forbidden": true
+  },
+  "candidate": {
+    "approach_via": {
+      "position_m": [0.18606933614192925, 0.11976423272744036, 0.38721872836424076],
+      "orientation_xyzw": [0.19946281649811778, 0.38019026690132723, 0.8150060012713882, 0.38914671228183106],
+      "joint_positions_rad": [-0.6421585994574873, -0.9246271118103603, 0.32986220616684103, -0.0885068622681707, -1.559811739955395],
+      "moveit_state_valid": true,
+      "contacts": []
+    },
+    "grasp_orientation_xyzw": [0.3450298741758752, 0.6172118344266647, 0.6332767577280262, 0.3145862131297726],
+    "descend_joint_positions_rad": [-0.6000000442835862, -0.8693352717737928, 0.8640595639082524, 0.005275710769147334, -1.5708000280690093]
+  },
+  "direct_path_baselines": {
+    "pilz_lin": {
+      "attempts": 1,
+      "moveit_error_code": 99999,
+      "moveit_error_name": "INVALID_MOTION_PLAN",
+      "plan_accepted": false,
+      "source_point_count": 24,
+      "gate_ready_point_count": 23,
+      "invalid_state_indices": [12, 13, 14, 15, 16, 17],
+      "collision_pair": ["edgegrasp_target_cube", "gripper_link"],
+      "execution_attempted": false
+    },
+    "ompl_rrt_connect_repetitions": [
+      {"run": 1, "moveit_error_code": 99999, "accepted": false, "source_points": 70, "planning_time_s": 0.037254319},
+      {"run": 2, "moveit_error_code": 1, "accepted": true, "source_points": 59, "planning_time_s": 0.022912772},
+      {"run": 3, "moveit_error_code": 1, "accepted": true, "source_points": 65, "planning_time_s": 0.016753176},
+      {"run": 4, "moveit_error_code": 99999, "accepted": false, "source_points": 87, "planning_time_s": 0.019927883},
+      {"run": 5, "moveit_error_code": 1, "accepted": true, "source_points": 53, "planning_time_s": 0.02348232},
+      {"run": 6, "moveit_error_code": 1, "accepted": true, "source_points": 58, "planning_time_s": 0.018843298},
+      {"run": 7, "moveit_error_code": 1, "accepted": true, "source_points": 78, "planning_time_s": 0.020240368},
+      {"run": 8, "moveit_error_code": 1, "accepted": true, "source_points": 58, "planning_time_s": 0.020997285},
+      {"run": 9, "moveit_error_code": 99999, "accepted": false, "source_points": 93, "planning_time_s": 0.023895931},
+      {"run": 10, "moveit_error_code": 1, "accepted": false, "source_points": 159, "planning_time_s": 0.034253315}
+    ],
+    "ompl_summary": {
+      "attempts": 10,
+      "moveit_success_responses": 7,
+      "edgegrasp_accepted": 6,
+      "edgegrasp_rejected": 4,
+      "deterministic": false,
+      "run_10_validator_reason_captured": false
+    }
+  },
+  "routed_pose_plan_only": {
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "planning_timeout_s": 2.0,
+    "velocity_scaling": 0.1,
+    "acceleration_scaling": 0.1,
+    "segments": [
+      {
+        "name": "home_to_approach_via",
+        "attempts": 10,
+        "accepted": 10,
+        "source_point_count_each": 83,
+        "gate_ready_point_count_each": 82,
+        "planning_times_s": [0.000911413, 0.0008904, 0.000978252, 0.00177433, 0.000784065, 0.000620864, 0.001233474, 0.001077947, 0.000944537, 0.001133601],
+        "planning_time_p50_s": 0.0009613945,
+        "planning_time_p95_s": 0.0015309448
+      },
+      {
+        "name": "approach_via_to_descend",
+        "attempts": 10,
+        "accepted": 10,
+        "source_point_count_each": 32,
+        "gate_ready_point_count_each": 31,
+        "planning_times_s": [0.000672429, 0.000608941, 0.001008713, 0.000580528, 0.000601704, 0.00049071, 0.000664707, 0.000542257, 0.000651698, 0.000716855],
+        "planning_time_p50_s": 0.0006303195,
+        "planning_time_p95_s": 0.0008773769
+      },
+      {
+        "name": "descend_to_lift_closed",
+        "attempts": 10,
+        "accepted": 10,
+        "source_point_count_each": 22,
+        "gate_ready_point_count_each": 21,
+        "planning_times_s": [0.00059517, 0.000555559, 0.000609692, 0.000707389, 0.000557142, 0.000581917, 0.000596364, 0.000427084, 0.000644989, 0.000500414],
+        "planning_time_p50_s": 0.0005885435,
+        "planning_time_p95_s": 0.000679309
+      }
+    ],
+    "all_segments_accepted": true,
+    "execution_attempted": false
+  },
+  "gazebo_health": {
+    "dart_collision_construction_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "physics_trial_run": false
+  },
+  "cleanup": {
+    "launch_parent_pids": [451, 740, 804],
+    "launch_parents_exited_after_sigint": true,
+    "gazebo_server_child_pid": 498,
+    "gazebo_server_child_exited_after_exact_sigint": true,
+    "matching_process_count_after_exact_cleanup": 0,
+    "clock_topic_after_cleanup": "absent",
+    "ros2_daemon_stopped": true
+  },
+  "claim_boundary": {
+    "verified": [
+      "A retained-cube, pad-only selective ACM was active for the plan-only graph.",
+      "The candidate005 approach via state was collision-valid in MoveIt.",
+      "All three pose-constrained Pilz PTP segments passed 10 of 10 read-only planning repetitions with stable point counts.",
+      "The direct Pilz LIN baseline remained fail-closed, and the OMPL baseline was not deterministic."
+    ],
+    "not_verified": [
+      "candidate005 typed GraspSequence execution",
+      "candidate005 FollowJointTrajectory terminal results",
+      "distal-pad contact",
+      "cube lift or retention",
+      "simulated grasp success",
+      "full-arm proxy collision fidelity"
+    ]
+  }
+}

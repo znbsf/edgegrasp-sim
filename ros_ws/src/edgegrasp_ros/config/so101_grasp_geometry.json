@@ -1,0 +1,91 @@
+{
+  "schema_version": 6,
+  "name": "edgegrasp_so101_target_cube_grasp_geometry",
+  "upstream": {
+    "repository": "https://github.com/adoodevv/so101_ros2.git",
+    "commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "target_id": "target_cube",
+  "end_effector_frame": "gripper_frame_link",
+  "cube_size_m": [0.05, 0.05, 0.05],
+  "target_center_in_frame_at_descend_m": [-0.025199464387, -0.0105, -0.016],
+  "target_center_tolerance_m": [0.003, 0.006, 0.004],
+  "approach_offset_end_effector_m": [0.0, 0.0, 0.03],
+  "approach_offset_planning_m": [0.0, 0.0, 0.08],
+  "lift_offset_planning_m": [0.0, 0.0, 0.04],
+  "gripper_open_position_rad": 1.5,
+  "gripper_contact_position_rad": 0.6,
+  "gripper_position_tolerance_rad": 0.02,
+  "stage_position_tolerance_m": 0.001,
+  "geometry_source": {
+    "fixed_pad": "edgegrasp_grasp_proxy_fixed_finger_pad",
+    "moving_pad": "edgegrasp_grasp_proxy_moving_finger_pad",
+    "predicted_inner_gap_at_contact_position_m": 0.042170540912,
+    "legacy_candidate003_moving_pad_obb_separation_m": 0.005526128822,
+    "candidate004_minimum_normalized_obb_overlap_m": 0.00219765713,
+    "derivation": "Candidate003 exposed an AABB false positive: at gripper=0.77 rad the moving distal pad is separated from the oriented cube by 5.53 mm despite overlapping projected AABBs. Candidate004 keeps the collision-validated arm poses but uses exact oriented-box SAT and a conservative 0.60 rad close target, whose minimum normalized moving-pad overlap is 2.20 mm. This is static geometry evidence only; selective target-to-pad collision policy and runtime contact remain required before execution."
+  },
+  "gazebo_proxy_preflight": {
+    "method": "conservative_aabb_in_gripper_frame",
+    "minimum_noncontact_clearance_m": 0.003,
+    "minimum_approach_clearance_m": 0.005,
+    "minimum_contact_overlap_m": 0.001,
+    "noncontact_body_aabbs": [
+      {
+        "name": "gripper_link_collision",
+        "minimum_m": [-0.0356, -0.024681879, -0.0947274],
+        "maximum_m": [0.0044, 0.025318121, -0.0547274]
+      },
+      {
+        "name": "gripper_link_collision_1",
+        "minimum_m": [-0.0329, -0.015000093, -0.119077106],
+        "maximum_m": [0.0171, 0.014999907, -0.079077106]
+      }
+    ],
+    "required_contact_pad_aabbs": [
+      {
+        "name": "edgegrasp_grasp_proxy_fixed_finger_pad",
+        "minimum_m": [-0.000500000382, -0.010131144113, -0.04378035611],
+        "maximum_m": [0.022926213688, 0.010131385797, 0.006797893344]
+      },
+      {
+        "name": "edgegrasp_grasp_proxy_moving_finger_pad",
+        "minimum_m": [-0.079458547582, -0.008489042012, -0.04125503772],
+        "maximum_m": [-0.042670541293, 0.008725284012, 0.000590211642]
+      }
+    ],
+    "required_contact_pad_obbs": [
+      {
+        "name": "edgegrasp_grasp_proxy_fixed_finger_pad",
+        "center_m": [0.011213106653, 0.000000120842, -0.018491231383],
+        "rotation_rows": [
+          [-1.0, 0.0, 0.0],
+          [0.0, -0.999999999996479, 0.000002653589793],
+          [0.0, 0.000002653589793, 0.999999999996479]
+        ],
+        "size_m": [0.023426214069, 0.02026252991, 0.050578249454]
+      },
+      {
+        "name": "edgegrasp_grasp_proxy_moving_finger_pad",
+        "center_m": [-0.061064544437422, 0.000118121, -0.020332413039104],
+        "rotation_rows": [
+          [-0.825335585306376, 0.56464251666606, 0.000000000000001],
+          [-0.000000000000001, 0.000000000000001, -1.0],
+          [-0.56464251666606, -0.825335585306376, 0.0]
+        ],
+        "size_m": [0.018586177681, 0.037985401064, 0.017214326024]
+      }
+    ],
+    "source": "Pinned URDF primitive boxes plus EdgeGrasp distal-pad proxies transformed into gripper_frame_link. The moving-pad envelope is evaluated at gripper=0.77 rad."
+  },
+  "claim_boundary": [
+    "This profile is a Gazebo proxy-grasp candidate, not a real-hardware calibration.",
+    "The 0.60 rad contact position passes exact oriented-box SAT but must still be confirmed by distal-pad contact plus FJT terminal evidence.",
+    "Approach and lift offsets intentionally use different frames and are not interchangeable.",
+    "The 30 mm tool +Z plus 80 mm planning-frame +Z far approach and 3 mm descend palm clearance are conservative proxy constraints derived after task039 contacted gripper_link_collision.",
+    "The unchanged far approach has candidate003 runtime evidence with the cube present; candidate004 descend must not execute until the cube remains collision-active and only the two dedicated pad links are allowed to contact it.",
+    "AABB remains a conservative approach/body-clearance screen; exact OBB SAT is now required for pad contact. Neither proves swept-path safety, dynamics, friction, or contact stability.",
+    "Stage commands may use an FK-confirmed pose within 1 mm of the ideal proxy geometry; this tolerance is not a real-hardware calibration.",
+    "A valid preflight does not prove IK, collision-free planning, contact, lift, or retention."
+  ]
+}

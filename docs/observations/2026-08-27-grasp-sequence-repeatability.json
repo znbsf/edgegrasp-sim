@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "observation_id": "grasp-sequence-repeatability-2026-08-27",
+  "observed_at": {
+    "artifact_window_start": "2026-08-27T05:20:07.547091973+08:00",
+    "artifact_window_end": "2026-08-27T05:22:58.702799320+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "guest": "Ubuntu 24.04 WSL2",
+    "ros_distribution": "Jazzy",
+    "gazebo_version": "8.11.0",
+    "physics_backend": "gz::physics::dartsim::Plugin",
+    "clock_domain": "ros_sim",
+    "clock_epoch": 0,
+    "clock_authority": "Gazebo only",
+    "target_frame": "base_link"
+  },
+  "source_contract": {
+    "upstream_repository": "https://github.com/adoodevv/so101_ros2",
+    "upstream_commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+    "edgegrasp_sequence_server": "installed console-script entry point",
+    "edgegrasp_sequence_client": "installed console-script entry point",
+    "reason_for_direct_entrypoints": "Backgrounding ros2 run tracks its CLI wrapper rather than reliably owning the child action-server process.",
+    "moveit_executes_directly": false,
+    "physics_grasp_verified": false
+  },
+  "reproduction_command": [
+    "source /opt/ros/jazzy/setup.bash",
+    "source /home/edgegrasp/ros2_ws/install/setup.bash",
+    "cd /home/edgegrasp/ros2_ws/src/edgegrasp-sim",
+    "bash scripts/run_grasp_sequence_repetitions.sh 10 /home/edgegrasp/ros2_ws/test_results/grasp_repeat_direct_final_20260827_0520 grasp-direct-accept '[0.391231968, -0.001571668, 0.256520737]' '[0.391231968, -0.001571668, 0.251520737]' '[0.391231968, -0.001571668, 0.261520737]' '[0.017007859, 0.706463960, 0.013976791, 0.707406570]' 0.2"
+  ],
+  "final_acceptance_batch": {
+    "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/grasp_repeat_direct_final_20260827_0520",
+    "summary_file": "summary.tsv",
+    "summary_sha256": "8658ff43a9974edec6f6c69934f37052e530ebff6fb1891a32c899268d38c4da",
+    "requested_runs": 10,
+    "completed_runs": 10,
+    "failed_runs": 0,
+    "client_exit_zero_runs": 10,
+    "sequence_completed_runs": 10,
+    "clean_sequence_shutdown_runs": 10,
+    "wrapper_status_succeeded_runs": 10,
+    "physics_grasp_verified_runs": 0,
+    "distinct_last_trajectory_digests": 10,
+    "result": "PROTOCOL_OUTCOME_REPEATABILITY_PASS",
+    "interpretation": "All ten immutable tasks completed the exact typed four-stage protocol and each owned GraspSequence process stopped cleanly. Distinct trajectory digests mean byte-identical MoveIt planning determinism was not demonstrated."
+  },
+  "historical_and_intermediate_batches": [
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/grasp_repeat_final_20260827_0450",
+      "artifact_window_start": "2026-08-27T04:39:59.324151723+08:00",
+      "artifact_window_end": "2026-08-27T04:43:39.806802475+08:00",
+      "summary_sha256": "491e2cd6a2311daf61726cccffad9ffd07d0f4b0ed8b59a9ea3fb1a15f26bc0e",
+      "completed_runs": 4,
+      "failed_runs": 6,
+      "failure_reasons": {
+        "target_source_timestamp_future": 3,
+        "trajectory_gate_cancel_rejected": 3
+      },
+      "status": "HISTORICAL_FAIL_CLOSED_PRE_FIX"
+    },
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/grasp_repeat_current_20260827_0510",
+      "artifact_window_start": "2026-08-27T05:09:23.618939323+08:00",
+      "artifact_window_end": "2026-08-27T05:13:20.667982233+08:00",
+      "summary_sha256": "f5420e46c68c53da5905f8171251f7693b51ca7dd0a8a6d874f76c4dc3396864",
+      "nominal_completed_before_stop": 6,
+      "status": "INVALID_MEASUREMENT",
+      "reason": "The old harness backgrounded ros2 run, observed the CLI wrapper PID instead of the child node, and could falsely record shutdown_clean while action servers lingered. This batch is not acceptance evidence."
+    },
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/grasp_repeat_direct_20260827_0514",
+      "artifact_window_start": "2026-08-27T05:15:13.073990971+08:00",
+      "artifact_window_end": "2026-08-27T05:15:36.230708317+08:00",
+      "summary_sha256": "b9dc68b78d52215c533df8e8953abb0bf0eea8a341fa0158fef1c6317cd3ca55",
+      "completed_runs": 1,
+      "failed_runs": 1,
+      "failure_reason": "task_source_stale",
+      "shutdown_failure": "rclpy RCLError: failed to initialize wait set after context shutdown",
+      "status": "INTERMEDIATE_FAILURE"
+    },
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/grasp_repeat_direct_smoke_20260827_0518",
+      "artifact_window_start": "2026-08-27T05:19:16.521067610+08:00",
+      "artifact_window_end": "2026-08-27T05:19:45.976273836+08:00",
+      "summary_sha256": "7a6490eb60000271f61cf5b75f3bbf3aa05a31e1d6d9924d107703c6b1c5c43a",
+      "completed_runs": 2,
+      "failed_runs": 0,
+      "status": "POST_FIX_SMOKE_PASS"
+    }
+  ],
+  "post_run_cleanup": {
+    "grasp_sequence_processes_remaining": 0,
+    "grasp_sequence_action_servers_remaining": 0,
+    "clock_publisher_count": 0,
+    "move_group_sigint_exit_code": -11,
+    "gazebo_sigint_exit_code": -2,
+    "clean_full_graph_shutdown_claim": false
+  },
+  "claim_boundary": {
+    "four_stage_typed_sequence_runtime_verified": true,
+    "ten_run_protocol_outcome_repeatability_verified": true,
+    "zero_false_success_conversions_observed": true,
+    "byte_identical_planner_output_verified": false,
+    "physics_replay_determinism_verified": false,
+    "cube_contact_observed_during_batch": false,
+    "cube_lift_retention_verified": false,
+    "physics_grasp_verified": false,
+    "real_hardware_verified": false
+  }
+}

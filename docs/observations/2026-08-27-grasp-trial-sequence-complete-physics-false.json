@@ -1,0 +1,113 @@
+{
+  "observation_id": "grasp-trial-sequence-complete-physics-false-2026-08-27-003",
+  "started_at": "2026-08-27T07:24:27.946+08:00",
+  "finished_at_observed": "2026-08-27T07:24:47+08:00",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_workspace": "/home/edgegrasp/ros2_ws"
+  },
+  "launch_logs": {
+    "gazebo_ros": "/home/edgegrasp/.ros/log/2026-08-27-07-20-22-241661-DESKTOP-MGV04IT-51862",
+    "gazebo_server": "/home/edgegrasp/.gz/sim/log/2026-08-27T07:20:23.230268806/server_console.log",
+    "planning_scene": "/home/edgegrasp/.ros/log/2026-08-27-07-20-56-117218-DESKTOP-MGV04IT-52153",
+    "grasp_sequence": "/home/edgegrasp/.ros/log/2026-08-27-07-20-56-139001-DESKTOP-MGV04IT-52160",
+    "move_group": "/home/edgegrasp/.ros/log/2026-08-27-07-20-56-592752-DESKTOP-MGV04IT-52157",
+    "moveit_adapter": "/home/edgegrasp/.ros/log/2026-08-27-07-20-56-652752-DESKTOP-MGV04IT-52156"
+  },
+  "preparation": {
+    "task_id": "grasp-trial-preparation-003",
+    "direct_fjt_bypass": false,
+    "gripper": {
+      "command_id": "grasp-trial-preparation-003|diagnostic|0",
+      "position_rad": 1.5,
+      "wrapper_status": 4,
+      "downstream_terminal_observed": true,
+      "fjt_error_code": 0,
+      "success": true
+    },
+    "arm": {
+      "command_id": "grasp-trial-preparation-003|diagnostic|1",
+      "joint_positions_rad": [-0.05, 0.8, -1.4, -1.4, 0.0],
+      "wrapper_status": 4,
+      "downstream_terminal_observed": true,
+      "fjt_error_code": 0,
+      "success": true
+    }
+  },
+  "collision_aware_ik_preflight": {
+    "service_only_no_motion": true,
+    "approach": {
+      "position_m": [0.218593782915783, 0.008984635830312946, 0.40347754536477237],
+      "error_code": 1,
+      "success": true,
+      "solution_rad": [-0.05, 0.8, -1.4, -1.4, 0.0]
+    },
+    "descend": {
+      "position_m": [0.2300581889824526, 0.009558463149665533, 0.38232132213689934],
+      "error_code": 1,
+      "success": true,
+      "solution_rad": [-0.049999994608665804, 0.950018561363941, -1.5000345375058057, -1.449984023856935, -5.019150729716841e-09]
+    }
+  },
+  "trial": {
+    "task_id": "grasp-physics-trial-20260827-003",
+    "target_id": "target_cube",
+    "target_source_timestamp_ns": 117650000000,
+    "orientation_xyzw": [0.0001408479320060159, -0.21296290635254542, 0.04819078118902108, 0.9758711130513749],
+    "planning_timeout_s": 2.0,
+    "velocity_scaling": 0.1,
+    "acceleration_scaling": 0.1,
+    "sequence_wrapper_status": 4,
+    "sequence_phase": "COMPLETE",
+    "sequence_completed": true,
+    "sequence_reason": "correlated_sequence_completed;physics_unverified",
+    "last_terminal_command_id": "grasp-physics-trial-20260827-003|lift|3",
+    "last_trajectory_digest": "e8620a300775789809b39844f00cdabf99b2697fb6b2e8c96f996d54c68d9225",
+    "physics_wrapper_status": 6,
+    "physics_phase": "FAULT",
+    "physics_reason": "clock_rollback",
+    "physics_grasp_verified": false,
+    "gripper_contact_observed": false,
+    "lift_observed": false,
+    "retention_observed": false,
+    "pose_sample_count": 132,
+    "gripper_contact_count": 0,
+    "table_contact_count": 545,
+    "baseline_z_m": 0.424999999902001,
+    "peak_z_m": 0.424999999902001,
+    "final_z_m": 0.424999999902001,
+    "scene_digest": "54fabe93f95b57379c2579775e9c0d45117460c6eed578071f7b68f9177cb55d",
+    "evidence_digest": "1390a420b5fb858faf7e8d5ca2b61679247125046976a823ff1787e9963883c1",
+    "process_exit_code": 11
+  },
+  "post_trial_observations": {
+    "so101_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "target_cube_pose_xyz_rpy": [0.2, 0.0, 0.425, 0.0, 0.0, 0.0],
+    "dart_mesh_construction_diagnostic_count": 0,
+    "dart_geometry_could_not_be_created_count": 0,
+    "clock_publisher_count": 1,
+    "clock_publisher": "/ros_gz_bridge"
+  },
+  "diagnosis": {
+    "observer_clock_fault": "This task003 snapshot preceded the final fix. Merely serializing the ROS clock read was insufficient: task004 still reproduced clock_rollback. The actual cross-callback race allowed one callback to retain an older sample while another advanced the strict core. The final implementation re-samples immediately under the same lock used for every core call; task005 and task006 then ran without clock_rollback.",
+    "physics_failure": "The cube pose never changed and no configured gripper-cube contact was observed. Sequence completion alone is not physical grasp evidence."
+  },
+  "claim_boundary": {
+    "verified": [
+      "Collision-aware IK succeeded for the chosen approach and descend poses.",
+      "Safe preparation completed through the typed EdgeGrasp gate with successful downstream FollowJointTrajectory results.",
+      "The correlated APPROACH, DESCEND, CLOSE_GRIPPER and LIFT sequence reached COMPLETE.",
+      "The robot remained world-anchored and the cube remained at its initial pose."
+    ],
+    "not_verified": [
+      "gripper-to-cube contact",
+      "cube lift",
+      "retention after lift",
+      "physics grasp success",
+      "observer clock-fault fix in this task003 snapshot; later task005/task006 provide that runtime evidence"
+    ]
+  }
+}

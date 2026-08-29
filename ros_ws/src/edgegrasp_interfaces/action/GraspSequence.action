@@ -1,0 +1,36 @@
+# Immutable task snapshot. Stage positions and both task-level arm orientations
+# are expressed in target.observation's frame. Approach may use a collision-safe
+# routing orientation; descend and lift share the exact grasp orientation.
+# Zero/invalid quaternions are rejected.
+string task_id
+edgegrasp_interfaces/TrackedTarget target
+geometry_msgs/Point approach_position
+geometry_msgs/Point descend_position
+geometry_msgs/Point lift_position
+geometry_msgs/Quaternion approach_orientation
+geometry_msgs/Quaternion grasp_orientation
+float64 gripper_closed_position_rad
+string pipeline_id
+string planner_id
+float64 planning_timeout_s
+float64 velocity_scaling
+float64 acceleration_scaling
+---
+# sequence_completed proves correlated PlanTarget/ExecuteTrajectory terminal
+# success only. physics_grasp_verified remains false until an independent
+# contact + cube-lift + retention observer supplies runtime evidence.
+string task_id
+bool accepted
+bool sequence_completed
+bool physics_grasp_verified
+string terminal_phase
+string reason
+string active_command_id
+string last_terminal_command_id
+string last_trajectory_digest
+uint64 clock_epoch
+---
+string task_id
+string phase
+string command_id
+string reason

@@ -1,0 +1,293 @@
+{
+  "observation_id": "pilz-collision-contact-runtime-2026-08-27",
+  "observation_window": {
+    "started_at": "2026-08-27T15:14:39+08:00",
+    "finished_before": "2026-08-27T15:40:14+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 230,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "logs": {
+    "gazebo_ros_launch": "/home/edgegrasp/.ros/log/2026-08-27-15-14-38-608535-DESKTOP-MGV04IT-39717",
+    "gazebo_server": "/home/edgegrasp/.gz/sim/log/2026-08-27T15:14:39.519201421/server_console.log",
+    "move_group_launch": "/home/edgegrasp/.ros/log/2026-08-27-15-14-55-832743-DESKTOP-MGV04IT-39989",
+    "move_group_process": "/home/edgegrasp/.ros/log/move_group_40015_1787814896750.log",
+    "planning_scene_launch": "/home/edgegrasp/.ros/log/2026-08-27-15-15-11-615729-DESKTOP-MGV04IT-40058",
+    "moveit_adapter_launch": "/home/edgegrasp/.ros/log/2026-08-27-15-21-16-483473-DESKTOP-MGV04IT-40826",
+    "grasp_sequence_launch": "/home/edgegrasp/.ros/log/2026-08-27-15-31-03-566621-DESKTOP-MGV04IT-41724"
+  },
+  "move_group_overlay": {
+    "edgegrasp_launch": "edgegrasp_ros/launch/edgegrasp_proxy_move_group.launch.py",
+    "allow_trajectory_execution": false,
+    "disabled_capabilities": [
+      "move_group/MoveGroupExecuteTrajectoryAction",
+      "move_group/ExecuteTaskSolutionCapability"
+    ],
+    "pilz_response_adapter": "default_planning_response_adapters/ValidateSolution",
+    "moveit_robot_description_distal_contact_extensions": 2,
+    "moveit_robot_description_gazebo_arm_proxy_count": 0,
+    "gazebo_robot_description_distal_contact_extensions": 2,
+    "gazebo_robot_description_primitive_arm_proxy_count": 13,
+    "interpretation": "MoveIt keeps the upstream arm collision model and adds only two EdgeGrasp distal contact boxes; Gazebo uses the generated 13-primitive DART-compatible arm proxy plus the same distal boxes. Direct MoveGroup execution is disabled."
+  },
+  "planning_scene": {
+    "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35",
+    "planning_frame": "base_link",
+    "initial_expected_objects": [
+      "edgegrasp_table",
+      "edgegrasp_target_cube"
+    ],
+    "target_contact_policy_expected_objects": [
+      "edgegrasp_table"
+    ],
+    "target_contact_policy_forbidden_objects": [
+      "edgegrasp_target_cube"
+    ],
+    "target_contact_policy_confirmed": true,
+    "claim_boundary": "Only the optional target cube was removed before intentional contact. The required table stayed in MoveIt."
+  },
+  "collision_rejection_case": {
+    "label": "mid-approach-identical-path-after-pilz-validation",
+    "start_arm_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "target_position_m": [
+      0.2662075259898732,
+      0.1649137000605404,
+      0.2567987744381357
+    ],
+    "target_orientation_xyzw": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "pipeline": "pilz_industrial_motion_planner",
+    "planner": "PTP",
+    "moveit_error_code": 99999,
+    "plan_accepted": false,
+    "execution_attempted": false,
+    "candidate_point_count": 84,
+    "invalid_state_indices_inclusive": [
+      51,
+      71
+    ],
+    "collision_pair": [
+      "edgegrasp_target_cube",
+      "gripper_link"
+    ],
+    "move_group_terminal": "ValidateSolution failed with INVALID_MOTION_PLAN",
+    "physical_state_after_probe": {
+      "so101_pose_xyz_rpy": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "target_cube_pose_xyz_rpy": [
+        0.246955,
+        0.121865,
+        0.205,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "safe_approach": {
+    "target_position_m": [
+      0.27859814485128837,
+      0.1733906932169842,
+      0.29693801242225025
+    ],
+    "target_orientation_xyzw": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "read_only_open_gripper_probe": {
+      "moveit_error_code": 1,
+      "plan_accepted": true,
+      "source_point_count": 45,
+      "gate_ready_point_count": 44,
+      "execution_attempted": false
+    },
+    "first_execution_attempt": {
+      "task_id": "far-approach-runtime-036",
+      "success": false,
+      "reason": "permission:safety_signal_stale:trajectory_gate:canceled:client_cancel_requested",
+      "downstream_action_status": 5,
+      "downstream_terminal_observed": true,
+      "fjt_error_code": 0,
+      "cube_displaced": false
+    },
+    "bounded_retry": {
+      "task_id": "far-approach-runtime-037",
+      "success": true,
+      "action_status": 4,
+      "downstream_action_status": 4,
+      "downstream_terminal_observed": true,
+      "fjt_error_code": 0,
+      "trajectory_digest": "e24e9378a154467b0d9fe4e7c91ac0f9d5574a6321bee9ad1e75fd6bab6b41fe",
+      "cube_displaced": false,
+      "final_arm_rad": [
+        -0.6000000476478994,
+        -0.3496580448383683,
+        -0.1126313067945797,
+        0.46228935419772865,
+        -1.5708000244629523
+      ]
+    },
+    "sim_clock_rate_observation": {
+      "motion_allowed_hz": 50.025,
+      "motion_allowed_max_interval_s": 0.023,
+      "tracked_target_hz": 19.993,
+      "tracked_target_max_interval_s": 0.054,
+      "joint_states_hz": 100.0,
+      "interpretation": "The first cancellation was fail-closed and not reproduced by the single bounded retry. It remains a transient runtime observation, not a proven fixed fault."
+    }
+  },
+  "target_contact_policy_read_only_plans": {
+    "descend": {
+      "target_position_m": [
+        0.2538169071284581,
+        0.15643670690409664,
+        0.2166595364540212
+      ],
+      "moveit_error_code": 1,
+      "plan_accepted": true,
+      "source_point_count": 52,
+      "gate_ready_point_count": 51,
+      "execution_attempted": false
+    },
+    "lift": {
+      "target_position_m": [
+        0.2537915860804717,
+        0.15641927732806185,
+        0.2567110773505267
+      ],
+      "moveit_error_code": 1,
+      "plan_accepted": true,
+      "source_point_count": 22,
+      "gate_ready_point_count": 21,
+      "execution_attempted": false
+    }
+  },
+  "grasp_trial": {
+    "rejected_preflight": {
+      "task_id": "collision-validated-physics-038",
+      "requested_observation_timeout_s": 40.0,
+      "configured_maximum_observation_s": 30.0,
+      "result": "physics_goal_rejected",
+      "sequence_or_motion_started": false
+    },
+    "accepted_task": {
+      "task_id": "collision-validated-physics-039",
+      "pipeline": "pilz_industrial_motion_planner",
+      "planner": "PTP",
+      "gripper_closed_position_rad": 0.77,
+      "sequence_wrapper_status": 4,
+      "sequence_completed": true,
+      "sequence_phase": "COMPLETE",
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "last_terminal_command_id": "collision-validated-physics-039|lift|3",
+      "last_trajectory_digest": "70b4ee377f50830eccdb20bc6f70d6f065c381c7d9d74c0555c3c4a8309b9ab4",
+      "stage_downstream_results": {
+        "approach": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0",
+        "descend": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0",
+        "close_gripper": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0",
+        "lift": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0"
+      },
+      "physics_wrapper_status": 6,
+      "physics_phase": "FAULT",
+      "physics_reason": "observation_wall_timeout",
+      "physics_grasp_verified": false,
+      "gripper_contact_observed": true,
+      "lift_observed": false,
+      "retention_observed": false,
+      "gripper_contact_count": 1860,
+      "table_contact_count": 10834,
+      "pose_sample_count": 2614,
+      "matched_contact_pair": [
+        "target_cube::target_cube_link::collision",
+        "so101::gripper_link::gripper_link_collision"
+      ],
+      "baseline_z_m": 0.20499999990200096,
+      "peak_z_m": 0.2072676879016199,
+      "peak_lift_m": 0.0022676879996189336,
+      "required_lift_m": 0.02,
+      "final_z_m": 0.20499994270654195,
+      "final_target_cube_pose_xyz_rpy": [
+        0.240583,
+        0.062217,
+        0.205,
+        0.000001,
+        -0.000001,
+        -1.88273
+      ],
+      "horizontal_displacement_from_initial_m": 0.05998704248727752,
+      "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35",
+      "evidence_digest": "4820801c0fb18a2cd773b44c63606dddb03d936cdc425eb3945b8bd701543f149",
+      "process_exit_code": 11
+    }
+  },
+  "runtime_health": {
+    "controllers_active_during_run": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "robot_world_pose_after_trial_xyz_rpy": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "dart_collision_construction_diagnostic_count": 0,
+    "clock_publisher_count_during_run": 1,
+    "clock_publisher_count_after_cleanup": 0,
+    "matching_process_count_after_cleanup": 0,
+    "move_group_sigint_exit_code": -11,
+    "gazebo_sigint_exit_code": -2,
+    "interface_probe_shutdown_exception": "RuntimeError during graph teardown",
+    "interpretation": "The shutdown anomalies occurred after evidence collection and are not runtime motion successes. They remain defects to track."
+  },
+  "claim_boundary": {
+    "verified": [
+      "Pilz PTP now executes ValidateSolution in the unique EdgeGrasp MoveGroup overlay.",
+      "The mid approach was rejected as INVALID_MOTION_PLAN with target-cube versus gripper_link collision and zero execution.",
+      "The farther approach executed through PlanTarget, ExecuteTrajectory and FJT without moving the cube.",
+      "With only the optional target cube removed, descend and lift remained collision-valid against the required table.",
+      "The four-stage sequence completed through correlated typed actions and all four downstream FJT terminals succeeded.",
+      "Gazebo observed gripper_link-to-cube contact."
+    ],
+    "negative_evidence": [
+      "The cube peak lift was only about 2.27 mm, below the required 20 mm.",
+      "The cube returned to table height and moved about 60 mm horizontally.",
+      "The observed contact was gripper_link, not either distal pad proxy."
+    ],
+    "not_verified": [
+      "simulated grasp success",
+      "cube lift and retention",
+      "minimum path clearance",
+      "collision fidelity for every proxy link",
+      "real hardware behavior"
+    ]
+  }
+}

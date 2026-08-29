@@ -1,0 +1,112 @@
+{
+  "schema_version": 7,
+  "name": "edgegrasp_so101_target_cube_grasp_geometry_candidate020_reachable_preclose_q0p40",
+  "upstream": {
+    "repository": "https://github.com/adoodevv/so101_ros2.git",
+    "commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "target_id": "target_cube",
+  "end_effector_frame": "gripper_frame_link",
+  "cube_size_m": [0.05, 0.05, 0.05],
+  "target_center_in_frame_at_descend_m": [-0.03737764540800784, -0.013808314245085803, -0.01389243490693568],
+  "target_center_tolerance_m": [0.003, 0.006, 0.004],
+  "approach_offset_end_effector_m": [0.0, 0.0, 0.03],
+  "approach_offset_planning_m": [0.0, 0.0, 0.08],
+  "lift_offset_planning_m": [0.0, 0.0, 0.04],
+  "gripper_open_position_rad": 1.5,
+  "gripper_contact_position_rad": 0.4,
+  "gripper_position_tolerance_rad": 0.02,
+  "stage_position_tolerance_m": 0.001,
+  "preclose_contact_policy": {
+    "fixed_pad_name": "edgegrasp_grasp_proxy_fixed_finger_pad",
+    "moving_pad_name": "edgegrasp_grasp_proxy_moving_finger_pad",
+    "minimum_fixed_pad_clearance_m": 0.0005,
+    "maximum_fixed_pad_clearance_m": 0.0015,
+    "minimum_moving_pad_closed_overlap_m": 0.001,
+    "enable_target_pad_contacts_after": "descend_terminal"
+  },
+  "geometry_source": {
+    "fixed_pad": "edgegrasp_grasp_proxy_fixed_finger_pad",
+    "moving_pad": "edgegrasp_grasp_proxy_moving_finger_pad",
+    "predicted_inner_gap_at_contact_position_m": 0.03314530015699046,
+    "generated_gripper_position_rad": 0.4,
+    "generator": "collision-valid FK refinement plus exact primitive OBB evaluation",
+    "source_profile": "so101_grasp_geometry_candidate019_preclose_clearance_q0p40.json",
+    "source_fk_artifact": "/home/edgegrasp/ros2_ws/test_results/candidate020_geometry_gated_fk_scan_20260829T0042",
+    "source_fk_joint_positions_rad": {
+      "shoulder_pan": -0.65,
+      "shoulder_lift": -0.8999999999999999,
+      "elbow_flex": 0.85,
+      "wrist_flex": 0.05,
+      "wrist_roll": -1.5708000401290527
+    },
+    "target_point_error_m": 0.00392342365589997,
+    "minimum_descend_noncontact_body_clearance_m": 0.005802975375413702,
+    "minimum_approach_clearance_m": 0.05185274586260248,
+    "fixed_pad_descend_margin_m": -0.0006707096730516615,
+    "moving_pad_closed_margin_m": 0.021005907654983197,
+    "moving_pad_open_margin_m": -0.029599755594481754,
+    "moving_pad_open_position_rad": 1.5,
+    "derivation": "Use the best result from a 7,560-state read-only search gated by MoveIt state validity plus the full EdgeGrasp routed geometry contract. The exact cube center transformed into gripper_frame_link leaves 0.671 mm fixed-pad clearance while open, keeps the moving pad 29.600 mm away while open, permits 21.006 mm moving-pad overlap at q=0.40, and leaves 5.803 mm minimum descend palm clearance. The separate approach waypoint was extracted from an accepted OMPL route and has 51.853 mm static clearance. These are static proxy margins, not swept-path, runtime contact, or force-closure evidence."
+  },
+  "gazebo_proxy_preflight": {
+    "method": "conservative_aabb_in_gripper_frame_plus_preclose_obb_policy",
+    "minimum_noncontact_clearance_m": 0.003,
+    "minimum_approach_clearance_m": 0.005,
+    "minimum_contact_overlap_m": 0.001,
+    "noncontact_body_aabbs": [
+      {
+        "name": "gripper_link_collision",
+        "minimum_m": [-0.0356, -0.024681879, -0.0947274],
+        "maximum_m": [0.0044, 0.025318121, -0.0547274]
+      },
+      {
+        "name": "gripper_link_collision_1",
+        "minimum_m": [-0.0329, -0.015000093, -0.119077106],
+        "maximum_m": [0.0171, 0.014999907, -0.079077106]
+      }
+    ],
+    "required_contact_pad_aabbs": [
+      {
+        "name": "edgegrasp_grasp_proxy_fixed_finger_pad",
+        "minimum_m": [-0.000500000382, -0.010131144113, -0.04378035611],
+        "maximum_m": [0.022926213688, 0.010131385797, 0.006797893344]
+      },
+      {
+        "name": "edgegrasp_grasp_proxy_moving_finger_pad",
+        "minimum_m": [-0.06555644356307846, -0.008488899684597425, -0.035979809722159764],
+        "maximum_m": [-0.03364530053899046, 0.00872558143915891, 0.00624491722079799]
+      }
+    ],
+    "required_contact_pad_obbs": [
+      {
+        "name": "edgegrasp_grasp_proxy_fixed_finger_pad",
+        "center_m": [0.011213106653, 0.000000120842, -0.018491231383],
+        "rotation_rows": [
+          [-1.0, 0.0, 0.0],
+          [0.0, -0.999999999996479, 0.000002653589793],
+          [0.0, 0.000002653589793, 0.999999999996479]
+        ],
+        "size_m": [0.023426214069, 0.02026252991, 0.050578249454]
+      },
+      {
+        "name": "edgegrasp_grasp_proxy_moving_finger_pad",
+        "center_m": [-0.049600872051034466, 0.00011834087728074261, -0.014867446250680885],
+        "rotation_rows": [
+          [-0.9210620069397271, 0.38941594647903466, 0.000000000009555971326557803],
+          [-0.0000014304134436017488, -0.000003383245943208947, -0.9999999999932537],
+          [-0.38941594647640754, -0.9210620069335134, 0.000003673205103419232]
+        ],
+        "size_m": [0.018586177681, 0.037985401064, 0.017214326024]
+      }
+    ],
+    "source": "Candidate011 fixed-SHA primitive proxies at gripper=0.400000 rad; Candidate020 target placement comes from a MoveIt-valid, EdgeGrasp-geometry-gated FK scan and exact OBB evaluation."
+  },
+  "claim_boundary": [
+    "This is a Gazebo proxy candidate, not a real-hardware calibration.",
+    "The fixed-pad SAT margin at descend is -0.671 mm, so target-pad contacts must stay disallowed through the correlated descend terminal.",
+    "The closed-position moving-pad overlap is only reachability evidence; it does not predict force closure, friction, controller effort, lift, or retention.",
+    "The FK sample passing MoveIt state validity and the static geometry gate does not prove that the complete approach, descend, or lift paths can be planned.",
+    "Only a fresh-domain run with zero pre-close contact, bilateral close contact, lift and retention can upgrade the physics evidence."
+  ]
+}

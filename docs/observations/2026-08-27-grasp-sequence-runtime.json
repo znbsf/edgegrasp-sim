@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "observation_id": "grasp-sequence-runtime-2026-08-27",
+  "observed_at": {
+    "start": "2026-08-27T03:26:59+08:00",
+    "end": "2026-08-27T03:40:24+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "guest": "Ubuntu 24.04 WSL2",
+    "ros_distribution": "Jazzy",
+    "gazebo_version": "8.11.0",
+    "physics_backend": "gz::physics::dartsim::Plugin",
+    "clock_domain": "ros_sim",
+    "clock_epoch": 0,
+    "clock_authority": "Gazebo only",
+    "target_frame": "base_link"
+  },
+  "graph_contract": {
+    "upstream_sha": "0305e03ab54e64aae9263fcbf339622e654012f3",
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "fjt_actions": [
+      "/arm_controller/follow_joint_trajectory",
+      "/gripper_controller/follow_joint_trajectory"
+    ],
+    "edgegrasp_actions": [
+      "/edgegrasp/execute_trajectory",
+      "/edgegrasp/plan_target",
+      "/edgegrasp/grasp_sequence"
+    ],
+    "planning_scene_ready": true,
+    "planning_scene_objects": ["edgegrasp_table"],
+    "planning_scene_digest": "adbc39d4a582744159a71c18abf05cdcc1ce673fc3e238577a211d6f09e00665"
+  },
+  "interface_change": {
+    "reason": "Per-stage current-orientation snapshots made immutable stage positions use different IK orientation constraints.",
+    "contract": "GraspSequence.Goal carries one finite normalized arm_orientation quaternion and every arm PlanTarget goal copies it exactly.",
+    "fail_closed_default": "The one-shot client default is the zero quaternion and is rejected until an explicit normalized snapshot is supplied.",
+    "wsl_package_test": {
+      "package": "edgegrasp_grasp_sequence",
+      "collected": 22,
+      "passed": 22,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "preposition": {
+    "task_id": "sequence-preposition-0329",
+    "target": "fresh current gripper_frame_link pose plus 0.03 m in base_link z",
+    "action_status": 4,
+    "moveit_error_code": 1,
+    "trajectory_dispatched": true,
+    "gate_terminal": true,
+    "downstream_terminal_observed": true,
+    "downstream_action_status": 4,
+    "fjt_error_code": 0,
+    "trajectory_digest": "a01cd6f599f905b3e9f10c478eeb97d453d115d4d4edd8966c820162653ddbad",
+    "result": "PASS"
+  },
+  "task_orientation_xyzw": [
+    0.017007859,
+    0.70646396,
+    0.013976791,
+    0.70740657
+  ],
+  "successful_sequence": {
+    "task_id": "grasp-sequence-runtime-0331",
+    "target_id": "ros-target",
+    "approach_position_m": [0.391231968, -0.001571668, 0.256520737],
+    "descend_position_m": [0.391231968, -0.001571668, 0.251520737],
+    "lift_position_m": [0.391231968, -0.001571668, 0.261520737],
+    "stages": [
+      {
+        "stage": "approach",
+        "sequence_no": 0,
+        "command_id": "grasp-sequence-runtime-0331|approach|0",
+        "next_phase_observed": "DESCEND_PLAN"
+      },
+      {
+        "stage": "descend",
+        "sequence_no": 1,
+        "command_id": "grasp-sequence-runtime-0331|descend|1",
+        "next_phase_observed": "CLOSE_GRIPPER_EXEC"
+      },
+      {
+        "stage": "close_gripper",
+        "sequence_no": 2,
+        "command_id": "grasp-sequence-runtime-0331|close_gripper|2",
+        "next_phase_observed": "LIFT_PLAN"
+      },
+      {
+        "stage": "lift",
+        "sequence_no": 3,
+        "command_id": "grasp-sequence-runtime-0331|lift|3",
+        "next_phase_observed": "COMPLETE"
+      }
+    ],
+    "controller_terminal_log": {
+      "arm_goal_successes": 3,
+      "gripper_goal_successes": 1
+    },
+    "wrapper_status": 4,
+    "accepted": true,
+    "sequence_completed": true,
+    "physics_grasp_verified": false,
+    "terminal_phase": "COMPLETE",
+    "reason": "correlated_sequence_completed;physics_unverified",
+    "last_terminal_command_id": "grasp-sequence-runtime-0331|lift|3",
+    "last_trajectory_digest": "115cb2b99cd242f841910222b555eb0ae0f4a06cda7c2b817c09adc5499fbcc7",
+    "result": "SEQUENCE_PASS_PHYSICS_UNVERIFIED"
+  },
+  "fail_closed_followup": {
+    "task_id": "grasp-sequence-runtime-0333",
+    "approach_terminal_observed": true,
+    "descend_terminal_observed": true,
+    "gripper_goal_accepted": true,
+    "fault": "joint_state_stale",
+    "gripper_cancel_requested": true,
+    "lift_dispatched": false,
+    "wrapper_status": 6,
+    "sequence_completed": false,
+    "terminal_phase": "SAFE_STOP",
+    "interpretation": "Fail-closed behavior passed; repeat-run reliability is not yet established."
+  },
+  "post_sequence_state": {
+    "joint_positions_rad": {
+      "shoulder_pan": 0.0031068670988424842,
+      "shoulder_lift": 0.05856909319720144,
+      "elbow_flex": -0.3305352786313558,
+      "wrist_flex": 0.2800404946429544,
+      "wrist_roll": 0.0009456020702335371,
+      "gripper": 0.19999999997406984
+    },
+    "robot_model_pose_xyz_m": [0.0, 0.0, 0.0],
+    "robot_model_pose_rpy_rad": [0.0, 0.0, 0.0]
+  },
+  "collision_diagnostics": {
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T03:27:00.575367858/server_console.log",
+    "dart_mesh_construction_diagnostic_count": 0,
+    "geometry_could_not_be_created_count": 0,
+    "behavioral_collision_evidence_reused": "Only the separately recorded named base-proxy contact is verified; this sequence did not add all-link collision evidence."
+  },
+  "shutdown": {
+    "clock_publisher_count": 0,
+    "matching_runtime_process_count": 0,
+    "planning_scene_loader_double_shutdown_observed": true,
+    "move_group_sigint_segfault_observed": true,
+    "gazebo_sigint_exit_code": -2,
+    "clean_shutdown_claim": false
+  },
+  "claim_boundary": {
+    "four_stage_typed_sequence_runtime_verified": true,
+    "repeat_run_determinism_verified": false,
+    "joint_state_stale_fail_closed_runtime_verified": true,
+    "moveit_direct_execution_used": false,
+    "optional_cube_loaded_in_moveit": false,
+    "cube_pose_observed_during_sequence": false,
+    "contact_observed_during_sequence": false,
+    "cube_lift_retention_verified": false,
+    "physics_grasp_verified": false
+  }
+}

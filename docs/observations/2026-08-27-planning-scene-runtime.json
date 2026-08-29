@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "observation_id": "planning-scene-runtime-2026-08-27",
+  "observed_at": {
+    "start": "2026-08-27T01:23:51+08:00",
+    "end": "2026-08-27T01:41:00+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "guest": "Ubuntu 24.04 WSL2",
+    "ros_distribution": "Jazzy",
+    "gazebo_version": "8.11.0",
+    "physics_backend": "gz::physics::dartsim::Plugin",
+    "clock_domain": "ros_sim",
+    "clock_authority": "Gazebo only",
+    "planning_frame": "base_link"
+  },
+  "scene": {
+    "source": "ros_ws/src/edgegrasp_ros/config/scene.json",
+    "digest": "adbc39d4a582744159a71c18abf05cdcc1ce673fc3e238577a211d6f09e00665",
+    "gazebo_world": "edgegrasp_table_cube",
+    "moveit_objects": [
+      {
+        "id": "edgegrasp_table",
+        "frame_id": "base_link",
+        "shape": "BOX",
+        "dimensions_m": [0.6, 0.8, 0.04],
+        "position_m": [0.35, 0.0, 0.38]
+      }
+    ],
+    "get_planning_scene_components_mask": 24,
+    "service_echo_verified": true,
+    "periodic_revalidation_sample": {
+      "true_messages": 10,
+      "false_messages_after_first_true": 0
+    },
+    "optional_cube_loaded": false
+  },
+  "cases": [
+    {
+      "case": "A_free_reachable",
+      "observed_at": "2026-08-27T01:32:22.576752291+08:00",
+      "target": "current gripper_frame_link pose, zero offset",
+      "task_id": "planning-scene-A-retry",
+      "command_id": "planning-scene-A-retry|diagnostic|1",
+      "moveit_error_code": 1,
+      "wrapper_action_status": 4,
+      "trajectory_request_count": 1,
+      "trajectory_digest": "7f9871de257bb81c7a2109e50aee911cd8926c1a3ddadb8e2efdf5ee6f3c7c3a",
+      "gate_terminal": true,
+      "downstream_terminal_observed": true,
+      "downstream_action_status": 4,
+      "fjt_error_code": 0,
+      "fjt_error_string": "Goal successfully reached!",
+      "result": "PASS"
+    },
+    {
+      "case": "B_inside_table",
+      "observed_at": "2026-08-27T01:33:55.585513079+08:00",
+      "target_position_m": [0.2, 0.0, 0.38],
+      "task_id": "planning-scene-B2",
+      "moveit_error_code": -31,
+      "reason": "compute_ik_error:-31:",
+      "trajectory_request_count": 0,
+      "trajectory_dispatched": false,
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "C_path_crossing_table",
+      "target_source": "FK of arm joints [0.0, -1.5, 0.0, 0.0, 0.0]",
+      "target_position_m": [-0.017573687, -0.000012381, 0.445691981],
+      "task_id": "planning-scene-C5",
+      "moveit_error_code": 99999,
+      "reason": "move_group_action_status:6",
+      "moveit_log_reason": "ValidateSolution failed with INVALID_MOTION_PLAN",
+      "trajectory_request_count": 0,
+      "trajectory_dispatched": false,
+      "direct_plan_only_diagnostic": {
+        "service": "/plan_kinematic_path",
+        "planning_time_s": 0.080471859,
+        "candidate_joint_trajectory_nonempty": true,
+        "error_code": 99999,
+        "executed": false
+      },
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "D_unreachable",
+      "target_position_m": [2.0, 0.0, 2.0],
+      "task_id": "planning-scene-D",
+      "moveit_error_code": -31,
+      "reason": "compute_ik_error:-31:",
+      "trajectory_request_count": 0,
+      "trajectory_dispatched": false,
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "E_epoch_mismatch",
+      "task_id": "planning-scene-E-epoch",
+      "requested_epoch": 1,
+      "configured_epoch": 0,
+      "reason": "clock_epoch_mismatch",
+      "trajectory_request_count": 0,
+      "trajectory_dispatched": false,
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "E_stale_during_planning",
+      "task_id": "planning-scene-C4",
+      "planning_timeout_s": 2.0,
+      "reason": "stale_target",
+      "trajectory_request_count": 0,
+      "trajectory_dispatched": false,
+      "result": "PASS_REJECTED"
+    }
+  ],
+  "regression_observed_and_fixed": {
+    "symptom": "The loader emitted false during every periodic confirmation request after a prior confirmed scene.",
+    "first_run_moveit_error_code": 1,
+    "first_run_gate_result": "cancel_failed_stop_unconfirmed",
+    "first_run_downstream_log": "arm_controller reported Goal reached, success, then received cancel",
+    "fix": "Preserve the last confirmed ready value while the same geometry is being revalidated; revoke on timeout, service loss, mismatch, or clock fault.",
+    "test": "The Jazzy fake-service test asserts no false readiness message after the first true across repeated queries."
+  },
+  "artifacts": {
+    "gazebo_log": "/home/edgegrasp/ros2_ws/log/edgegrasp_planning_scene_gazebo_retry_20260827.log",
+    "move_group_log": "/home/edgegrasp/ros2_ws/log/edgegrasp_planning_scene_move_group_retry_20260827.log",
+    "loader_log": "/home/edgegrasp/ros2_ws/log/edgegrasp_planning_scene_loader_retry_20260827.log",
+    "adapter_log": "/home/edgegrasp/ros2_ws/log/edgegrasp_planning_scene_adapter_retry_20260827.log",
+    "direct_plan_log": "/home/edgegrasp/ros2_ws/log/edgegrasp_scene_C_with_table_plan.txt"
+  },
+  "claim_boundary": {
+    "shared_gazebo_moveit_scene_runtime_verified": true,
+    "table_collision_rejection_runtime_verified": true,
+    "optional_cube_moveit_runtime_verified": false,
+    "minimum_clearance_measured": false,
+    "all_robot_proxy_collisions_verified": false,
+    "grasp_sequence_runtime_verified": false,
+    "physics_grasp_verified": false
+  },
+  "shutdown": {
+    "ros_node_count": 0,
+    "clock_topic_present": false,
+    "matching_runtime_processes": 0
+  }
+}

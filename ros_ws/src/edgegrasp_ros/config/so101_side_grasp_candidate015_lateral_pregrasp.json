@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate015_lateral_pregrasp",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "target": {
+    "id": "target_cube"
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "grasp": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "lateral_pregrasp_no_execution_until_plan_only_passes",
+      "position_m": [
+        0.2709963789421751,
+        0.16819000116779708,
+        0.21671428128394862
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "approach_waypoint",
+    "baseline": "high collision-routing waypoint with orientation transition",
+    "candidate": "30 mm along grasp-frame +Z at the final grasp orientation",
+    "purpose": "approach the cube laterally instead of driving the fixed pad through the cube top during the final segment"
+  },
+  "claim_boundary": [
+    "This file defines a plan-only candidate and does not authorize motion.",
+    "The pose is derived from Candidate011 descend plus 30 mm along grasp-frame +Z; contact normals, lift, and retention still require a fresh runtime trial.",
+    "A MoveIt plan does not prove collision-free Gazebo dynamics or grasp success."
+  ]
+}

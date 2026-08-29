@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-08-26",
+  "policy": {
+    "checkout_location": "workspaces/forks/<repository-name>",
+    "copy_into_edgegrasp": false,
+    "verification_rule": "Repository claims are not local runtime evidence. Build and runtime states stay unverified until reproduced at the pinned commit."
+  },
+  "audit_history": [
+    {
+      "repository": "adoodevv/so101_ros2",
+      "commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+      "observed_at": "2026-08-26T12:56:06+08:00",
+      "status": "retracted",
+      "retracted_claim": "The pinned tree lacks SRDF, move_group, MoveIt controller mapping, and kinematics configuration.",
+      "corrected_observation": "The clean detached local checkout contains a complete-looking static MoveIt configuration and the Gazebo-plus-MoveIt launch references resolve. Runtime remains unrun and unverified."
+    },
+    {
+      "repository": "adoodevv/so101_ros2",
+      "commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+      "observed_at": "2026-08-26T17:40:00+08:00",
+      "status": "partial_runtime_verified",
+      "observation": "In a dedicated Ubuntu 24.04 WSL2 ROS 2 Jazzy workspace, colcon/xacro, Gazebo controllers and joint states, both FollowJointTrajectory actions, MoveIt joint-space planning, EdgeGrasp plan-only-to-gate execution, and simulated camera topics ran. Collision fidelity, grasp success, combined bringup robustness, and real hardware remain unverified."
+    }
+  ],
+  "upstreams": [
+    {
+      "repository": "adoodevv/so101_ros2",
+      "commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+      "license": "BSD-3-Clause",
+      "role": "Gazebo Harmonic, gz_ros2_control, SO-101 URDF, world/bridge/controllers, and complete-looking static MoveIt configuration",
+      "source_url": "https://github.com/adoodevv/so101_ros2/tree/0305e03ab54e64aae9263fcbf339622e654012f3",
+      "evidence_urls": {
+        "commit": "https://github.com/adoodevv/so101_ros2/commit/0305e03ab54e64aae9263fcbf339622e654012f3",
+        "license": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/LICENSE",
+        "root_readme": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/README.md",
+        "status_claims": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/README.md#L30-L39",
+        "gazebo_commands_and_controllers": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/README.md#L80-L100",
+        "gazebo_readme": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_gazebo/README.md",
+        "gazebo_launch": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_gazebo/launch/so101.gazebo.launch.py",
+        "world": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_gazebo/worlds/pick_and_place.world",
+        "bridge": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_gazebo/config/ros_gz_bridge.yaml",
+        "gazebo_control_xacro": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_description/urdf/control/gazebo_sim_ros2_control.urdf.xacro",
+        "ros2_control_xacro": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_description/urdf/control/so101_ros2_control.urdf.xacro",
+        "robot_state_publisher_launch": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_description/launch/robot_state_publisher.launch.py",
+        "robot_xacro": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_description/urdf/robots/so101.urdf.xacro",
+        "moveit_readme_documentation_state": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/README.md#L3-L14",
+        "moveit_readme_planned_items": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/README.md#L75-L80",
+        "controller_launch": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/launch/load_ros2_controllers.launch.py",
+        "move_group_launch": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/launch/move_group.launch.py",
+        "srdf": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/config/so101/so101.srdf",
+        "moveit_controllers": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/config/so101/moveit_controllers.yaml",
+        "ros2_controllers": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/config/so101/ros2_controllers.yaml",
+        "kinematics": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_moveit_config/config/so101/kinematics.yaml",
+        "gazebo_moveit_bringup": "https://github.com/adoodevv/so101_ros2/blob/0305e03ab54e64aae9263fcbf339622e654012f3/so101_bringup/launch/so101_gazebo_moveit.launch.py"
+      },
+      "official_commands": [
+        "git clone https://github.com/adoodevv/so101_ros2.git",
+        "git checkout 0305e03ab54e64aae9263fcbf339622e654012f3",
+        "rosdep install --from-paths src --ignore-src -r -y",
+        "colcon build --symlink-install",
+        "ros2 launch so101_gazebo so101.gazebo.launch.py",
+        "ros2 control list_controllers",
+        "ros2 launch so101_bringup so101_gazebo_moveit.launch.py"
+      ],
+      "reproduction_steps": [
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws/src",
+          "command": "git clone https://github.com/adoodevv/so101_ros2.git"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws/src/so101_ros2",
+          "command": "git checkout 0305e03ab54e64aae9263fcbf339622e654012f3"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws",
+          "command": "rosdep install --from-paths src --ignore-src -r -y"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws",
+          "command": "colcon build --symlink-install"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws (after source install/setup.bash)",
+          "command": "ros2 launch so101_gazebo so101.gazebo.launch.py"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws (second sourced shell)",
+          "command": "ros2 control list_controllers"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_gazebo_ws (after source install/setup.bash; runtime verification only)",
+          "command": "ros2 launch so101_bringup so101_gazebo_moveit.launch.py"
+        }
+      ],
+      "known_limitations": [
+        "The pinned local tree contains SRDF, move_group, MoveIt controller mapping, planning configuration, and a Gazebo-plus-MoveIt bringup. Selected build/runtime scopes passed in a dedicated Jazzy WSL workspace, but full-stack collision and grasp behavior did not.",
+        "The pinned MoveIt README still describes planned/incomplete work and a ForwardCommandController/Float64MultiArray gripper path; this conflicts with the pinned ros2_controllers.yaml and moveit_controllers.yaml FollowJointTrajectory mapping and is treated as stale documentation.",
+        "robot_state_publisher.launch.py expands templates and writes generated configuration to hard-coded ~/ros2_ws source and install paths; run only in a disposable, inspected workspace.",
+        "System tests are planned/TODO shells and real hardware support is not implemented.",
+        "A whole-workspace colcon test at this exact pin reproduced upstream-only lint failures in so101_bringup, so101_description, so101_gazebo, so101_moveit_config, and so101_teleop_bridge; the complete 11-package colcon build still passed and EdgeGrasp package tests are reported separately.",
+        "rosdep required a bounded skip for unresolved metadata keys ament_python and moveit_planners_pilz_industrial_motion_planner after the corresponding installed packages were checked; treat this as a reproducibility metadata risk, not a runtime package-absence claim.",
+        "pick_and_place.world needs Gazebo Fuel network access on first use; empty.world is the offline-first smoke-test choice."
+      ],
+      "local_verification_status": {
+        "status": "PARTIAL_RUNTIME_VERIFIED_COLLISION_GRASP_UNVERIFIED",
+        "local_checkout": true,
+        "local_checkout_path": "<githubsss>/workspaces/forks/so101_ros2",
+        "local_checkout_static_verified": true,
+        "checkout_commit_verified": true,
+        "checkout_clean_detached_head": true,
+        "ros_build_verified": true,
+        "runtime_unverified": false,
+        "runtime_full_stack_verified": false,
+        "gazebo_controller_runtime_verified": true,
+        "joint_states_runtime_verified": true,
+        "fjt_actions_runtime_verified": true,
+        "moveit_plan_runtime_verified": true,
+        "edgegrasp_gated_execution_runtime_verified": true,
+        "camera_topics_runtime_verified": true,
+        "collision_and_grasp_runtime_verified": false,
+        "moveit_status": "complete_looking_static_configuration_and_plan_runtime_verified_execution_only_via_edgegrasp_gate",
+        "contract_snapshot": "src/edgegrasp/contracts/so101_ros2_0305e03.json",
+        "reason": "Runtime evidence is intentionally scoped: controller activation, planning, gated execution, and camera topic publication passed; DART collision-mesh errors prevent any collision/grasp-success claim."
+      }
+    },
+    {
+      "repository": "TheRobotStudio/SO-ARM100",
+      "commit": "7629d2ad9853d10fb903093a33ef6114099d97e5",
+      "license": "Apache-2.0",
+      "role": "Authoritative SO-101 geometry, URDF, MJCF, meshes, and calibration-convention cross-check",
+      "source_url": "https://github.com/TheRobotStudio/SO-ARM100/tree/7629d2ad9853d10fb903093a33ef6114099d97e5",
+      "evidence_urls": {
+        "commit": "https://github.com/TheRobotStudio/SO-ARM100/commit/7629d2ad9853d10fb903093a33ef6114099d97e5",
+        "license": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/LICENSE",
+        "simulation_overview": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/Simulation/README.md#L18-L23",
+        "so101_caveats": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/Simulation/SO101/README.md#L7-L31",
+        "scene": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/Simulation/SO101/scene.xml",
+        "model_default": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/Simulation/SO101/so101_new_calib.xml",
+        "new_urdf": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/Simulation/SO101/so101_new_calib.urdf",
+        "old_urdf": "https://github.com/TheRobotStudio/SO-ARM100/blob/7629d2ad9853d10fb903093a33ef6114099d97e5/Simulation/SO101/so101_old_calib.urdf"
+      },
+      "official_commands": [
+        "rerun Simulation/SO101/so101_new_calib.urdf",
+        "rerun Simulation/SO101/so101_old_calib.urdf"
+      ],
+      "reproduction_steps": [
+        {
+          "cwd": "<githubsss>/workspaces/forks",
+          "command": "git clone https://github.com/TheRobotStudio/SO-ARM100.git"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/forks/SO-ARM100",
+          "command": "git checkout 7629d2ad9853d10fb903093a33ef6114099d97e5"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/forks/SO-ARM100",
+          "command": "rerun Simulation/SO101/so101_new_calib.urdf"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/forks/SO-ARM100",
+          "command": "rerun Simulation/SO101/so101_old_calib.urdf"
+        }
+      ],
+      "known_limitations": [
+        "This is a geometry and MuJoCo asset repository, not a ROS workspace; it provides no Gazebo or MoveIt build/launch command.",
+        "Base collision meshes were removed because of problematic simulation and planning behavior.",
+        "The LeRobot gripper mapping of 0 closed and 100 open is not reflected in the pinned URDF or MJCF.",
+        "Relative mesh paths require care when assets are consumed from a ROS package overlay."
+      ],
+      "local_verification_status": {
+        "status": "LOCAL_CHECKOUT_STATIC_VERIFIED_MUJOCO_RUNTIME_BLOCKED",
+        "local_checkout": true,
+        "local_checkout_path": "<githubsss>/workspaces/forks/SO-ARM100",
+        "checkout_commit_verified": true,
+        "checkout_clean_detached_head": true,
+        "mjcf_paths_and_joint_actuator_names_static_verified": true,
+        "rerun_verified": false,
+        "mujoco_runtime_verified": false,
+        "mujoco_attempts": [
+          "Python MuJoCo 3.3.7 and 3.12.0 failed while loading bundled Windows plugin DLLs with WinError 1114.",
+          "Official checksum-verified MuJoCo 3.12.0 testspeed failed on its bundled model with process status 0xC0000142.",
+          "MuJoCo 2.3.7 imported but rejected the unchanged pinned MJCF position actuator kv attribute, so no downgraded success is claimed."
+        ],
+        "reason": "The exact asset checkout is present and statically inspected, but the host MuJoCo Windows runtime fails independently of the SO-101 model."
+      }
+    },
+    {
+      "repository": "legalaspro/so101-ros-physical-ai",
+      "commit": "58318c905a2c61289fa907de85cb8473322fbe68",
+      "license": "Apache-2.0",
+      "role": "MoveIt configuration, mock/real ros2_control boundary, controllers, camera TF, MCAP recording, and hardware-safety reference",
+      "source_url": "https://github.com/legalaspro/so101-ros-physical-ai/tree/58318c905a2c61289fa907de85cb8473322fbe68",
+      "submodules": [
+        {
+          "path": "feetech_ros2_driver",
+          "commit": "4c0fdbfe16c84c686f8ace09526c52d98d0110ca",
+          "repository_url": "https://github.com/legalaspro/feetech_ros2_driver",
+          "commit_url": "https://github.com/legalaspro/feetech_ros2_driver/commit/4c0fdbfe16c84c686f8ace09526c52d98d0110ca"
+        }
+      ],
+      "evidence_urls": {
+        "commit": "https://github.com/legalaspro/so101-ros-physical-ai/commit/58318c905a2c61289fa907de85cb8473322fbe68",
+        "license": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/LICENSE",
+        "readme": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/README.md",
+        "moveit_and_backend_boundaries": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/README.md#L426-L457",
+        "submodule": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/.gitmodules",
+        "pixi": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/pixi.toml",
+        "real_mock_xacro": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_description/urdf/ros2_control/so101_ros2_control.xacro",
+        "teleop_launch": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_bringup/launch/teleop.launch.py",
+        "follower_split": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_bringup/launch/follower_split.launch.py",
+        "moveit_demo": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_bringup/launch/follower_moveit_demo.launch.py",
+        "move_group": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_moveit_config/launch/move_group.launch.py",
+        "controller_mapping": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_moveit_config/config/moveit_controllers.yaml",
+        "recorder_launch": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_bringup/launch/recording_session.launch.py",
+        "recorder_config": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/so101_bringup/config/recording/episode_recorder_so101.yaml",
+        "hardware_caveats": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/docs/hardware.md#L1-L11",
+        "calibration_and_eeprom": "https://github.com/legalaspro/so101-ros-physical-ai/blob/58318c905a2c61289fa907de85cb8473322fbe68/docs/hardware.md#L124-L155"
+      },
+      "official_commands": [
+        "git clone --recurse-submodules https://github.com/legalaspro/so101-ros-physical-ai.git",
+        "git checkout 58318c905a2c61289fa907de85cb8473322fbe68",
+        "git submodule update --init --recursive",
+        "rosdep install --from-paths src --ignore-src -r -y",
+        "colcon build --symlink-install",
+        "ros2 launch so101_bringup teleop.launch.py",
+        "ros2 launch so101_bringup follower_moveit_demo.launch.py",
+        "ros2 launch so101_bringup recording_session.launch.py experiment_name:=pick_and_place task:=\"Pick up the cube and place it in the container.\" use_rerun:=true",
+        "pixi run -e lerobot convert -- --input-dir ~/.ros/so101_episodes/pick_and_place --config ~/ros2_ws/src/so101-ros-physical-ai/rosbag_to_lerobot/config/so101.yaml --repo-id local/so101_test"
+      ],
+      "reproduction_steps": [
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws/src",
+          "command": "git clone --recurse-submodules https://github.com/legalaspro/so101-ros-physical-ai.git"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws/src/so101-ros-physical-ai",
+          "command": "git checkout 58318c905a2c61289fa907de85cb8473322fbe68"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws/src/so101-ros-physical-ai",
+          "command": "git submodule update --init --recursive"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws",
+          "command": "rosdep install --from-paths src --ignore-src -r -y"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws",
+          "command": "colcon build --symlink-install"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws (after source install/setup.bash)",
+          "command": "ros2 launch so101_bringup teleop.launch.py"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws (after source install/setup.bash)",
+          "command": "ros2 launch so101_bringup follower_moveit_demo.launch.py"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws (after source install/setup.bash)",
+          "command": "ros2 launch so101_bringup recording_session.launch.py experiment_name:=pick_and_place task:=\"Pick up the cube and place it in the container.\" use_rerun:=true"
+        },
+        {
+          "cwd": "<githubsss>/workspaces/edgegrasp_physical_ws/src/so101-ros-physical-ai",
+          "command": "pixi run -e lerobot convert -- --input-dir ~/.ros/so101_episodes/pick_and_place --config rosbag_to_lerobot/config/so101.yaml --repo-id local/so101_test"
+        }
+      ],
+      "known_limitations": [
+        "The pinned repository supports hardware_type real or mock only; MuJoCo is planned and not supported.",
+        "It provides no Gazebo adapter and must not be used as evidence of physics simulation.",
+        "Real hardware requires LeRobot motor setup and calibration that writes persistent EEPROM values, followed by stable udev device naming.",
+        "Its code and package names remain in a separate checkout; EdgeGrasp uses an overlay and does not copy this source."
+      ],
+      "local_verification_status": {
+        "status": "REMOTE_PINNED_EVIDENCE_ONLY",
+        "remote_pinned_evidence_only": true,
+        "local_checkout": false,
+        "build_verified": false,
+        "runtime_unverified": true,
+        "reason": "No local checkout was created by design. Evidence remains limited to commit-pinned remote files; no legalaspro build, mock/real runtime, recording path, or hardware path was run.",
+        "supported_backends_observed_in_source": ["mock", "real"],
+        "unsupported_backends_observed_in_source": ["gazebo", "mujoco"]
+      }
+    }
+  ]
+}

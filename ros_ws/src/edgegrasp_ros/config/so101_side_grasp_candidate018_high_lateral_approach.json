@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate018_high_lateral_approach",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "scene_config_filename": "scene.json",
+  "world_filename": "table_cube.sdf",
+  "target": {
+    "id": "target_cube",
+    "center_m": [0.24695465627174787, 0.1218646928533295, 0.205]
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "grasp": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "collision_checked_high_lateral_pregrasp",
+      "position_m": [
+        0.1942405524686608,
+        0.11567768735635443,
+        0.29671354893315634
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "approach_waypoint_height",
+    "baseline": "Candidate016 low lateral approach",
+    "candidate": "same lateral position/orientation plus 80 mm planning-frame Z",
+    "purpose": "keep home-to-approach target-pad contacts disabled and avoid sweeping the cube before descend"
+  },
+  "contact_policy": {
+    "home_to_approach": "target_pad_contacts_disallowed",
+    "approach_to_descend": "target_pad_contacts_allowed_after_confirmed_policy_switch",
+    "descend_to_lift": "target_pad_contacts_allowed"
+  },
+  "claim_boundary": [
+    "Candidate018 returns to the baseline scene and Candidate011 q=0.40 geometry; only the approach waypoint and stage-scoped contact policy change.",
+    "The first segment must pass MoveIt with target-pad contacts disabled before any execution is considered.",
+    "Allowed endpoint contact during descend does not prove a collision-free physical approach, bilateral grasp, lift, or retention."
+  ]
+}

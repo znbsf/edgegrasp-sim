@@ -1,0 +1,102 @@
+{
+  "observation_id": "candidate010_q0p45_plan_only_20260827",
+  "observation_window": {
+    "started_at": "2026-08-27T21:54:59.711933318+08:00",
+    "finished_at": "2026-08-27T21:55:48.760026798+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "evidence_status": "RUNTIME_PLAN_ONLY_PASS_ZERO_EXECUTION",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 61,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "candidate": {
+    "profile": "so101_grasp_geometry_candidate010_q0p45.json",
+    "profile_sha256": "7b183c9368bc4b87c4d54a3de777ead4e7b1be3d59cd150435254d66f00b09ac",
+    "source_profile": "so101_grasp_geometry_candidate008_q0p50.json",
+    "target_center_x_offset_m": 0.0,
+    "gripper_contact_position_rad": 0.45,
+    "predicted_inner_gap_m": 0.035436673911051694,
+    "arm_stage_poses_unchanged_from_candidate008": true,
+    "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35"
+  },
+  "plan_only": {
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "attempts_requested": 10,
+    "attempts_completed": 10,
+    "all_segments_accepted": true,
+    "segments": {
+      "home_to_approach": {
+        "accepted": "10/10",
+        "source_point_count": 83,
+        "gate_ready_point_count": 82,
+        "unique_trajectory_digest_count": 1,
+        "planning_time_p50_s": 0.0011930045,
+        "planning_time_p95_s": 0.0018691845,
+        "planning_time_max_s": 0.002326544
+      },
+      "approach_to_descend": {
+        "accepted": "10/10",
+        "source_point_count": 32,
+        "gate_ready_point_count": 31,
+        "unique_trajectory_digest_count": 1,
+        "planning_time_p50_s": 0.000698584,
+        "planning_time_p95_s": 0.0009061075,
+        "planning_time_max_s": 0.000918085
+      },
+      "descend_to_lift_closed": {
+        "accepted": "10/10",
+        "source_point_count": 22,
+        "gate_ready_point_count": 21,
+        "unique_trajectory_digest_count": 1,
+        "planning_time_p50_s": 0.000615649,
+        "planning_time_p95_s": 0.0007258505,
+        "planning_time_max_s": 0.000745423
+      }
+    }
+  },
+  "motion_boundary": {
+    "edgegrasp_motion_nodes_launched": false,
+    "execute_trajectory_service_present": false,
+    "edgegrasp_motion_actions_present": false,
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "execution_attempted": false
+  },
+  "runtime_health": {
+    "controllers_active_count": 3,
+    "robot_pose_final_xyz_m": [0.0, 0.0, 0.0],
+    "robot_pose_final_rpy_rad": [0.0, 0.0, 0.0],
+    "cube_pose_final_xyz_m": [0.246955, 0.121865, 0.205],
+    "dart_mesh_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0
+  },
+  "artifacts": {
+    "directory": "/home/edgegrasp/ros2_ws/test_results/candidate010_q0p45_plan_only_20260827_2250",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T21:55:02.608623631/server_console.log",
+    "plan_only_result_sha256": "f51313330bb53b627386ac78817c72fabd0978ac7cd93e43ae676c7eaa3f408d",
+    "move_group_log_sha256": "b48b89a2d2ed25a366e0b6df6b551669dbf9bce3bed4bf0d0b2b67612dd00cae",
+    "planning_scene_status_sha256": "45d624901f880fd5f46207863648330b6ea043575ccb7212de5d0debf162ae72",
+    "cleanup_log_sha256": "abaeab182e0fb3c5a461d269d2a8895344cce58f58ddeaa71a07b2a6e8949d04"
+  },
+  "cleanup": {
+    "matching_domain_process_count_after_cleanup": 0,
+    "clock_after_cleanup": "Unknown topic /clock"
+  },
+  "claim_boundary": {
+    "static_proxy_geometry_verified": true,
+    "moveit_plan_only_runtime_verified": true,
+    "candidate010_execution_attempted": false,
+    "candidate010_contact_verified": false,
+    "physics_grasp_verified": false,
+    "real_hardware_verified": false,
+    "next_gate": "One fresh-domain typed sequence and physics observation may run; success still requires contact, at least 20 mm lift, and retention."
+  }
+}

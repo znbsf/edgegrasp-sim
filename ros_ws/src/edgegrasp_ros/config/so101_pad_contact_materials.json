@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scope": "generated_edgegrasp_finger_pad_collisions_only",
+  "model": "isotropic_coulomb_friction",
+  "parameter_mapping": {
+    "urdf_gazebo_extension": [
+      "mu1",
+      "mu2"
+    ],
+    "expected_sdf_path": "collision/surface/friction/ode/{mu,mu2}"
+  },
+  "coefficient_bounds": {
+    "minimum": 0.5,
+    "maximum": 1.5,
+    "bound_kind": "project_experiment_bound_not_hardware_measurement"
+  },
+  "targets": [
+    {
+      "extension_link": "edgegrasp_fixed_finger_pad_link",
+      "legacy_urdf_collision_name": "edgegrasp_grasp_proxy_fixed_finger_pad",
+      "explicit_converted_collision_token": "edgegrasp_fixed_finger_pad_link_collision"
+    },
+    {
+      "extension_link": "edgegrasp_moving_finger_pad_link",
+      "legacy_urdf_collision_name": "edgegrasp_grasp_proxy_moving_finger_pad",
+      "explicit_converted_collision_token": "edgegrasp_moving_finger_pad_link_collision"
+    }
+  ],
+  "profiles": {
+    "implicit_default": {
+      "apply_explicit_friction": false,
+      "coefficient": null,
+      "purpose": "preserve the pre-Candidate012 generated URDF without claiming an engine default value"
+    },
+    "candidate012_control_mu1p0": {
+      "apply_explicit_friction": true,
+      "coefficient": 1.0,
+      "purpose": "explicit configured control for the Candidate012 sensitivity study"
+    },
+    "candidate012_treatment_mu1p5": {
+      "apply_explicit_friction": true,
+      "coefficient": 1.5,
+      "purpose": "single-variable higher-friction treatment with all geometry and sequence inputs held fixed"
+    }
+  },
+  "claim_boundary": [
+    "Coefficients are bounded simulation sensitivity parameters, not measured SO-101 or cube material properties.",
+    "The implicit profile deliberately does not assign or infer an SDFormat or DART default coefficient.",
+    "A generated URDF profile is accepted only after gz sdf conversion confirms both intended pad collision surfaces and no unintended target.",
+    "Explicit profiles leave the two pad collisions unnamed in URDF because the pinned Gazebo converter drops link-level mu tags on named collisions; paired control and treatment use the same workaround.",
+    "Sequence completion, contact samples, and transient lift remain insufficient for physics_grasp_verified without at least 20 mm lift and the configured retention window."
+  ],
+  "sources": [
+    "https://github.com/gazebosim/sdf_tutorials/blob/master/docs/urdf/sdf_extensions.md",
+    "https://github.com/gazebosim/gz-sim/blob/main/examples/worlds/diff_drive.sdf",
+    "https://github.com/gazebosim/gz-physics/issues/258",
+    "https://github.com/gazebosim/gz-physics/issues/841"
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "observation_id": "candidate009_reachability_boundary_scan_20260827",
+  "observation_window": {
+    "started_at": "2026-08-27T21:34:48.533926368+08:00",
+    "finished_at": "2026-08-27T21:49:28.576499615+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "evidence_status": "RUNTIME_PLAN_ONLY_REACHABILITY_BOUNDARY_ZERO_EXECUTION",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "fixed_contract": {
+    "source_profile": "so101_grasp_geometry_candidate008_q0p50.json",
+    "gripper_contact_position_rad": 0.5,
+    "approach_pose_unchanged": true,
+    "grasp_orientation_unchanged": true,
+    "scene_and_selective_acm_unchanged": true,
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "position_tolerance_m": 0.002,
+    "orientation_tolerance_rad": 0.02,
+    "offset_axis": "end_effector_frame_x"
+  },
+  "cases": [
+    {
+      "offset_m": 0.0,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate008_offset_zero_control_plan_only_20260827_2220",
+      "status": "PLAN_ONLY_PASS",
+      "attempts_requested": 10,
+      "attempts_completed": 10,
+      "accepted_segment_count": 30,
+      "failed_segment": null,
+      "plan_result_sha256": "6d7b1e066b5613040c0d1086fdcba510b80ece372f705180f9d06bd4cab5c1e3"
+    },
+    {
+      "offset_m": -0.0001,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate010_offset_m0p1mm_plan_only_20260827_2240",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "6003033ac9521f645465c5c6160184d1eca93dbd250fbdaa47efc22de055f10a"
+    },
+    {
+      "offset_m": -0.0002,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate010_offset_m0p2mm_plan_only_20260827_2230",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "4c021698c80fe1b63660950bbdbbdf030b318a28a9b73509348a6f5d1bf8c115"
+    },
+    {
+      "offset_m": -0.0003,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate010_offset_m0p3mm_plan_only_20260827_2210",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "12a6dab22210f092ff66596495250ebc8db8472681bbff0ab00acc31418d9c15"
+    },
+    {
+      "offset_m": -0.0005,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate010_offset_m0p5mm_plan_only_20260827_2200",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "b16cf6b4f0ee14fbc423dd5a371a69f30b6ebcc020b1d2b0eb8b82e3d92a5845"
+    },
+    {
+      "offset_m": -0.0007,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate010_offset_m0p7mm_plan_only_20260827_2150",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "c0a7dc59ce6ccf4a38e2f622a929b7ea2bf0825170a9067fa0e9f692467c2e25"
+    },
+    {
+      "offset_m": -0.0008,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate010_offset_m0p8mm_plan_only_20260827_2145",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "c07b7edcad0117dfc46df5df2d730e52cd11903d1f0ffe5982089decd559120e"
+    },
+    {
+      "offset_m": -0.0009,
+      "artifact": "/home/edgegrasp/ros2_ws/test_results/candidate009_plan_only_20260827_2230",
+      "status": "PLAN_ONLY_REJECTED",
+      "attempts_completed": 0,
+      "failed_segment": "approach_to_descend",
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "plan_result_sha256": "665af16ddc47be70d0d4cecc7451b5c5e6b581c742545f2d23d8125948d62e13"
+    }
+  ],
+  "zero_offset_repeatability": {
+    "home_to_approach": {
+      "accepted": "10/10",
+      "source_point_count": 83,
+      "gate_ready_point_count": 82,
+      "unique_trajectory_digest_count": 1,
+      "planning_time_p50_s": 0.0011045045,
+      "planning_time_p95_s": 0.0014906975
+    },
+    "approach_to_descend": {
+      "accepted": "10/10",
+      "source_point_count": 32,
+      "gate_ready_point_count": 31,
+      "unique_trajectory_digest_count": 1,
+      "planning_time_p50_s": 0.000740788,
+      "planning_time_p95_s": 0.0009570735
+    },
+    "descend_to_lift_closed": {
+      "accepted": "10/10",
+      "source_point_count": 22,
+      "gate_ready_point_count": 21,
+      "unique_trajectory_digest_count": 1,
+      "planning_time_p50_s": 0.0005610965,
+      "planning_time_p95_s": 0.000768601
+    }
+  },
+  "safety_and_cleanup": {
+    "all_graphs_motion_boundary_absent": true,
+    "all_graphs_trajectory_publication_count": 0,
+    "all_graphs_execute_trajectory_goal_count": 0,
+    "all_graphs_fjt_goal_count": 0,
+    "all_graphs_execution_attempted": false,
+    "all_graphs_domain_process_count_after_cleanup": 0,
+    "all_graphs_clock_absent_after_cleanup": true
+  },
+  "decision": {
+    "candidate009_execution_authorized": false,
+    "negative_offset_search_stopped": true,
+    "reason": "At the fixed orientation, even the first negative 0.1 mm grid step failed the approach-to-descend IK gate while the zero-offset control passed 10/10. Further translation-only optimization is not justified.",
+    "next_controlled_variable": "Keep the reachable zero-offset arm poses and test a 0.45 rad gripper-contact profile through static geometry and plan-only before any physics execution."
+  },
+  "claim_boundary": {
+    "moveit_plan_only_runtime_verified": true,
+    "trajectory_execution_verified_by_this_scan": false,
+    "gazebo_contact_verified_by_this_scan": false,
+    "physics_grasp_verified": false,
+    "real_hardware_verified": false
+  }
+}

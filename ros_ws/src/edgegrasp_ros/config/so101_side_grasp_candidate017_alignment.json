@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate017_alignment",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "scene_config_filename": "scene_candidate017.json",
+  "world_filename": "table_cube_candidate017.sdf",
+  "target": {
+    "id": "target_cube",
+    "center_m": [0.2475199749691644, 0.12103838250883298, 0.205]
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "grasp": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "reverse_lateral_pregrasp_with_alignment_trial",
+      "position_m": [
+        0.1942405524686608,
+        0.11567768735635443,
+        0.21671354893315634
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "cube_to_gripper_lateral_alignment",
+    "baseline": "Candidate016 scene/profile alignment",
+    "candidate": "cube shifted 1 mm toward moving pad in grasp-frame X with matching profile center",
+    "world_delta_m": [0.0005653186974165121, -0.0008263103444965205, 0.0],
+    "end_effector_descend_and_lift_delta_m": [0.0, 0.0, 0.0]
+  },
+  "claim_boundary": [
+    "Candidate017 retains Candidate016 arm poses, orientation, q=0.40 close command, effort PID, and -0.004 Nm feed-forward.",
+    "Only cube-to-gripper lateral alignment changes; the generated Gazebo world and MoveIt scene use the same scene contract.",
+    "No execution is authorized until the paired scene/profile passes the three-stage plan-only probe.",
+    "A complete action sequence is still not a physics grasp without bilateral contact, at least 20 mm lift, and retention."
+  ]
+}

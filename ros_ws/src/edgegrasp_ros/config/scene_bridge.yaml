@@ -1,0 +1,17 @@
+# Gazebo is the sole clock authority in this launch. These two bridges are
+# read-only evidence channels and never command the simulator. The dedicated
+# PosePublisher attached to target_cube is required: SceneBroadcaster Pose_V
+# loses identity and timestamps in ros_gz_bridge 1.0.22 TFMessage conversion.
+- ros_topic_name: "/edgegrasp/target_cube_pose"
+  gz_topic_name: "/model/target_cube/pose"
+  ros_type_name: "geometry_msgs/msg/PoseStamped"
+  gz_type_name: "gz.msgs.Pose"
+  direction: GZ_TO_ROS
+  lazy: false
+
+- ros_topic_name: "/edgegrasp/target_cube_contacts"
+  gz_topic_name: "/edgegrasp/target_cube_contacts"
+  ros_type_name: "ros_gz_interfaces/msg/Contacts"
+  gz_type_name: "gz.msgs.Contacts"
+  direction: GZ_TO_ROS
+  lazy: false

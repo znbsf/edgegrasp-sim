@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate019_preclose_clearance",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "scene_config_filename": "scene.json",
+  "world_filename": "table_cube.sdf",
+  "target": {
+    "id": "target_cube",
+    "center_m": [0.24695465627174787, 0.1218646928533295, 0.205]
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "grasp": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "collision_checked_high_lateral_pregrasp_for_preclose_clearance",
+      "position_m": [
+        0.1942405524686608,
+        0.11567768735635443,
+        0.29671354893315634
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "fixed_pad_clearance_before_close",
+    "baseline": "Candidate018 fixed-pad SAT overlap 0.011083351662 m at descend",
+    "candidate": "fixed-pad SAT clearance 0.001 m at descend",
+    "target_center_in_gripper_x_delta_m": -0.012097686189282315,
+    "approach_waypoint_delta_m": [0.0, 0.0, 0.0],
+    "derived_descend_and_lift_delta_m": [-0.006822850648015549, 0.009972767741761535, 0.0005887476013596293],
+    "purpose": "prevent the fixed pad from pushing the cube during descend while retaining the already reachable Candidate018 high-lateral approach waypoint"
+  },
+  "contact_policy": {
+    "home_to_approach": "target_pad_contacts_disallowed",
+    "approach_to_descend": "target_pad_contacts_disallowed",
+    "after_descend_terminal": "confirm_target_pad_contacts_allowed_then_wait_for_fresh_target",
+    "close_to_lift": "target_pad_contacts_allowed"
+  },
+  "claim_boundary": [
+    "Candidate019 keeps the Candidate018 scene, orientation, q=0.40 close command, contact material and controller settings.",
+    "The physical candidate change is the descend/lift gripper-to-cube lateral alignment needed to create a 1 mm fixed-pad pre-close gap; the proven Candidate018 approach waypoint is unchanged.",
+    "Approach and descend must both pass MoveIt with target-pad contacts disabled before any execution is considered.",
+    "Planning success does not prove zero runtime contact, bilateral grasp, lift, retention, or hardware behavior."
+  ]
+}

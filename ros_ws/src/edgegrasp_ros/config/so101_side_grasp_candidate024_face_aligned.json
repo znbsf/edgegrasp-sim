@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate024_face_aligned",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "scene_config_filename": "scene_candidate024_face_aligned.json",
+  "world_filename": "table_cube_candidate024_face_aligned.sdf",
+  "target": {
+    "id": "target_cube",
+    "center_m": [0.24108428841333183, 0.12958666029737353, 0.205]
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.2331317032041589,
+      0.64322176696111,
+      0.6312836059695762,
+      0.3652346866093155
+    ],
+    "grasp": [
+      0.32949333991371943,
+      0.6256437866625097,
+      0.6409427340464572,
+      0.2986576683029441
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "candidate020_pilz_waypoint_unchanged",
+      "position_m": [
+        0.18935130740287912,
+        0.1362844055039475,
+        0.3035699084117852
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "derived_target_pose_se3",
+    "baseline_scene": "scene.json",
+    "candidate_scene": "scene_candidate024_face_aligned.json",
+    "target_cube_yaw_deg": 37.2426998157748,
+    "target_cube_translation_world_m": [-0.005870367858416043, 0.007721967444044027, 0.0],
+    "target_cube_translation_norm_m": 0.0097,
+    "fixed_arm_candidate": "so101_side_grasp_candidate020_reachable_preclose.json",
+    "fixed_grasp_geometry": "so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+    "derived_descend_position_m": [0.2358268665862049, 0.15945756320918505, 0.22061108776810287],
+    "derived_lift_position_m": [0.2358268665862049, 0.15945756320918505, 0.2606110877681029],
+    "fixed_pad_preclose_clearance_m": 0.0010021085505342794,
+    "moving_pad_closed_overlap_m": 0.018769051773012798,
+    "source_runtime_observation": "docs/observations/2026-08-29-candidate020-022-preclose-control-runtime.json",
+    "purpose": "make the contact faces antipodal while preserving the known-reachable SO-101 arm poses and existing preclose policy"
+  },
+  "contact_policy": {
+    "home_to_approach": "target_pad_contacts_disallowed",
+    "approach_to_descend": "target_pad_contacts_disallowed",
+    "after_descend_terminal": "confirm_target_pad_contacts_allowed_then_wait_for_fresh_target",
+    "close_to_lift": "target_pad_contacts_allowed"
+  },
+  "claim_boundary": [
+    "Candidate024 changes one derived target SE(3) pose; arm poses, close command, pad material, preload effort, controller tolerance, and proxy geometry remain Candidate022 values.",
+    "The translation is not an independent tuning sweep: it is solved from the existing fixed-pad preclose gap after face alignment.",
+    "Shared-scene generation, rotated-cube OBB validation, and all three MoveIt segments must pass before any execution is considered.",
+    "Planning success would not prove bilateral contact, lift, retention, physics grasp, or hardware behavior."
+  ]
+}

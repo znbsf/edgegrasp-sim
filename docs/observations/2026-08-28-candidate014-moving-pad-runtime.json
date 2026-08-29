@@ -1,0 +1,140 @@
+{
+  "observation_id": "candidate014_moving_pad_runtime_20260828",
+  "recorded_timezone": "Asia/Shanghai",
+  "evidence_status": "PLAN_ONLY_PASS_SEQUENCE_COMPLETE_PHYSICS_GRASP_FAILED",
+  "environment": {
+    "ros_distro": "jazzy",
+    "gazebo": "Harmonic / Gazebo Sim 8.11",
+    "physics_engine": "gz-physics-dartsim-plugin",
+    "upstream_sha": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "experiment": {
+    "profile": "so101_grasp_geometry_candidate014_moving_pad_plus12mm.json",
+    "profile_sha256": "91757552dfc05d6f15e865fce36eb0e89601260ac73786ba542a1ab88f9b3333",
+    "single_changed_runtime_parameter": "moving distal-pad local-Y contact length",
+    "baseline_local_y_size_m": 0.037985401064,
+    "extension_m": 0.012,
+    "generated_local_y_size_m": 0.049985401064,
+    "preserved_proximal_local_y_m": -0.044514601201,
+    "gripper_closed_position_rad": 0.4,
+    "pad_friction_profile": "candidate012_control_mu1p0",
+    "geometry_role": "edgegrasp_simulation_attachment",
+    "claim_boundary": "The extended box is an EdgeGrasp simulation attachment, not pinned upstream mesh geometry or a verified hardware design."
+  },
+  "rejected_alignment_preflight": {
+    "purpose": "A tool-frame Y alignment idea was rejected before motion and was not retained as a project API or selected profile.",
+    "plus_5mm": {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate013_yalign_plan_20260828_1647",
+      "profile_sha256": "bfb40027cebd2f11ef48f649ab19eaa2e41a583c4802fb670207c8411e164fe4",
+      "result": "approach_to_descend NO_IK_SOLUTION",
+      "trajectory_publication_count": 0,
+      "fjt_goal_count": 0
+    },
+    "plus_2mm": {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate013_yalign_p2mm_plan_20260828_1652",
+      "profile_sha256": "8a63dfcdd5ec7a8beac4d1f244abbfd2c1dd65b56e0ac0270dcff4a01f684ebe",
+      "result": "approach_to_descend NO_IK_SOLUTION",
+      "trajectory_publication_count": 0,
+      "fjt_goal_count": 0
+    }
+  },
+  "harness_race_correction": {
+    "superseded_artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate014_moving_pad_plan_20260828_1700",
+    "observed": "The first ACM service call returned success=False because the base scene was not yet confirmed. The old harness ignored that response and later saw fixed-pad/cube INVALID_MOTION_PLAN.",
+    "fix": "Wait for base PlanningScene confirmation, require SetBool success=True, then require a confirmed status with allow_target_pad_contacts=true.",
+    "interpretation": "The superseded rejection is harness-race evidence, not a Candidate014 geometry rejection."
+  },
+  "authoritative_plan_only": {
+    "command": "bash scripts/run_grasp_candidate_plan_only.sh 85 /home/edgegrasp/ros2_ws/test_results/candidate014_moving_pad_plan_fixed_20260828_1710 candidate014-moving-pad-plan-fixed so101_grasp_geometry_candidate014_moving_pad_plus12mm.json 3 0.0 candidate012_control_mu1p0 0.012",
+    "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate014_moving_pad_plan_fixed_20260828_1710",
+    "status": "PASS",
+    "attempts_completed": 3,
+    "segments_per_attempt": 3,
+    "all_segments_accepted": true,
+    "stable_segment_digests": true,
+    "acm_service_success": true,
+    "acm_confirmed_allow_target_pad_contacts": true,
+    "execution_attempted": false,
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "plan_only_result_sha256": "e9d25602f405bbd5290371d5f877936ee639cd6b99130301cb14b3e6ab2d680f"
+  },
+  "runtime": {
+    "command": "bash scripts/run_candidate005_contact_quality.sh 86 /home/edgegrasp/ros2_ws/test_results/candidate014_moving_pad_runtime_20260828_1710 candidate014-moving-pad-runtime so101_grasp_geometry_candidate014_moving_pad_plus12mm.json 0.40 true candidate012_control_mu1p0 0.012",
+    "ros_domain_id": 86,
+    "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate014_moving_pad_runtime_20260828_1710",
+    "started_at": "2026-08-28T17:04:22.241431667+08:00",
+    "capture_finished_at": "2026-08-28T17:06:17.022788781+08:00",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-28T17:04:25.760213646/server_console.log",
+    "client_exit_code": 11,
+    "sequence_completed": true,
+    "sequence_phase": "COMPLETE",
+    "sequence_reason": "correlated_sequence_completed;physics_unverified",
+    "sequence_wrapper_status": 4,
+    "last_terminal_command_id": "candidate014-moving-pad-runtime|lift|3",
+    "physics_grasp_verified": false,
+    "physics_phase": "FAULT",
+    "physics_reason": "observation_wall_timeout",
+    "baseline_z_m": 0.20499999990200096,
+    "peak_z_m": 0.20868028124989724,
+    "peak_lift_m": 0.003680281347896279,
+    "required_lift_m": 0.02,
+    "final_z_m": 0.20499990694220302,
+    "retention_observed": false,
+    "gripper_contact_count": 1348,
+    "fixed_pad_contact_count": 979,
+    "moving_pad_contact_count": 369,
+    "simultaneous_contact_sample_count": 172,
+    "simultaneous_contact_span_ns": 462000000,
+    "simultaneous_contact_ended_before_sequence_completion_ns": 1744000000,
+    "moving_pad_contact_span_ns": 974000000,
+    "moving_pad_contact_ended_before_sequence_completion_ns": 1232000000,
+    "peak_abs_gripper_effort": 2.7478224853288333,
+    "final_xy_drift_m_cli_precision": 0.0135341154714997
+  },
+  "comparison_to_candidate011": {
+    "candidate011_observation": "docs/observations/2026-08-27-candidate011-q0p40-runtime.json",
+    "peak_lift_delta_m": -0.000030824563413351,
+    "simultaneous_contact_sample_delta": 1,
+    "simultaneous_contact_span_delta_ns": -1000000,
+    "moving_pad_contact_count_delta": -17,
+    "moving_pad_contact_span_delta_ns": -5000000,
+    "simultaneous_contact_end_margin_delta_ns": 7000000,
+    "final_xy_drift_delta_m": -0.0000261022815396,
+    "physics_grasp_status_unchanged": true,
+    "decision": "The 12 mm moving-pad length extension produced essentially the same transient result as Candidate011: 0.031 mm less peak lift, 1 ms less simultaneous-contact span, and no retention. It does not support contact-patch length as the current bottleneck."
+  },
+  "runtime_health": {
+    "generated_collision_meshes_remaining": 0,
+    "generated_contact_extension_count": 2,
+    "generated_moving_pad_size_m": [0.018586177681, 0.049985401064, 0.017214326024],
+    "explicit_pad_mu_mu2": [1.0, 1.0],
+    "controllers_active_count": 3,
+    "edgegrasp_actions_present_count": 4,
+    "robot_pose_remained_at_world_origin": true,
+    "dart_mesh_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "cleanup_exact_domain_processes_remaining": 0,
+    "clock_after_cleanup": "absent"
+  },
+  "hashes": {
+    "trial_log_sha256": "130bcd8b8b79909e9db315e6303b4f3daf5d6c3f4cfc1bc97b1d400d1a72e327",
+    "generated_proxy_urdf_sha256": "123bc8747e7fe02bf97d32af9df34de9434e66f43778c7124ece7ddd522c3cef",
+    "generated_proxy_sdf_sha256": "528d88706df8e5368621aaa47bfd63755c6d350fd02eedb40840b377f8052c87",
+    "generated_proxy_report_sha256": "ff32440b5070b851f200b5e937ad8c7baa475ebbe580d0f849b7c8ea6b11ad1b",
+    "pad_contact_material_mapping_sha256": "7a3b863c48e6f7eeeb71823407b2f4fb0d8e421e79c594cfd7a017fc932e01ca",
+    "gazebo_server_log_sha256": "a5b28475c915625594b6a784d44ab2eda68eba3ddd0335016680ea198cf6a8c4",
+    "cleanup_log_sha256": "cf39a7b5df1c95a849c197d48a0f7b7945a4a796f31d715aba0c8c07d36ef7ca"
+  },
+  "claim_boundary": {
+    "typed_sequence_runtime_verified": true,
+    "bounded_simulation_attachment_runtime_observed": true,
+    "contact_patch_length_bottleneck_identified": false,
+    "physics_grasp_verified": false,
+    "force_closure_verified": false,
+    "simulator_determinism_verified": false,
+    "hardware_geometry_verified": false,
+    "real_hardware_verified": false
+  }
+}

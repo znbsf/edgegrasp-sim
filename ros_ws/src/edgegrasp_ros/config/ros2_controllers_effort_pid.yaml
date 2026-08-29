@@ -1,0 +1,71 @@
+# EdgeGrasp Gazebo-only gripper experiment.
+#
+# The arm remains position-controlled. The gripper claims only effort so the
+# Jazzy JointTrajectoryController position-error PID is the sole writer seen by
+# gz_ros2_control. Both FollowJointTrajectory endpoints remain unchanged.
+# These gains respond to two observed Gazebo failures: a high-gain velocity
+# limit cycle and integral windup into the upper joint stop. They are simulation
+# experiment parameters, not hardware-safe values.
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    enforce_command_limits: true
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan
+      - shoulder_lift
+      - elbow_flex
+      - wrist_flex
+      - wrist_roll
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+    open_loop_control: false
+    allow_integration_in_goal_trajectories: true
+    allow_nonzero_velocity_at_trajectory_end: true
+
+gripper_controller:
+  ros__parameters:
+    joints:
+      - gripper
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+    open_loop_control: false
+    allow_integration_in_goal_trajectories: true
+    allow_nonzero_velocity_at_trajectory_end: true
+    gains:
+      gripper:
+        p: 0.05
+        i: 0.0
+        d: 0.003
+        i_clamp_max: 0.0
+        i_clamp_min: 0.0
+        antiwindup_strategy: none
+        ff_velocity_scale: 0.0
+        u_clamp_min: -0.005
+        u_clamp_max: 0.005
+    constraints:
+      stopped_velocity_tolerance: 0.05
+      goal_time: 1.0
+      gripper:
+        # A grasp is contact-limited, so reaching the free-space 0.400 rad
+        # command is neither expected nor desirable once the cube is between
+        # the pads. Candidate021 measured unilateral contact at about 0.830
+        # rad and bilateral contact at about 0.812 rad. This narrow simulation
+        # tolerance rejects the former (~0.430 rad error) while accepting the
+        # latter (~0.412 rad error). Physics success still independently
+        # requires bilateral contact, lift, and retention evidence.
+        goal: 0.42

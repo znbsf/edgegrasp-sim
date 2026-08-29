@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "observation_id": "candidate024_face_aligned_plan_runtime_repeatability_20260829",
+  "observed_time_window": {
+    "start": "2026-08-29T02:26:02.109610129+08:00",
+    "end": "2026-08-29T03:13:38.083494227+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "host": "Windows with isolated Ubuntu 24.04 WSL2 guest",
+    "ros_distribution": "Jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_backend": "DART",
+    "python": "3.12.3",
+    "upstream_repository": "https://github.com/adoodevv/so101_ros2.git",
+    "upstream_commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+    "clock_domain": "ros_sim",
+    "clock_epoch": 0
+  },
+  "candidate": {
+    "id": "candidate024",
+    "hypothesis": "Align a cube face with Candidate022's measured gripper closing axis, then restore the fixed-pad pre-close clearance without changing the reachable arm-stage poses.",
+    "scene_config": "ros_ws/src/edgegrasp_ros/config/scene_candidate024_face_aligned.json",
+    "candidate_config": "ros_ws/src/edgegrasp_ros/config/so101_side_grasp_candidate024_face_aligned.json",
+    "grasp_geometry": "ros_ws/src/edgegrasp_ros/config/so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+    "world": "ros_ws/src/edgegrasp_ros/worlds/table_cube_candidate024_face_aligned.sdf",
+    "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+    "cube_center_m": [
+      0.24108428841333183,
+      0.12958666029737353,
+      0.205
+    ],
+    "cube_yaw_rad": 0.6500077341171558,
+    "cube_yaw_deg": 37.2426998158,
+    "translation_from_candidate022_m": [
+      -0.005870367858416043,
+      0.007721967444044027,
+      0.0
+    ],
+    "translation_norm_m": 0.0097,
+    "fixed_pad_preclose_gap_m": 0.00100210855,
+    "moving_pad_closed_overlap_m": 0.01876905177,
+    "gripper_closed_position_rad": 0.4,
+    "pad_material_profile": "candidate012_control_mu1p0",
+    "moving_pad_distal_extension_m": 0.0,
+    "gripper_control_profile": "effort_pid_preload",
+    "gripper_feedforward_effort_nm": -0.02,
+    "arm_stage_poses_changed_from_candidate020": false
+  },
+  "file_sha256": {
+    "ros_ws/src/edgegrasp_ros/config/scene_candidate024_face_aligned.json": "e99ae900971772b33eed3707d189f1719b9a3a92c19c5875a6d0ac8675751701",
+    "ros_ws/src/edgegrasp_ros/config/so101_side_grasp_candidate024_face_aligned.json": "e1209fdea7a0e1d079f0d7d77025f30664f9fbad399a6d81a50b1b1cd70eb2c5",
+    "ros_ws/src/edgegrasp_ros/config/so101_grasp_geometry_candidate024_face_aligned_q0p40.json": "19b44e2b56cc1841e073166e94125eca73579f44efc831514e4f169ef3ffe22e",
+    "ros_ws/src/edgegrasp_ros/worlds/table_cube_candidate024_face_aligned.sdf": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5",
+    "ros_ws/src/edgegrasp_grasp_sequence/edgegrasp_grasp_sequence/trial_client.py": "94b948b0ca09e6ffc6cf44fd0c785c038db25e466bb5843297d291c6066ef65d"
+  },
+  "plan_only": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_plan_only_10x_20260829T0225",
+    "attempts": 10,
+    "accepted_attempts": 10,
+    "accepted_segments": 30,
+    "rejected_segments": 0,
+    "moveit_error_codes": [
+      1
+    ],
+    "planning_time_ms_range": [
+      0.355,
+      2.397
+    ],
+    "stable_trajectory_digest_by_segment": {
+      "home_to_approach": "8f94f3f1f3a33ed0a09023f1ebff8302923d0f38598dfc9858896ba9a4fbaf4f",
+      "approach_to_descend": "66a50933ba979be128a089f0cb600e9327cf9e8c36a67e49192440611918c3ac",
+      "descend_to_lift": "1aeff309c67597557f1e0af3cf416989f8ab9c049d6348de9474e486811b02af"
+    },
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "follow_joint_trajectory_goal_count": 0,
+    "execution_occurred": false
+  },
+  "stale_target_root_cause_and_fix": {
+    "pre_fix_failure_artifact": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_repeat_20260829T0232_r02",
+    "pre_fix_target_source_timestamp_ns": 27600000000,
+    "pre_fix_approach_dispatch_timestamp_ns": 27781000000,
+    "pre_fix_adapter_terminal_timestamp_ns": 27808000000,
+    "pre_fix_age_at_dispatch_ms": 181.0,
+    "pre_fix_age_at_planning_boundary_ms": 208.0,
+    "pre_fix_result": "SAFE_STOP: terminal_failure:plan_or_execution_failed:stale_target",
+    "pre_fix_motion_side_effects": {
+      "trajectory_publication_count": 0,
+      "execute_trajectory_goal_count": 0,
+      "follow_joint_trajectory_goal_count": 0
+    },
+    "root_cause": "The trial client checked freshness before starting the read-only physics observer, then waited for five pose baseline samples and sent the same target snapshot without a second check.",
+    "fix": {
+      "pre_sequence_max_target_age_ms": 100.0,
+      "core_source_freshness_limit_ms": 200.0,
+      "minimum_nominal_planning_margin_ms": 100.0,
+      "max_baseline_restarts": 2,
+      "requires_new_target_snapshot_on_restart": true,
+      "requires_cancel_accepted": true,
+      "required_wrapper_terminal": "CANCELED",
+      "required_observer_reason": "observer_cancelled",
+      "required_identity_fields": [
+        "task_id",
+        "target_id",
+        "target_source_timestamp_ns",
+        "clock_domain",
+        "clock_epoch"
+      ],
+      "late_feedback_generation_filter": true,
+      "terminal_unconfirmed_policy": "stop without sending GraspSequence"
+    },
+    "runtime_restart_evidence": {
+      "run": "r04",
+      "first_target_age_ms": 242.0,
+      "cancel_accepted": true,
+      "wrapper_status": 5,
+      "observer_reason": "observer_cancelled",
+      "identity_matched": true,
+      "second_target_age_ms": 52.0,
+      "baseline_attempts": 2,
+      "sequence_sent_after_confirmed_restart": true,
+      "physics_grasp_verified": true
+    }
+  },
+  "runtime_summary": {
+    "attempts": 11,
+    "physics_successes": 10,
+    "pre_motion_safety_rejections": 1,
+    "post_fix_attempts": 9,
+    "post_fix_physics_successes": 9,
+    "post_fix_baseline_restarts_observed": 1,
+    "post_fix_pre_sequence_target_age_ms": {
+      "min": 52.0,
+      "p50": 73.0,
+      "p95": 89.0,
+      "max": 95.0
+    },
+    "successful_retained_lift_mm": {
+      "min": 28.85774988571524,
+      "p50": 28.935958229617228,
+      "p95": 29.124462929996362,
+      "max": 29.128294233767253
+    },
+    "plan_dispatch_to_execution_start_ms": {
+      "samples": 30,
+      "p50": 51.0,
+      "p95": 76.0,
+      "max": 83.0
+    },
+    "fjt_execution_ms": {
+      "samples": 30,
+      "p50": 3618.0,
+      "p95": 7179.1,
+      "max": 7193.0,
+      "note": "Mixed approach, descend, and lift motion durations; not MoveIt planning latency."
+    },
+    "gripper_close_execution_ms": {
+      "samples": 10,
+      "p50": 2532.5,
+      "p95": 2548.85,
+      "max": 2552.0
+    },
+    "zero_dart_mesh_or_geometry_creation_diagnostic_runs": 11,
+    "exact_cleanup_and_clock_unknown_runs": 11
+  },
+  "runs": [
+    {
+      "run": "r01",
+      "classification": "pre_fix_physics_success",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_runtime_20260829T0227",
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 28.929415599311753,
+      "fixed_contact_count": 915,
+      "moving_contact_count": 1290,
+      "simultaneous_contact_sample_count": 915,
+      "evidence_digest": "c377188569cf57a2f6e8d28274c02d2fdea6fcf96dabb42d079e21235f4567ad"
+    },
+    {
+      "run": "r02",
+      "classification": "pre_fix_stale_safety_reject",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_repeat_20260829T0232_r02",
+      "physics_grasp_verified": false,
+      "sequence_completed": false,
+      "motion_side_effect_count": 0,
+      "reason": "terminal_failure:plan_or_execution_failed:stale_target",
+      "evidence_digest": "0b7dcf0a9e9f47c08b11d6050d8e72644f6fb10160dc1b1d118afc208121b6e2"
+    },
+    {
+      "run": "r03",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_repeat_fix_20260828T184635Z_r03",
+      "pre_sequence_target_age_ms": 62.0,
+      "baseline_attempts": 1,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 28.881387313731633,
+      "simultaneous_contact_sample_count": 1001,
+      "evidence_digest": "d5425ffb213138727906ef26b667741011d894e5fefaecc69822e3c5f6a71d64"
+    },
+    {
+      "run": "r04",
+      "classification": "post_fix_with_confirmed_baseline_restart",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T185117Z_r04",
+      "pre_sequence_target_age_ms": 52.0,
+      "baseline_attempts": 2,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 28.936125625861674,
+      "simultaneous_contact_sample_count": 1011,
+      "evidence_digest": "7c56007058bfdf1df35138a6c0c9566cc22c70bf266622decab99e7c606774ee"
+    },
+    {
+      "run": "r05",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T185410Z_r05",
+      "pre_sequence_target_age_ms": 80.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 29.119780225387498,
+      "simultaneous_contact_sample_count": 1068,
+      "evidence_digest": "d6c40c33375ddefd9719467e5533ff390d2f052d5a8d3cf6910f164019c71699"
+    },
+    {
+      "run": "r06",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T185655Z_r06",
+      "pre_sequence_target_age_ms": 71.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 28.935790833372778,
+      "simultaneous_contact_sample_count": 988,
+      "evidence_digest": "5ae6914b17c6d60344c207a3f8416b871f58898d3bdb2fe30527b8abddde30f5"
+    },
+    {
+      "run": "r07",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T185943Z_r07",
+      "pre_sequence_target_age_ms": 80.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 28.859076886031314,
+      "simultaneous_contact_sample_count": 980,
+      "evidence_digest": "04c4a4af53b5eefb83368b7dfa5ed241d249537e60a32d869c624709af5ca65d"
+    },
+    {
+      "run": "r08",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T190219Z_r08",
+      "pre_sequence_target_age_ms": 95.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 29.045086872019567,
+      "simultaneous_contact_sample_count": 956,
+      "evidence_digest": "3d0b7dc1e3d406d9507a71eda997b68bd48e301cb0c899ee7dcbd21f2a5f7245"
+    },
+    {
+      "run": "r09",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T190504Z_r09",
+      "pre_sequence_target_age_ms": 73.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 29.128294233767253,
+      "simultaneous_contact_sample_count": 990,
+      "evidence_digest": "517f946ad698aaae2fb1be38bce44506b1d32e0eb644b9c9e5c6e9cfe32f69a7"
+    },
+    {
+      "run": "r10",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T190749Z_r10",
+      "pre_sequence_target_age_ms": 73.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 28.85774988571524,
+      "simultaneous_contact_sample_count": 894,
+      "evidence_digest": "b3c7691861509efef185e79f1ac1550623370c8245967ba50cbfaa69c67fa419"
+    },
+    {
+      "run": "r11",
+      "classification": "post_fix",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_postfix_20260828T191054Z_r11",
+      "pre_sequence_target_age_ms": 72.0,
+      "physics_grasp_verified": true,
+      "retained_lift_mm": 29.064726028684706,
+      "simultaneous_contact_sample_count": 993,
+      "evidence_digest": "7a78dedf91c9f31e74fd4fb8402fcdd506485bdcd71414726aa50f1e6f10618d"
+    }
+  ],
+  "validation": {
+    "windows": {
+      "command": "scripts/check.ps1 -ReplayRuns 100",
+      "python": "3.14.5",
+      "pytest": "9.1.1",
+      "collected": 332,
+      "passed": 332,
+      "failed": 0,
+      "skipped": 0,
+      "project_structure": "PASS",
+      "deterministic_replay_runs_per_speed": 100
+    },
+    "ubuntu_jazzy": {
+      "build_packages": 5,
+      "package_results": {
+        "edgegrasp_core": "1/1",
+        "edgegrasp_interfaces": "0 tests",
+        "edgegrasp_ros": "49/49",
+        "edgegrasp_moveit_adapter": "23/23",
+        "edgegrasp_grasp_sequence": "45/45"
+      },
+      "total_collected": 118,
+      "total_passed": 118,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "claim_boundary": {
+    "sequence_completed": true,
+    "simulation_physics_grasp_verified": true,
+    "success_contract": "Both configured distal-pad contacts plus at least 20 mm cube lift and a 0.5 s retention window, correlated to the matching lift command.",
+    "specific_scene_and_pose_only": true,
+    "proxy_collision_geometry_only": true,
+    "all_robot_proxy_links_behavior_verified": false,
+    "physics_determinism_verified": false,
+    "hardware_grasp_verified": false,
+    "hardware_stop_verified": false,
+    "camera_localization_verified": false,
+    "post_release_cube_pose_is_not_retention_evidence": true
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate020_reachable_preclose",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "scene_config_filename": "scene.json",
+  "world_filename": "table_cube.sdf",
+  "target": {
+    "id": "target_cube",
+    "center_m": [0.24695465627174787, 0.1218646928533295, 0.205]
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.2331317032041589,
+      0.64322176696111,
+      0.6312836059695762,
+      0.3652346866093155
+    ],
+    "grasp": [
+      0.32949333991371943,
+      0.6256437866625097,
+      0.6409427340464572,
+      0.2986576683029441
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "pilz_waypoint_extracted_from_accepted_ompl_route",
+      "position_m": [
+        0.18935130740287912,
+        0.1362844055039475,
+        0.3035699084117852
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "reachable_preclose_grasp_pose",
+    "baseline": "Candidate019 exact-clearance pose was not reachable at its retained five-axis orientation",
+    "candidate": "closest collision-valid FK sample from a bounded local pan/lift/elbow/wrist scan",
+    "fk_target_point_error_m": 0.00392342365589997,
+    "derived_descend_position_m": [0.2358268665862049, 0.15945756320918505, 0.22061108776810287],
+    "derived_lift_position_m": [0.2358268665862049, 0.15945756320918505, 0.2606110877681029],
+    "approach_waypoint_source_artifact": "/home/edgegrasp/ros2_ws/test_results/candidate020_ompl_route_probe_20260829T0053/route_8.json",
+    "approach_waypoint_joint_positions_rad": [-0.6985671088268519, -1.0231248587861945, 0.27176033136916994, 0.687499046697227, -1.3453274192533609],
+    "approach_minimum_static_clearance_m": 0.05185274586260248,
+    "purpose": "preserve a contact-free pre-close gap without leaving the SO-101 five-axis reachable manifold"
+  },
+  "contact_policy": {
+    "home_to_approach": "target_pad_contacts_disallowed",
+    "approach_to_descend": "target_pad_contacts_disallowed",
+    "after_descend_terminal": "confirm_target_pad_contacts_allowed_then_wait_for_fresh_target",
+    "close_to_lift": "target_pad_contacts_allowed"
+  },
+  "claim_boundary": [
+    "Candidate020 changes the grasp orientation and local target placement to one geometry-gated FK sample, then uses one accepted OMPL route state as a deterministic Pilz waypoint.",
+    "The 3.923 mm FK target-point error, 5.803 mm descend palm clearance, 51.853 mm approach clearance, and primitive-pad margins are static evidence only.",
+    "Approach, descend, and lift must all pass repeated MoveIt plan-only checks before any execution is considered.",
+    "Planning success does not prove zero runtime pre-close contact, bilateral grasp, lift, retention, or hardware behavior."
+  ]
+}

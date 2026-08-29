@@ -1,0 +1,225 @@
+{
+  "observation_id": "candidate005-typed-runtime-2026-08-27",
+  "recorded_timezone": "Asia/Shanghai (+08:00)",
+  "evidence_status": "RUNTIME_SEQUENCE_COMPLETE_CONTACT_OBSERVED_PHYSICS_FAIL",
+  "environment": {
+    "wsl_distribution": "Ubuntu-24.04",
+    "ubuntu": "24.04.4 LTS",
+    "architecture": "x86_64",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "ros_domain_id": 42,
+    "pinned_so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+    "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35"
+  },
+  "timing": {
+    "gazebo_server_log_started_at": "2026-08-27T18:16:24.512820844+08:00",
+    "trial_started_at": "2026-08-27T18:24:37.610601655+08:00",
+    "trial_log_finished_at": "2026-08-27T18:25:38.935716483+08:00",
+    "cleanup_finished_at": "2026-08-27T18:28:15.417443013+08:00"
+  },
+  "runtime_preconditions": {
+    "motion_allowed": true,
+    "interface_ready": true,
+    "planning_scene_ready": true,
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "joint_state_names": [
+      "elbow_flex",
+      "gripper",
+      "shoulder_lift",
+      "shoulder_pan",
+      "wrist_flex",
+      "wrist_roll"
+    ],
+    "fjt_actions": [
+      "/arm_controller/follow_joint_trajectory",
+      "/gripper_controller/follow_joint_trajectory"
+    ],
+    "edgegrasp_actions": [
+      "/edgegrasp/execute_trajectory",
+      "/edgegrasp/plan_target",
+      "/edgegrasp/grasp_sequence",
+      "/edgegrasp/grasp_physics_evidence"
+    ]
+  },
+  "planning_scene_policy": {
+    "target_cube_retained": true,
+    "selective_acm_service": "/edgegrasp/set_target_pad_contacts",
+    "service_success": true,
+    "confirmation_ready": true,
+    "allowed_target_contact_links": [
+      "edgegrasp_fixed_finger_pad_link",
+      "edgegrasp_moving_finger_pad_link"
+    ],
+    "forbidden_target_contact_links": [
+      "gripper_link",
+      "moving_jaw_so101_v1_link"
+    ]
+  },
+  "typed_gripper_preparation": {
+    "direct_fjt_bypass": false,
+    "failed_attempts": [
+      {
+        "task_id": "candidate005-prep-001",
+        "exit_code": 1,
+        "reason": "fresh matching TrackedTarget not observed"
+      },
+      {
+        "task_id": "candidate005-prep-002",
+        "exit_code": 1,
+        "reason": "fresh matching TrackedTarget not observed"
+      }
+    ],
+    "diagnosis": "The preparation node filtered for ros_sim targets but its default clock was the system clock, so otherwise live targets failed the age calculation.",
+    "successful_attempt": {
+      "task_id": "candidate005-prep-003",
+      "explicit_use_sim_time": true,
+      "exit_code": 0,
+      "command_id": "candidate005-prep-003|diagnostic|0",
+      "controller": "gripper_controller",
+      "wrapper_status": 4,
+      "downstream_terminal_observed": true,
+      "fjt_error_code": 0,
+      "fjt_error_string": "Goal successfully reached!",
+      "success": true,
+      "final_gripper_position_rad": 1.499999492924928
+    },
+    "implementation_followup": "prepare_so101_trial.py now defaults its ROS node to use_sim_time=true and fails closed if that invariant is not active."
+  },
+  "candidate": {
+    "task_id": "candidate005-physics-001",
+    "target_id": "target_cube",
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "velocity_scaling": 0.1,
+    "acceleration_scaling": 0.1,
+    "gripper_closed_position_rad": 0.6,
+    "approach_position_m": [
+      0.18606933614192925,
+      0.11976423272744036,
+      0.38721872836424076
+    ],
+    "descend_position_m": [
+      0.2462364349184608,
+      0.15125054509958977,
+      0.21671404504175756
+    ],
+    "lift_position_m": [
+      0.2462364349184608,
+      0.15125054509958977,
+      0.25671404504175754
+    ],
+    "approach_orientation_xyzw": [
+      0.19946281649811778,
+      0.38019026690132723,
+      0.8150060012713882,
+      0.38914671228183106
+    ],
+    "grasp_orientation_xyzw": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "sequence_result": {
+    "process_exit_code": 11,
+    "exit_code_contract": "The trial client returns 11 when the command sequence completed but independent physics verification did not pass.",
+    "wrapper_status": 4,
+    "sequence_completed": true,
+    "terminal_phase": "COMPLETE",
+    "reason": "correlated_sequence_completed;physics_unverified",
+    "observed_stage_order": [
+      "APPROACH_PLAN",
+      "APPROACH_EXEC",
+      "DESCEND_PLAN",
+      "DESCEND_EXEC",
+      "CLOSE_GRIPPER_EXEC",
+      "LIFT_PLAN",
+      "LIFT_EXEC",
+      "COMPLETE"
+    ],
+    "last_terminal_command_id": "candidate005-physics-001|lift|3",
+    "last_trajectory_digest": "805288e71523b78ebf609f75bb4cee0d1dbbb01205d406c2eb68386cef1df3cb",
+    "individual_stage_terminal_payloads_exported": false
+  },
+  "physics_result": {
+    "wrapper_status": 6,
+    "phase": "FAULT",
+    "reason": "observation_wall_timeout",
+    "physics_grasp_verified": false,
+    "gripper_contact_observed": true,
+    "gripper_contact_count": 1283,
+    "matched_contact_pair": [
+      "target_cube::target_cube_link::collision",
+      "so101::gripper_link::gripper_link_fixed_joint_lump__edgegrasp_grasp_proxy_fixed_finger_pad_collision_2"
+    ],
+    "per_pad_contact_histogram_captured": false,
+    "table_contact_count": 11475,
+    "pose_sample_count": 2676,
+    "baseline_z_m": 0.20499999990200096,
+    "peak_z_m": 0.20531559484207534,
+    "peak_lift_m": 0.0003155949400743818,
+    "required_lift_m": 0.02,
+    "final_z_m": 0.20499995414764088,
+    "lift_observed": false,
+    "retention_observed": false,
+    "initial_cube_pose_xyz_rpy_cli_precision": [
+      0.246955,
+      0.121865,
+      0.205,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "final_cube_pose_xyz_rpy_cli_precision": [
+      0.249235,
+      0.12346,
+      0.205,
+      0.0,
+      0.0,
+      0.053803
+    ],
+    "approximate_horizontal_displacement_m": 0.00278297905331622,
+    "evidence_digest": "e36e8cf3b256d52d50f94a865f26f8c1317f5a4ea1180b4a00b389fdbd778b9c"
+  },
+  "runtime_health": {
+    "final_robot_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "final_gripper_position_rad": 0.6000000000009827,
+    "controllers_still_active_after_trial": true,
+    "dart_mesh_construction_diagnostic_count": 0,
+    "geometry_could_not_be_created_count": 0,
+    "table_contact_topic_present": true,
+    "cube_contact_topic_present": true
+  },
+  "logs": {
+    "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate005_typed_runtime_20260827_1818",
+    "gazebo_server": {
+      "path": "/home/edgegrasp/.gz/sim/log/2026-08-27T18:16:24.512820844/server_console.log",
+      "sha256": "ff51a894a9361c955ae3762ec46d1bc3cefb2bef1e3babeb4d61b00af32252fe"
+    },
+    "gazebo_stdout_sha256": "5acea596b84a05b4786421948590346c794eb3b3277c02035369d6f3e42e66d3",
+    "move_group_stdout_sha256": "80a6c0b47fbc788447b0a04eb02007fbc790656893164bccef99698eeae717dc",
+    "planning_scene_stdout_sha256": "8465edef8d3062e842da2dc706992c174476a0add182e6f000dc3e07e6a9fc93",
+    "adapter_stdout_sha256": "cf8f20cdb11c2e6ea90c8790df1621c5d86834ba2b06bc021cda3933f6554e6d",
+    "sequence_stdout_sha256": "a93be4429bfc59750ea259f3e0ccd35e69415c4dbf58ceb5756705eb6fcf4781",
+    "trial_stdout_sha256": "5b220006e204633457f94c7af84ed42d5ed8671e0ed9cb5aca9c331469267b3e"
+  },
+  "cleanup": {
+    "exact_pid_sigint_only": true,
+    "launch_shutdown_escalated_some_children_to_sigterm": true,
+    "matching_process_count_after_cleanup": 0,
+    "clock_topic_after_cleanup": "absent",
+    "ros_daemon_stopped": true,
+    "broad_kill_used": false
+  },
+  "claim_boundary": {
+    "verified": "The routed candidate completed the correlated typed arm/gripper sequence and produced cube-to-fixed-pad proxy contact.",
+    "not_verified": "The run did not achieve the 20 mm lift threshold or any retention window. Bilateral pad contact, full collision fidelity, physical grasp success, and real hardware remain unverified.",
+    "next_debugging_evidence": "Capture a per-pad collision histogram before changing contact geometry or close position; the retained result identifies the fixed-pad proxy but does not prove whether the moving pad ever contacted."
+  }
+}

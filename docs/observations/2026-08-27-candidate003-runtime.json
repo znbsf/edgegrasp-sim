@@ -1,0 +1,202 @@
+{
+  "observation_id": "candidate003-runtime-2026-08-27",
+  "observation_window": {
+    "started_at": "2026-08-27T16:24:42.842897+08:00",
+    "finished_at": "2026-08-27T16:32:42.7748803+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 230,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "logs": {
+    "build": "/home/edgegrasp/ros2_ws/log/build_2026-08-27_16-22-01",
+    "package_test": "/home/edgegrasp/ros2_ws/log/test_2026-08-27_16-23-24",
+    "package_test_result_base": "/home/edgegrasp/ros2_ws/test_results/candidate003_20260827_1622",
+    "gazebo_ros_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-24-42-842897-DESKTOP-MGV04IT-346",
+    "gazebo_server": "/home/edgegrasp/.gz/sim/log/2026-08-27T16:24:44.755980345/server_console.log",
+    "move_group_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-25-46-005599-DESKTOP-MGV04IT-840",
+    "planning_scene_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-25-45-531624-DESKTOP-MGV04IT-845",
+    "moveit_adapter_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-25-45-522993-DESKTOP-MGV04IT-847",
+    "grasp_sequence_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-25-46-114623-DESKTOP-MGV04IT-866"
+  },
+  "preconditions": {
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "fjt_actions": [
+      "/arm_controller/follow_joint_trajectory",
+      "/gripper_controller/follow_joint_trajectory"
+    ],
+    "typed_actions": [
+      "/edgegrasp/execute_trajectory",
+      "/edgegrasp/plan_target",
+      "/edgegrasp/grasp_sequence",
+      "/edgegrasp/grasp_physics_evidence"
+    ],
+    "planning_scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35",
+    "initial_expected_objects": [
+      "edgegrasp_table",
+      "edgegrasp_target_cube"
+    ],
+    "motion_allowed": true,
+    "interface_ready": true
+  },
+  "build_and_tests": {
+    "build_packages": 5,
+    "build_result": "PASS",
+    "package_tests": {
+      "edgegrasp_core": 1,
+      "edgegrasp_interfaces": 0,
+      "edgegrasp_ros": 46,
+      "edgegrasp_moveit_adapter": 21,
+      "edgegrasp_grasp_sequence": 30
+    },
+    "total": 98,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "known_teardown_warning": "edgegrasp_ros emitted: cannot use Destroyable because destruction was requested"
+  },
+  "trial_preparation": {
+    "task_id": "candidate003-prep-040",
+    "controller": "gripper_controller",
+    "requested_position_rad": 1.5,
+    "typed_gate_success": true,
+    "wrapper_status": 4,
+    "downstream_terminal_observed": true,
+    "fjt_error_code": 0,
+    "direct_fjt_bypass": false
+  },
+  "approach_execution": {
+    "task_id": "candidate003-approach-041",
+    "command_id": "candidate003-approach-041|approach|0",
+    "target_position_m": [
+      0.2709963789421751,
+      0.16819000116779706,
+      0.2967142812839486
+    ],
+    "moveit_error_code": 1,
+    "moveit_direct_execution_used": false,
+    "gate_accepted": true,
+    "gate_terminal": true,
+    "downstream_action_status": 4,
+    "downstream_terminal_observed": true,
+    "fjt_error_code": 0,
+    "trajectory_digest": "96e1c6d49619c6b0a3d20a626f4dfc62d1af1230c3b298c027513ba55283147b",
+    "cube_pose_before_xyz": [0.246955, 0.121865, 0.205],
+    "cube_pose_after_xyz": [0.246955, 0.121865, 0.205],
+    "robot_pose_after_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  },
+  "intentional_contact_policy": {
+    "service": "/edgegrasp/set_optional_cube_collision",
+    "request": false,
+    "confirmed": true,
+    "expected_objects": ["edgegrasp_table"],
+    "forbidden_objects": ["edgegrasp_target_cube"],
+    "gazebo_target_cube_retained": true
+  },
+  "plan_only_after_policy": {
+    "approach_to_descend": {
+      "moveit_error_code": 1,
+      "source_point_count": 51,
+      "gate_ready_point_count": 50,
+      "execution_attempted": false
+    },
+    "descend_to_lift": {
+      "moveit_error_code": 1,
+      "source_point_count": 22,
+      "gate_ready_point_count": 21,
+      "execution_attempted": false
+    }
+  },
+  "sequence": {
+    "task_id": "candidate003-physics-042",
+    "sequence_completed": true,
+    "sequence_phase": "COMPLETE",
+    "sequence_reason": "correlated_sequence_completed;physics_unverified",
+    "sequence_wrapper_status": 4,
+    "last_terminal_command_id": "candidate003-physics-042|lift|3",
+    "last_trajectory_digest": "7428c9887db2027256fb82ee381716c84afad7c2faa4d2e43a8e53b979df6738",
+    "stage_downstream_results": {
+      "approach": "FJT Goal reached, success",
+      "descend": "FJT Goal reached, success",
+      "close_gripper": "FJT Goal reached, success",
+      "lift": "FJT Goal reached, success"
+    }
+  },
+  "physics": {
+    "physics_grasp_verified": false,
+    "physics_phase": "FAULT",
+    "physics_reason": "observation_wall_timeout",
+    "physics_wrapper_status": 6,
+    "distal_pad_contact_tokens_required": [
+      "edgegrasp_grasp_proxy_fixed_finger_pad",
+      "edgegrasp_grasp_proxy_moving_finger_pad"
+    ],
+    "distal_pad_contact_count": 0,
+    "distal_pad_contact_observed": false,
+    "matched_gripper_collision1": "",
+    "matched_gripper_collision2": "",
+    "baseline_z_m": 0.20499999990200096,
+    "peak_z_m": 0.20743373798318185,
+    "peak_lift_m": 0.00243373808118089,
+    "required_lift_m": 0.02,
+    "final_z_m": 0.20499985094196407,
+    "retention_observed": false,
+    "pose_sample_count": 2527,
+    "table_contact_count": 10958,
+    "final_cube_pose_xyz_rpy": [
+      0.243793,
+      0.069662,
+      0.205,
+      0.000001,
+      -0.000002,
+      -1.68417
+    ],
+    "horizontal_displacement_from_initial_m": 0.0522983480763947,
+    "final_raw_contact_pair": [
+      "target_cube::target_cube_link::collision",
+      "table::table_link::collision"
+    ],
+    "evidence_digest": "1621a719b8d4d444c5205bfaba9ea9b6da626db0085d4cedd8e197749e3b514c"
+  },
+  "runtime_health": {
+    "dart_collision_construction_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "robot_final_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "matching_process_count_after_cleanup": 0,
+    "clock_topic_after_cleanup": "unknown",
+    "move_group_sigint": "segmentation fault during Executor destruction",
+    "planning_scene_sigint": "rclpy message conversion RuntimeError during teardown",
+    "gazebo_sigint_exit_code": -2,
+    "trajectory_gate_teardown_warning": "Destroyable because destruction was requested"
+  },
+  "claim_boundary": {
+    "verified": [
+      "Candidate 003 retained the cube during a collision-validated and typed-gated approach.",
+      "The target-contact scene policy removed only the optional MoveIt cube and retained the required table and Gazebo cube.",
+      "All four correlated sequence stages reached successful downstream FJT terminals.",
+      "The stricter observer required an exact distal-pad proxy token and found none."
+    ],
+    "negative_evidence": [
+      "No distal-pad/cube contact was observed.",
+      "Peak cube lift was only about 2.43 mm versus the required 20 mm.",
+      "The cube returned to table height and moved about 52.3 mm laterally.",
+      "Cleanup still exposes MoveGroup, PlanningScene and trajectory-gate teardown defects."
+    ],
+    "not_verified": [
+      "simulated grasp success",
+      "cube lift and retention",
+      "full-arm collision fidelity",
+      "real hardware behavior"
+    ]
+  }
+}

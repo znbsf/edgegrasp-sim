@@ -1,0 +1,107 @@
+{
+  "observation_id": "candidate009_plan_only_runtime_20260827",
+  "observation_window": {
+    "started_at": "2026-08-27T21:34:48.533926368+08:00",
+    "finished_at": "2026-08-27T21:35:36.108493384+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "evidence_status": "RUNTIME_PLAN_ONLY_REJECTED_NO_IK_ZERO_EXECUTION",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 53,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "inputs": {
+    "profile": "so101_grasp_geometry_candidate009_centered_q0p50.json",
+    "profile_sha256": "db7c3483a18e7065f930a77706eb3b8c802413dd22a46c716ade07ff98a70122",
+    "candidate_sha256": "01be94b3d631ce33878f9fcc4c59991573207fcc31afad36999ef00d360ce16d",
+    "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35",
+    "gripper_contact_position_rad": 0.5,
+    "target_center_x_offset_from_candidate008_m": -0.0009,
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "attempts_requested": 10
+  },
+  "motion_boundary": {
+    "edgegrasp_motion_nodes_launched": false,
+    "execute_trajectory_service_present": false,
+    "edgegrasp_motion_actions_present": false,
+    "controller_fjt_servers_present": true,
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "execution_attempted": false
+  },
+  "plan_only_segments": [
+    {
+      "name": "home_to_approach",
+      "attempt": 1,
+      "target_position_m": [
+        0.18606933614192925,
+        0.11976423272744036,
+        0.38721872836424076
+      ],
+      "moveit_error_code": 1,
+      "source_point_count": 83,
+      "gate_ready_point_count": 82,
+      "planning_time_s": 0.001872408,
+      "validator_accepted": true,
+      "plan_accepted": true,
+      "trajectory_digest": "cda1500f0a8c22fc8a2b550ad59a2290f4ecfcfa2885887f940e183bdef60aeb"
+    },
+    {
+      "name": "approach_to_descend",
+      "attempt": 1,
+      "target_position_m": [
+        0.24572885309767808,
+        0.1519924630851577,
+        0.21675784456118077
+      ],
+      "moveit_service_error_code": 99999,
+      "move_group_log_error_name": "NO_IK_SOLUTION",
+      "move_group_log_detail": "Failed to compute inverse kinematics for link: gripper_frame_link of goal pose",
+      "source_point_count": 0,
+      "gate_ready_point_count": 0,
+      "planning_time_s": 0.053126489,
+      "validator_accepted": false,
+      "plan_accepted": false
+    },
+    {
+      "name": "descend_to_lift_closed",
+      "attempted": false,
+      "reason": "prior_segment_rejected"
+    }
+  ],
+  "runtime_health": {
+    "controllers_active_count": 3,
+    "robot_pose_final_xyz_m": [0.0, 0.0, 0.0],
+    "robot_pose_final_rpy_rad": [0.0, 0.0, 0.0],
+    "cube_pose_final_xyz_m": [0.246955, 0.121865, 0.205],
+    "dart_mesh_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0
+  },
+  "artifacts": {
+    "directory": "/home/edgegrasp/ros2_ws/test_results/candidate009_plan_only_20260827_2230",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T21:34:52.547749625/server_console.log",
+    "plan_only_result_sha256": "665af16ddc47be70d0d4cecc7451b5c5e6b581c742545f2d23d8125948d62e13",
+    "move_group_log_sha256": "669b0efd1b4d682ccb2e7b775cf59ce589fd6f88f6e3ad076f19f3f86d64638c",
+    "planning_scene_status_sha256": "45d624901f880fd5f46207863648330b6ea043575ccb7212de5d0debf162ae72",
+    "cleanup_log_sha256": "4eadb9555e6dfd55d1b0b5a73590144372e28b82cd1ecb1edb1bcb4e410acb4c"
+  },
+  "cleanup": {
+    "matching_domain_process_count_after_cleanup": 0,
+    "clock_after_cleanup": "Unknown topic /clock"
+  },
+  "claim_boundary": {
+    "candidate009_static_symmetry_selection_still_valid": true,
+    "candidate009_moveit_plan_verified": false,
+    "candidate009_execution_authorized": false,
+    "candidate009_execution_attempted": false,
+    "physics_grasp_verified": false,
+    "interpretation": "The 0.9 mm tool-X symmetry offset passed static primitive geometry but failed the second chained Pilz PTP segment because MoveIt could not find IK. This is a fail-closed reachability result, not a controller, gate, contact, or grasp result."
+  }
+}

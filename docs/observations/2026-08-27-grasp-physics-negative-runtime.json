@@ -1,0 +1,78 @@
+{
+  "observation_id": "grasp-physics-negative-runtime-2026-08-27",
+  "started_at": "2026-08-27T06:11:49.549146+08:00",
+  "finished_at": "2026-08-27T06:11:51.105217+08:00",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_workspace": "/home/edgegrasp/ros2_ws"
+  },
+  "launch": {
+    "command": "ros2 launch edgegrasp_ros edgegrasp_proxy_gazebo.launch.py use_camera:=false launch_edgegrasp_nodes:=false launch_physics_observer:=true",
+    "ros_log_directory": "/home/edgegrasp/.ros/log/2026-08-27-06-07-27-899793-DESKTOP-MGV04IT-36472",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T06:07:28.830217247/server_console.log"
+  },
+  "scene_digest": "54fabe93f95b57379c2579775e9c0d45117460c6eed578071f7b68f9177cb55d",
+  "static_and_graph_observations": {
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "fjt_actions": [
+      "/arm_controller/follow_joint_trajectory",
+      "/gripper_controller/follow_joint_trajectory"
+    ],
+    "observer_action": "/edgegrasp/grasp_physics_evidence",
+    "observer_action_clients": [],
+    "observer_motion_publishers": [],
+    "clock_publisher_count": 1,
+    "clock_authority_node": "/ros_gz_bridge",
+    "dart_mesh_construction_diagnostic_count": 0,
+    "so101_pose_xyz_m": [0.0, 0.0, 0.0],
+    "so101_pose_rpy_rad": [0.0, 0.0, 0.0]
+  },
+  "raw_observation_samples": {
+    "target_cube_pose": {
+      "stamp_ns": 227470000000,
+      "frame_id": "edgegrasp_table_cube",
+      "xyz_m": [0.2, 1.1683528068229902e-21, 0.424999999902001]
+    },
+    "target_cube_contact": {
+      "stamp_ns": 235575000000,
+      "collision1": "target_cube::target_cube_link::collision",
+      "collision2": "table::table_link::collision",
+      "contact_plane_z_m": 0.3999999902000027,
+      "normal_z": 1.0
+    }
+  },
+  "negative_action_check": {
+    "command": "python3 /home/edgegrasp/ros2_ws/src/edgegrasp-sim/scripts/check_grasp_physics_observer.py",
+    "command_capability": "none_read_only_observer",
+    "exit_code": 0,
+    "goal_accepted": true,
+    "action_goal_status": 6,
+    "action_goal_status_name": "STATUS_ABORTED",
+    "terminal_phase": "FAULT",
+    "reason": "observation_sim_timeout",
+    "pose_sample_count": 76,
+    "sequence_completed": false,
+    "physics_grasp_verified": false,
+    "evidence_digest": "27137a65d48d9c18c8e2657ff572f12800c4f27cc83c9328d093092c7d02735b"
+  },
+  "claim_boundary": {
+    "verified": [
+      "The live observer receives timestamped target-cube pose samples.",
+      "The live bridge exposes target-cube/table contact identity.",
+      "The observer has no motion action client and fails closed without correlated sequence, gripper contact, lift and retention evidence."
+    ],
+    "not_verified": [
+      "gripper-to-cube contact",
+      "cube lift",
+      "retention after lift",
+      "physics grasp success"
+    ]
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "observation_id": "candidate005-simultaneous-proxy-runtime-2026-08-27",
+  "recorded_timezone": "Asia/Shanghai (+08:00)",
+  "evidence_status": "RUNTIME_PROXY_MOVEIT_SEQUENCE_COMPLETE_SIMULTANEOUS_PAD_CONTACT_NO_LIFT",
+  "supersedes_for_planning_model_scope": "candidate005-contact-histogram-runtime-2026-08-27",
+  "environment": {
+    "wsl_distribution": "Ubuntu-24.04",
+    "ubuntu": "24.04.4 LTS",
+    "architecture": "x86_64",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "pinned_so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3",
+    "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35"
+  },
+  "planning_model_contract": {
+    "launch": "ros2 launch edgegrasp_ros edgegrasp_proxy_move_group.launch.py robot_name:=so101 use_camera:=false use_gazebo:=true use_sim_time:=true use_rviz:=false",
+    "edgegrasp_proxy_move_group_used": true,
+    "direct_moveit_execution_action_present": false,
+    "move_group_action_present": true,
+    "move_group_robot_description_pad_links": [
+      "edgegrasp_fixed_finger_pad_link",
+      "edgegrasp_moving_finger_pad_link"
+    ],
+    "validate_solution_load_count": 3,
+    "claim": "The runtime planning model was the EdgeGrasp-owned thin proxy overlay. This is scoped runtime evidence, not whole-robot collision-fidelity proof."
+  },
+  "attempts": [
+    {
+      "attempt_id": "candidate005-simultaneous-proxy-001",
+      "ros_domain_id": 44,
+      "started_at": "2026-08-27T19:18:32.059567541+08:00",
+      "gazebo_server_log_started_at": "2026-08-27T19:18:56.28349621+08:00",
+      "capture_finished_at": "2026-08-27T19:23:41.897425995+08:00",
+      "result": "SAFE_STOP_CLOCK_ROLLBACK",
+      "sequence_wrapper_status": 6,
+      "sequence_completed": false,
+      "terminal_phase": "SAFE_STOP",
+      "reason": "terminal_failure:plan_or_execution_failed:permission:clock_rollback:115405000000<115406000000:trajectory_gate:canceled:client_cancel_requested",
+      "rollback_previous_ns": 115406000000,
+      "rollback_observed_ns": 115405000000,
+      "clock_publisher_count": 1,
+      "clock_publisher_node": "ros_gz_bridge",
+      "last_terminal_command_id": "candidate005-simultaneous-proxy-001|approach|0",
+      "last_trajectory_digest": "747c6052c5d662fba14dda6d98c671fd0ec123cc03087b2c789c03d33b2e512d",
+      "gripper_contact_count": 0,
+      "simultaneous_gripper_contact_sample_count": 0,
+      "physics_grasp_verified": false,
+      "controllers_still_active": true,
+      "cube_pose_unchanged": true,
+      "robot_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate005_simultaneous_proxy_runtime_20260827_1940",
+      "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T19:18:56.28349621/server_console.log",
+      "trial_stdout_sha256": "cb229c5eeaedce1be917954c267dcf400818ccff167f6d8686e2940bd4148830",
+      "clock_info_sha256": "98fc23317d7a7d41a1f4263af4c8ef839ff9e4c3b4d4f48bc5a2dc150a891e04",
+      "recovery_policy": "No retry occurred in the latched graph. Exact-PID cleanup removed the graph, /clock publisher count reached zero, and the one bounded retry used a new ROS domain and fresh process epoch. The rollback safety rule was not weakened."
+    },
+    {
+      "attempt_id": "candidate005-simultaneous-proxy-retry-001",
+      "ros_domain_id": 45,
+      "started_at": "2026-08-27T19:26:38.450530823+08:00",
+      "gazebo_server_log_started_at": "2026-08-27T19:26:41.641080394+08:00",
+      "capture_finished_at": "2026-08-27T19:31:00.725010137+08:00",
+      "cleanup_finished_at": "2026-08-27T19:31:53.182432665+08:00",
+      "result": "SEQUENCE_COMPLETE_PHYSICS_UNVERIFIED",
+      "preflight": {
+        "preexisting_matching_process_count": 0,
+        "clock_topic_before_launch": "unknown",
+        "motion_allowed": true,
+        "interface_ready": true,
+        "planning_scene_ready": true,
+        "planning_scene_reason": "confirmed",
+        "planning_scene_node_count": 1,
+        "target_cube_retained": true,
+        "selective_acm_service_success": true,
+        "allowed_target_contact_links": [
+          "edgegrasp_fixed_finger_pad_link",
+          "edgegrasp_moving_finger_pad_link"
+        ],
+        "forbidden_target_contact_links": [
+          "gripper_link",
+          "moving_jaw_so101_v1_link"
+        ],
+        "controllers_active": [
+          "joint_state_broadcaster",
+          "arm_controller",
+          "gripper_controller"
+        ],
+        "fjt_actions": [
+          "/arm_controller/follow_joint_trajectory",
+          "/gripper_controller/follow_joint_trajectory"
+        ],
+        "edgegrasp_actions": [
+          "/edgegrasp/execute_trajectory",
+          "/edgegrasp/plan_target",
+          "/edgegrasp/grasp_sequence",
+          "/edgegrasp/grasp_physics_evidence"
+        ]
+      },
+      "typed_gripper_preparation": {
+        "task_id": "candidate005-sim-retry-prep-001",
+        "direct_fjt_bypass": false,
+        "process_exit_code": 0,
+        "command_id": "candidate005-sim-retry-prep-001|diagnostic|0",
+        "controller": "gripper_controller",
+        "wrapper_status": 4,
+        "downstream_terminal_observed": true,
+        "fjt_error_code": 0,
+        "fjt_error_string": "Goal successfully reached!",
+        "requested_position_rad": 1.5,
+        "success": true
+      },
+      "candidate": {
+        "target_id": "target_cube",
+        "pipeline_id": "pilz_industrial_motion_planner",
+        "planner_id": "PTP",
+        "velocity_scaling": 0.1,
+        "acceleration_scaling": 0.1,
+        "gripper_closed_position_rad": 0.6,
+        "approach_position_m": [
+          0.18606933614192925,
+          0.11976423272744036,
+          0.38721872836424076
+        ],
+        "descend_position_m": [
+          0.2462364349184608,
+          0.15125054509958977,
+          0.21671404504175756
+        ],
+        "lift_position_m": [
+          0.2462364349184608,
+          0.15125054509958977,
+          0.25671404504175754
+        ],
+        "approach_orientation_xyzw": [
+          0.19946281649811778,
+          0.38019026690132723,
+          0.8150060012713882,
+          0.38914671228183106
+        ],
+        "grasp_orientation_xyzw": [
+          0.3450298741758752,
+          0.6172118344266647,
+          0.6332767577280262,
+          0.3145862131297726
+        ]
+      },
+      "sequence_result": {
+        "process_exit_code": 11,
+        "exit_code_contract": "The client returns 11 when the correlated command sequence completed but independent physics verification did not pass.",
+        "wrapper_status": 4,
+        "sequence_completed": true,
+        "terminal_phase": "COMPLETE",
+        "reason": "correlated_sequence_completed;physics_unverified",
+        "observed_stage_order": [
+          "APPROACH_PLAN",
+          "APPROACH_EXEC",
+          "DESCEND_PLAN",
+          "DESCEND_EXEC",
+          "CLOSE_GRIPPER_EXEC",
+          "LIFT_PLAN",
+          "LIFT_EXEC",
+          "COMPLETE"
+        ],
+        "last_terminal_command_id": "candidate005-simultaneous-proxy-retry-001|lift|3",
+        "last_trajectory_digest": "88f16a929ba73754e9c84c274beddce09f94883d157afe2d1ec802e1b97911334"
+      },
+      "physics_result": {
+        "wrapper_status": 6,
+        "phase": "FAULT",
+        "reason": "observation_wall_timeout",
+        "physics_grasp_verified": false,
+        "gripper_contact_observed": true,
+        "gripper_contact_count": 1313,
+        "gripper_contact_counts_by_token": {
+          "edgegrasp_grasp_proxy_fixed_finger_pad": 1125,
+          "edgegrasp_grasp_proxy_moving_finger_pad": 188
+        },
+        "all_gripper_tokens_observed": true,
+        "simultaneous_gripper_contact_sample_count": 35,
+        "simultaneous_contact_samples_observed": true,
+        "simultaneous_bilateral_force_closure_verified": false,
+        "matched_contact_pair": [
+          "target_cube::target_cube_link::collision",
+          "so101::gripper_link::gripper_link_fixed_joint_lump__edgegrasp_grasp_proxy_fixed_finger_pad_collision_2"
+        ],
+        "table_contact_count": 10758,
+        "pose_sample_count": 2513,
+        "baseline_z_m": 0.20499999990200096,
+        "peak_z_m": 0.20533242954819875,
+        "peak_lift_m": 0.0003324296461977849,
+        "required_lift_m": 0.02,
+        "final_z_m": 0.204999979183065,
+        "lift_observed": false,
+        "retention_observed": false,
+        "evidence_digest": "db50e5118c855fb38fa6fb179e60e0485729aa26a9bc6b76f65c9e11976abf9a"
+      },
+      "runtime_health": {
+        "clock_publisher_count": 1,
+        "clock_publisher_node": "ros_gz_bridge",
+        "clock_subscription_count": 19,
+        "final_robot_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        "final_cube_pose_xyz_rpy_cli_precision": [
+          0.24936,
+          0.123513,
+          0.205,
+          0.0,
+          0.0,
+          0.057282
+        ],
+        "approximate_horizontal_displacement_from_contract_center_m": 0.0029159209352804627,
+        "final_gripper_position_rad": 0.6000000000009827,
+        "controllers_still_active_after_trial": true,
+        "dart_mesh_construction_diagnostic_count": 0,
+        "geometry_could_not_be_created_count": 0,
+        "contact_topic_count": 2
+      },
+      "logs": {
+        "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate005_simultaneous_proxy_retry_20260827_2000",
+        "gazebo_server": {
+          "path": "/home/edgegrasp/.gz/sim/log/2026-08-27T19:26:41.641080394/server_console.log",
+          "sha256": "237f993ce4e3a23040197a1bce38311dc0c8c1f7aa77de47bef99cfc65d0d5c6"
+        },
+        "gazebo_stdout_sha256": "5fcb267982feb537ab6581b333ee393e45bbb0d267a6834c2210f6ebc948b5a9",
+        "move_group_stdout_sha256": "6c7e05a589a74f8d900f0d13278ffae6e78f8386d8c6d0872f52f745202d8ad9",
+        "planning_scene_status_sha256": "b36d0ca22507a12db771c20b7c5099e4ded859b40ee895fc3459d90e2d22bc22",
+        "gripper_preparation_sha256": "999558f15bbd206a20d6a34db74a5f2f5f16c5acfdd58b136edfaecb94460a0f",
+        "trial_stdout_sha256": "997aaf8e0b5ddf9d4268d953875284aee5ad393ac5214441ada1b3afbc79aaaf",
+        "final_state_sha256": "b68d473a76028e2c152b4446cc6776e58d269c260b05d42157c8af60938bda76",
+        "joint_states_sha256": "0e77090f09dc7a599808a9a889a78c6d97b713818fb7076ae99a24fbe385dafb",
+        "gazebo_diagnostics_sha256": "c6e180b99f892583670f4fcf6f785413620e64bede7f4bc05de7d20c54f24f78",
+        "cleanup_sha256": "b95d8c971c74b4435dae322ba1c8eb8a4fff44318833424c5d281d54b8f53412"
+      },
+      "cleanup": {
+        "exact_pid_signals_only": true,
+        "matching_process_count_after_cleanup": 0,
+        "clock_publisher_count_after_cleanup": 0,
+        "ros_daemon_stopped": true,
+        "broad_kill_used": false
+      }
+    }
+  ],
+  "claim_boundary": {
+    "verified": "In a clean graph using the EdgeGrasp proxy MoveGroup overlay, the immutable candidate completed all four correlated typed stages. Both configured pad tokens appeared in the same contact sample 35 times, all three controllers remained active, the robot stayed anchored, and tracked DART geometry diagnostics remained zero.",
+    "not_verified": "Simultaneous token presence is not force-closure evidence. The cube rose only 0.332 mm against a 20 mm requirement, returned to table height, and never satisfied retention; physics_grasp_verified remains false. Whole-arm proxy fidelity, deterministic simulator timing, successful grasp, and real hardware remain unverified.",
+    "clock_safety": "The preceding clean graph observed a 1 ms ROS simulation-clock rollback and correctly SAFE_STOPped. The successful retry used a fresh graph/domain without weakening rollback detection.",
+    "next_step": "Keep routing fixed and change one dynamics variable at a time: first inspect contact normals/depths and closure effort/friction, then run a bounded candidate006 only after a static and plan-only preflight."
+  }
+}

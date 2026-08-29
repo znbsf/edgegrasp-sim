@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "experiment_id": "candidate012_pad_friction",
+  "changed_parameter": "generated_finger_pad_isotropic_friction_coefficient",
+  "upstream": {
+    "repository": "https://github.com/adoodevv/so101_ros2.git",
+    "commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "fixed_inputs": {
+    "grasp_geometry_filename": "so101_grasp_geometry_candidate011_q0p40.json",
+    "grasp_geometry_sha256": "50f2fbc4758806c9c9eaaf64fcce25b6c189a82cc771db139803a3ebec5ba1e6",
+    "gripper_contact_position_rad": 0.4,
+    "derive_descend_and_lift_from_profile": true,
+    "scene_filename": "scene.json",
+    "scene_sha256": "0773b0e888481e69ae93e1898bdfe2805f6b83e1f80f545635519155dcfc4a33",
+    "gazebo_world_filename": "table_cube.sdf",
+    "gazebo_world_sha256": "1b690a817a34e380276dc7ea99c7f44e48690fab02418e2f81485f0cfb879f58",
+    "collision_proxy_filename": "so101_collision_proxies.json",
+    "collision_proxy_sha256": "1f0cc4f69621040f871d3503dbec490be2e565b4ae92855fd562b395a736c98f",
+    "target_id": "target_cube",
+    "target_position_base_link_m": [
+      0.24695465627174787,
+      0.1218646928533295,
+      0.205
+    ],
+    "planning_group": "arm",
+    "planning_frame": "base_link",
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "velocity_scaling": 0.1,
+    "acceleration_scaling": 0.1,
+    "use_sim_time": true,
+    "clock_domain": "ros_sim",
+    "clock_epoch": 0,
+    "future_skew_tolerance_ms": 1000.0,
+    "target_publisher_start_delay_s": 3.0
+  },
+  "material_contract": {
+    "filename": "so101_pad_contact_materials.json",
+    "sha256": "588bce5751e11947a8bfdc059e6ad247565f61e0de7ced19a86a166c62c90a93"
+  },
+  "matrix": [
+    {
+      "row": "historical_implicit_replication",
+      "profile": "implicit_default",
+      "coefficient": null,
+      "comparison_role": "context_only_no_default_value_inferred"
+    },
+    {
+      "row": "paired_explicit_control",
+      "profile": "candidate012_control_mu1p0",
+      "coefficient": 1.0,
+      "comparison_role": "paired_control"
+    },
+    {
+      "row": "paired_explicit_treatment",
+      "profile": "candidate012_treatment_mu1p5",
+      "coefficient": 1.5,
+      "comparison_role": "paired_treatment"
+    }
+  ],
+  "paired_comparison": {
+    "control": "candidate012_control_mu1p0",
+    "treatment": "candidate012_treatment_mu1p5",
+    "converter_workaround_held_constant": "both explicit rows use unnamed URDF pad collisions and fixed-joint-lump converted names"
+  },
+  "preflight": {
+    "plan_only_attempts_per_row": 10,
+    "required_successes_per_row": 10,
+    "zero_motion_execution": true,
+    "effective_sdf_material_mapping_required": true,
+    "single_clock_required": true,
+    "future_samples_remain_denied_until_local_clock_catches_up": true,
+    "three_controllers_active_required": true,
+    "typed_motion_boundary_required": true
+  },
+  "success_gate": {
+    "minimum_lift_m": 0.02,
+    "minimum_clearance_m": 0.01,
+    "minimum_retention_s": 0.5,
+    "maximum_xy_drift_m": 0.01,
+    "requires_both_pad_contact_tokens": true,
+    "requires_matching_sequence_terminal": true
+  },
+  "claim_boundary": [
+    "The paired explicit control and treatment differ only in the isotropic pad friction coefficient; the implicit row is historical context, not a numeric control.",
+    "The collision-name workaround is held constant across the paired rows and is statically verified after gz sdf conversion.",
+    "Configured coefficients are simulation sensitivity inputs, not real material measurements.",
+    "Static material mapping does not prove DART applies the requested friction during contact.",
+    "Only the independent observer can set physics_grasp_verified after contact, lift, clearance, retention, drift, and matching terminal evidence all pass."
+  ]
+}

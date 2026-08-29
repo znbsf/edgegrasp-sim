@@ -1,0 +1,117 @@
+{
+  "observation_id": "candidate002-003-plan-only-2026-08-27",
+  "recorded_at": "2026-08-27T16:18:07.2821027+08:00",
+  "timezone": "Asia/Shanghai",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 230,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "logs": {
+    "gazebo_ros_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-11-09-506693-DESKTOP-MGV04IT-2020",
+    "move_group_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-13-52-093634-DESKTOP-MGV04IT-2393",
+    "planning_scene_launch": "/home/edgegrasp/.ros/log/2026-08-27-16-13-52-190550-DESKTOP-MGV04IT-2396"
+  },
+  "runtime_preconditions": {
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "joint_state_names_observed": [
+      "elbow_flex",
+      "gripper",
+      "shoulder_lift",
+      "shoulder_pan",
+      "wrist_flex",
+      "wrist_roll"
+    ],
+    "planning_scene_ready": true,
+    "planning_scene_expected_objects": [
+      "edgegrasp_table",
+      "edgegrasp_target_cube"
+    ],
+    "planning_scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35"
+  },
+  "candidate_002": {
+    "approach_position_m": [
+      0.18020991752188933,
+      0.10607866225103696,
+      0.21671341506258138
+    ],
+    "orientation_xyzw": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "pilz_ptp": {
+      "plan_accepted": false,
+      "execution_attempted": false,
+      "source_point_count": 91,
+      "invalid_state_indices_inclusive": [57, 68],
+      "collision_pair": ["edgegrasp_target_cube", "gripper_link"],
+      "terminal": "ValidateSolution failed with INVALID_MOTION_PLAN"
+    },
+    "ompl_rrt_connect": {
+      "plan_accepted": false,
+      "execution_attempted": false,
+      "source_point_count": 0,
+      "terminal": "GOAL_STATE_INVALID; unable to sample a valid goal state"
+    },
+    "status": "REJECTED_WITH_CUBE_PRESENT"
+  },
+  "candidate_003": {
+    "approach_position_m": [
+      0.2709963789421751,
+      0.16819000116779706,
+      0.2967142812839486
+    ],
+    "orientation_xyzw": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "collision_aware_ik": {
+      "error_code": 1,
+      "success": true,
+      "solution_arm_rad": [
+        -0.6000000524768894,
+        -0.4249611950204053,
+        -0.04600904468898089,
+        0.47097024253202446,
+        -1.5708000280600944
+      ]
+    },
+    "pilz_ptp": {
+      "moveit_error_code": 1,
+      "plan_accepted": true,
+      "validator_accepted": true,
+      "validator_reason": "valid",
+      "source_point_count": 84,
+      "gate_ready_point_count": 83,
+      "planning_time_s": 0.002059422,
+      "execution_attempted": false
+    },
+    "status": "APPROACH_PLAN_ONLY_PASS_WITH_CUBE_PRESENT"
+  },
+  "claim_boundary": {
+    "verified": [
+      "Candidate 002 was fail-closed by two planning pipelines with the cube present.",
+      "Candidate 003 far approach passed collision-aware IK and Pilz plan-only validation with the table and cube present.",
+      "No planning probe published a trajectory or called an execute action."
+    ],
+    "not_verified": [
+      "candidate 003 trajectory execution",
+      "candidate 003 descend or lift planning under the intentional-contact policy",
+      "distal-pad contact",
+      "cube lift or retention",
+      "simulated or real grasp success"
+    ]
+  }
+}

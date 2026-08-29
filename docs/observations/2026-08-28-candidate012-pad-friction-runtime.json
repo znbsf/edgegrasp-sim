@@ -1,0 +1,174 @@
+{
+  "observation_id": "candidate012_pad_friction_paired_runtime_20260828",
+  "recorded_timezone": "Asia/Shanghai",
+  "evidence_status": "PAIRED_RUNTIME_SEQUENCE_COMPLETE_PHYSICS_GRASP_FAILED",
+  "environment": {
+    "ros_distro": "jazzy",
+    "gazebo": "Harmonic / Gazebo Sim 8.11",
+    "physics_engine": "gz-physics-dartsim-plugin",
+    "upstream_sha": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "experiment": {
+    "contract": "ros_ws/src/edgegrasp_ros/config/candidate012_pad_friction_experiment.json",
+    "contract_sha256": "6cb370a11fcb0b5e05019522fdcd19424fc64ef34c589956a752097b92ebae53",
+    "geometry_profile": "so101_grasp_geometry_candidate011_q0p40.json",
+    "geometry_sha256": "50f2fbc4758806c9c9eaaf64fcce25b6c189a82cc771db139803a3ebec5ba1e6",
+    "gripper_closed_position_rad": 0.4,
+    "single_changed_runtime_parameter": "generated finger-pad isotropic mu and mu2",
+    "control_coefficient": 1.0,
+    "treatment_coefficient": 1.5,
+    "target_publisher_start_delay_s": 3.0,
+    "future_skew_tolerance_ms": 1000.0
+  },
+  "static_mapping": {
+    "status": "PASS",
+    "evidence_level": "URDF_TO_SDF_STATIC_MAPPING_ONLY",
+    "collision_count_per_row": 20,
+    "remaining_mesh_collision_count_per_row": 0,
+    "world_anchor_present": true,
+    "control": {
+      "profile": "candidate012_control_mu1p0",
+      "mu": 1.0,
+      "mu2": 1.0,
+      "mapped_collision_count": 2,
+      "mapping_sha256": "7a3b863c48e6f7eeeb71823407b2f4fb0d8e421e79c594cfd7a017fc932e01ca",
+      "generated_sdf_sha256": "e3f6bda64f60292356141d30bc56a8f52cf91d2d0f81a7a3abcc92b06badfb4a"
+    },
+    "treatment": {
+      "profile": "candidate012_treatment_mu1p5",
+      "mu": 1.5,
+      "mu2": 1.5,
+      "mapped_collision_count": 2,
+      "mapping_sha256": "4e7ea593a283029d2fb5625c57d08c1d71085b1fb5fe4551ae7d59b392cbd3df",
+      "generated_sdf_sha256": "9e04fac6f9228e9df49fa7849318e57048b36f37a81b2e959dd0baea0aea221e"
+    },
+    "claim_boundary": "Exact SDF mapping does not by itself prove DART friction behavior."
+  },
+  "plan_only_preflight": {
+    "status": "PASS",
+    "implicit_context": {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_implicit_plan_20260828_1305",
+      "attempts_completed": 10,
+      "all_segments_accepted": true
+    },
+    "explicit_control": {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_control_plan_20260828_1300",
+      "attempts_completed": 10,
+      "all_segments_accepted": true
+    },
+    "explicit_treatment": {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_treatment_plan_20260828_1300",
+      "attempts_completed": 10,
+      "all_segments_accepted": true
+    },
+    "execution_attempted": false,
+    "trajectory_publication_count": 0,
+    "fjt_goal_count": 0
+  },
+  "paired_runtime": {
+    "control": {
+      "profile": "candidate012_control_mu1p0",
+      "ros_domain_id": 81,
+      "task_id": "candidate012-control-runtime-clean",
+      "started_at": "2026-08-28T13:11:52.850525242+08:00",
+      "capture_finished_at": "2026-08-28T13:13:51.311358964+08:00",
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_control_runtime_clean_20260828_1425",
+      "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-28T13:11:56.587571693/server_console.log",
+      "client_exit_code": 11,
+      "sequence_completed": true,
+      "sequence_phase": "COMPLETE",
+      "sequence_wrapper_status": 4,
+      "physics_grasp_verified": false,
+      "physics_phase": "FAULT",
+      "physics_reason": "observation_wall_timeout",
+      "baseline_z_m": 0.20499999990200096,
+      "peak_z_m": 0.20839232400500943,
+      "peak_lift_m": 0.003392324103008465,
+      "final_z_m": 0.20499997332240447,
+      "simultaneous_contact_sample_count": 160,
+      "simultaneous_contact_span_ns": 437000000,
+      "simultaneous_contact_ended_before_sequence_completion_ns": 1754000000,
+      "final_xy_drift_m_cli_precision": 0.013487132246061084,
+      "retention_observed": false,
+      "trial_log_sha256": "6824e400269d038fb329183819f0d42576f67115529312eb79aab32ca41b858c",
+      "gazebo_log_sha256": "730dd1631ab659ff395704a81ccde70a71a43cedd3e6026b18c88651665998e7"
+    },
+    "treatment": {
+      "profile": "candidate012_treatment_mu1p5",
+      "ros_domain_id": 80,
+      "task_id": "candidate012-treatment-runtime-clean",
+      "started_at": "2026-08-28T13:08:35.281449216+08:00",
+      "capture_finished_at": "2026-08-28T13:10:32.425860341+08:00",
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_treatment_runtime_clean_20260828_1415",
+      "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-28T13:08:38.905055076/server_console.log",
+      "client_exit_code": 11,
+      "sequence_completed": true,
+      "sequence_phase": "COMPLETE",
+      "sequence_wrapper_status": 4,
+      "physics_grasp_verified": false,
+      "physics_phase": "FAULT",
+      "physics_reason": "observation_wall_timeout",
+      "baseline_z_m": 0.20499999990200096,
+      "peak_z_m": 0.20846844664219408,
+      "peak_lift_m": 0.003468446740193115,
+      "final_z_m": 0.20499982471142014,
+      "simultaneous_contact_sample_count": 172,
+      "simultaneous_contact_span_ns": 450000000,
+      "simultaneous_contact_ended_before_sequence_completion_ns": 1763000000,
+      "final_xy_drift_m_cli_precision": 0.013650439127579489,
+      "retention_observed": false,
+      "trial_log_sha256": "7f577a22a6aa547a99b00a9a5215f78164034aff9415e80ab9d1f9ffe0f5d1a3",
+      "gazebo_log_sha256": "477af5c994a7778cc9bd89df7f84bca476e08c4625d195cbec9e8d8247900e36"
+    }
+  },
+  "comparison": {
+    "peak_lift_delta_treatment_minus_control_m": 0.00007612263718465018,
+    "relative_peak_lift_change": 0.022439671114308002,
+    "simultaneous_contact_sample_delta": 12,
+    "simultaneous_contact_span_delta_ns": 13000000,
+    "contact_end_margin_delta_ns": 9000000,
+    "required_lift_m": 0.02,
+    "required_retention_s": 0.5,
+    "both_sequence_completed": true,
+    "both_physics_grasp_verified": false,
+    "decision": "The treatment produced only a 0.076 mm peak-lift increase and 13 ms longer simultaneous-contact span. Both cubes returned to table height, contact ended about 1.75 s before completion, and neither row met lift or retention. The evidence does not support friction as the current bottleneck."
+  },
+  "failed_attempt_audit": [
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_control_runtime_20260828_1310",
+      "stage": "pre_motion_safety_preflight",
+      "reason": "future_target_skew_exceeds_tolerance",
+      "motion_executed": false
+    },
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_treatment_runtime_retry_20260828_1350",
+      "stage": "pre_motion_safety_preflight",
+      "reason": "startup_cross_node_clock_skew",
+      "motion_executed": false
+    },
+    {
+      "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate012_treatment_runtime_ordered_20260828_1405",
+      "stage": "physics_baseline",
+      "reason": "source_timestamp_stale_while_an_orphaned_diagnostic_gazebo_process_consumed_cpu",
+      "motion_executed": false
+    }
+  ],
+  "runtime_health": {
+    "robot_pose_remained_at_world_origin_both_rows": true,
+    "controllers_active_count_both_rows": 3,
+    "dart_mesh_diagnostic_count_both_rows": 0,
+    "geometry_creation_failure_count_both_rows": 0,
+    "cleanup_exact_domain_processes_remaining_both_rows": 0,
+    "clock_topic_after_cleanup_both_rows": "unknown"
+  },
+  "claim_boundary": {
+    "typed_sequence_runtime_verified": true,
+    "explicit_material_mapping_static_verified": true,
+    "bounded_friction_sensitivity_runtime_observed": true,
+    "dart_friction_coefficient_effect_identified": false,
+    "physics_grasp_verified": false,
+    "force_closure_verified": false,
+    "simulator_determinism_verified": false,
+    "real_hardware_verified": false
+  }
+}

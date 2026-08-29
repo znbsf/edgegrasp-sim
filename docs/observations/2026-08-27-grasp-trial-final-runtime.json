@@ -1,0 +1,157 @@
+{
+  "observation_id": "grasp-trial-final-runtime-2026-08-27",
+  "timezone": "Asia/Shanghai",
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_workspace": "/home/edgegrasp/ros2_ws"
+  },
+  "fix_progression": [
+    {
+      "task_id": "grasp-physics-trial-20260827-004",
+      "gazebo_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T07:32:56.624033779/server_console.log",
+      "change_under_test": "ROS clock read serialized, but callback-local timestamp retained before the core lock",
+      "sequence_completed": true,
+      "physics_wrapper_status": 6,
+      "physics_reason": "clock_rollback",
+      "pose_sample_count": 55,
+      "gripper_contact_count": 0,
+      "table_contact_count": 249,
+      "last_trajectory_digest_prefix": "53f91b",
+      "evidence_digest_prefix": "28ec85",
+      "interpretation": "DISPROVED the clock-read-only fix. Only digest prefixes were retained in the captured task trace and they are not presented as full hashes."
+    },
+    {
+      "task_id": "grasp-physics-trial-20260827-005",
+      "gazebo_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T07:38:24.96344718/server_console.log",
+      "change_under_test": "Every observer core call re-samples ROS time while holding the shared core lock",
+      "sequence_completed": false,
+      "sequence_wrapper_status": 6,
+      "sequence_reason": "terminal_failure:plan_or_execution_failed:trajectory_gate_result_timeout:trajectory_gate:canceled:client_cancel_requested",
+      "physics_wrapper_status": 6,
+      "physics_reason": "sequence_not_completed",
+      "clock_rollback_observed": false,
+      "pose_sample_count": 445,
+      "gripper_contact_count": 0,
+      "table_contact_count": 2301,
+      "last_trajectory_digest_prefix": "e73757",
+      "evidence_digest_prefix": "357e0f",
+      "interpretation": "Clock fix supported at runtime. Lift was canceled by the MoveIt adapter's wall-clock result deadline while Gazebo ran slower than real time; the downstream gate itself retained ROS-clock execution safety."
+    },
+    {
+      "task_id": "grasp-physics-trial-20260827-006",
+      "started_at_observed": "2026-08-27T07:51:30+08:00",
+      "finished_before": "2026-08-27T07:52:56+08:00",
+      "launch_logs": {
+        "gazebo_ros": "/home/edgegrasp/.ros/log/2026-08-27-07-48-02-069165-DESKTOP-MGV04IT-57907",
+        "gazebo_server": "/home/edgegrasp/.gz/sim/log/2026-08-27T07:48:03.150550423/server_console.log",
+        "move_group": "/home/edgegrasp/.ros/log/2026-08-27-07-48-51-423788-DESKTOP-MGV04IT-58205",
+        "moveit_adapter": "/home/edgegrasp/.ros/log/2026-08-27-07-48-51-500886-DESKTOP-MGV04IT-58198",
+        "grasp_sequence": "/home/edgegrasp/.ros/log/2026-08-27-07-48-51-867789-DESKTOP-MGV04IT-58208",
+        "planning_scene": "/home/edgegrasp/.ros/log/2026-08-27-07-49-15-728161-DESKTOP-MGV04IT-58358"
+      },
+      "preflight_parameter_rejection": {
+        "requested_observation_timeout_s": 120.0,
+        "configured_maximum_observation_s": 30.0,
+        "result": "physics_goal_rejected",
+        "motion_or_sequence_started": false,
+        "interpretation": "Expected fail-closed validation; the request was repeated with the declared 30 second maximum."
+      },
+      "preparation": {
+        "task_id": "grasp-trial-preparation-006",
+        "direct_fjt_bypass": false,
+        "gripper": {
+          "command_id": "grasp-trial-preparation-006|diagnostic|0",
+          "position_rad": 1.5,
+          "wrapper_status": 4,
+          "downstream_terminal_observed": true,
+          "fjt_error_code": 0,
+          "fjt_error_string": "Goal successfully reached!",
+          "success": true
+        },
+        "arm": {
+          "command_id": "grasp-trial-preparation-006|diagnostic|1",
+          "joint_positions_rad": [-0.05, 0.8, -1.4, -1.4, 0.0],
+          "wrapper_status": 4,
+          "downstream_terminal_observed": true,
+          "fjt_error_code": 0,
+          "fjt_error_string": "Goal successfully reached!",
+          "success": true
+        }
+      },
+      "trial": {
+        "target_id": "target_cube",
+        "target_source_timestamp_ns": 106500000000,
+        "approach_position_m": [0.218593782915783, 0.008984635830312946, 0.40347754536477237],
+        "descend_position_m": [0.2300581889824526, 0.009558463149665533, 0.38232132213689934],
+        "lift_position_m": [0.218593782915783, 0.008984635830312946, 0.40347754536477237],
+        "orientation_xyzw": [0.0001408479320060159, -0.21296290635254542, 0.04819078118902108, 0.9758711130513749],
+        "planning_timeout_s": 2.0,
+        "velocity_scaling": 0.1,
+        "acceleration_scaling": 0.1,
+        "adapter_gate_terminal_wall_guard_s": 15.0,
+        "sequence_wrapper_status": 4,
+        "sequence_phase": "COMPLETE",
+        "sequence_completed": true,
+        "sequence_reason": "correlated_sequence_completed;physics_unverified",
+        "last_terminal_command_id": "grasp-physics-trial-20260827-006|lift|3",
+        "last_trajectory_digest": "d0e2281e6312e4d9eb07756b017750e03b3f159352cdf83963d3bc03bdca641e0",
+        "stage_fjt_results": {
+          "approach": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0",
+          "descend": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0",
+          "close_gripper": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0",
+          "lift": "STATUS_SUCCEEDED and FollowJointTrajectory error_code 0"
+        },
+        "physics_wrapper_status": 6,
+        "physics_phase": "FAULT",
+        "physics_reason": "observation_wall_timeout",
+        "clock_rollback_observed": false,
+        "gripper_contact_observed": false,
+        "lift_observed": false,
+        "retention_observed": false,
+        "physics_grasp_verified": false,
+        "pose_sample_count": 2781,
+        "gripper_contact_count": 0,
+        "table_contact_count": 11408,
+        "baseline_z_m": 0.424999999902001,
+        "peak_z_m": 0.424999999902001,
+        "final_z_m": 0.424999999902001,
+        "scene_digest": "54fabe93f95b57379c2579775e9c0d45117460c6eed578071f7b68f9177cb55d",
+        "evidence_digest": "fad56be4c1abfdfefa1075f33b0bd000d4d0a53243afa76e62cb1f6b704399ac3",
+        "process_exit_code": 11
+      },
+      "post_trial_observations": {
+        "so101_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        "target_cube_pose_xyz_rpy": [0.2, 0.0, 0.425, 0.0, 0.0, 0.0],
+        "controllers_active": ["joint_state_broadcaster", "arm_controller", "gripper_controller"],
+        "dart_mesh_construction_diagnostic_count": 0,
+        "dart_geometry_could_not_be_created_count": 0,
+        "clock_publisher_count_during_run": 1,
+        "clock_publisher_count_after_cleanup": 0,
+        "orphan_process_count_after_cleanup": 0,
+        "move_group_sigint_exit_code": -11
+      }
+    }
+  ],
+  "claim_boundary": {
+    "verified": [
+      "The final observer clock-ordering implementation completed task005 and task006 without clock_rollback.",
+      "The 15 second adapter wall guard prevented the earlier premature lift cancellation in task006.",
+      "Task006 completed APPROACH, DESCEND, CLOSE_GRIPPER and LIFT with correlated typed gate/FJT success.",
+      "The robot remained world-anchored and the proxy Gazebo log contained zero tracked DART mesh diagnostics."
+    ],
+    "negative_evidence": [
+      "No configured gripper-cube contact was observed.",
+      "The cube pose did not rise during or after the sequence.",
+      "The physics observer reached its bounded wall timeout because Gazebo ran below the assumed 0.5 real-time factor."
+    ],
+    "not_verified": [
+      "physical simulated grasp",
+      "cube lift or retention",
+      "full fidelity of all collision proxies",
+      "real hardware behavior"
+    ]
+  }
+}

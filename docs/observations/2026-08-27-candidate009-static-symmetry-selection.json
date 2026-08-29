@@ -1,0 +1,101 @@
+{
+  "observation_id": "candidate009_static_symmetry_selection_20260827",
+  "recorded_timezone": "Asia/Shanghai",
+  "evidence_status": "STATIC_SELECTION_PASS_RUNTIME_UNRUN",
+  "motivation": {
+    "source_observation": "docs/observations/2026-08-27-candidate008-q0p50-runtime.json",
+    "candidate008_fixed_pad_contact_count": 966,
+    "candidate008_moving_pad_contact_count": 195,
+    "candidate008_approximate_final_xy_drift_m": 0.016569792010805887,
+    "candidate008_peak_lift_m": 0.00266662576599772,
+    "candidate008_physics_grasp_verified": false,
+    "decision": "Do not reduce the close angle blindly; first select one bounded pose offset that equalizes the two static exact-OBB contact margins."
+  },
+  "selection": {
+    "selection_method": "equalize_two_pad_minimum_normalized_sat_overlap",
+    "source_profile": "so101_grasp_geometry_candidate008_q0p50.json",
+    "source_profile_sha256": "995109ce2fd37b46a6332f8b3a75c5b691a881369112a2a53246ed0be4699520",
+    "grasp_orientation_xyzw": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "scan": {
+      "axis": "end_effector_frame_x",
+      "minimum_offset_m": -0.003,
+      "maximum_offset_m": 0.003,
+      "step_m": 0.0001,
+      "candidate_count": 61,
+      "minimum_required_overlap_m": 0.001
+    },
+    "baseline": {
+      "offset_x_m": 0.0,
+      "target_center_in_frame_m": [
+        -0.025199464387,
+        -0.0105,
+        -0.016
+      ],
+      "minimum_normalized_sat_overlap_m_by_pad": {
+        "edgegrasp_grasp_proxy_fixed_finger_pad": 0.011083351662357903,
+        "edgegrasp_grasp_proxy_moving_finger_pad": 0.009411903524359843
+      },
+      "absolute_overlap_difference_m": 0.0016714481379980599,
+      "bottleneck_overlap_m": 0.009411903524359843
+    },
+    "selected": {
+      "offset_x_m": -0.0009,
+      "target_center_in_frame_m": [
+        -0.026099464387,
+        -0.0105,
+        -0.016
+      ],
+      "minimum_normalized_sat_overlap_m_by_pad": {
+        "edgegrasp_grasp_proxy_fixed_finger_pad": 0.010184418070762794,
+        "edgegrasp_grasp_proxy_moving_finger_pad": 0.010201007713504894
+      },
+      "absolute_overlap_difference_m": 0.000016589642742100008,
+      "bottleneck_overlap_m": 0.010184418070762794
+    }
+  },
+  "candidate009": {
+    "profile": "ros_ws/src/edgegrasp_ros/config/so101_grasp_geometry_candidate009_centered_q0p50.json",
+    "gripper_closed_position_rad": 0.5,
+    "routed_approach_position_m": [
+      0.18606933614192925,
+      0.11976423272744036,
+      0.38721872836424076
+    ],
+    "derived_descend_position_m": [
+      0.24572885309767808,
+      0.1519924630851577,
+      0.2167578445611808
+    ],
+    "derived_lift_position_m": [
+      0.24572885309767808,
+      0.1519924630851577,
+      0.2567578445611808
+    ],
+    "world_position_delta_from_candidate008_m": [
+      -0.00050758182078272,
+      0.00074191731169793,
+      0.00004379951942324
+    ],
+    "world_position_delta_norm_m": 0.0009,
+    "other_motion_parameters_unchanged": true,
+    "execution_attempted": false
+  },
+  "required_runtime_gates": [
+    "generated profile byte-equivalence and exact OBB validation",
+    "MoveIt plan-only acceptance for approach, descend, and lift with retained cube/selective pad ACM",
+    "fresh-domain typed sequence only if plan-only passes",
+    "compare per-pad contact counts/timing, XY drift, peak lift, and retention against candidate008"
+  ],
+  "claim_boundary": {
+    "static_primitive_geometry_selected": true,
+    "moveit_plan_verified": false,
+    "gazebo_contact_symmetry_verified": false,
+    "physics_grasp_verified": false,
+    "real_hardware_verified": false
+  }
+}

@@ -1,0 +1,387 @@
+{
+  "schema_version": 14,
+  "name": "so101_side_grasp_candidate_005",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "scene_contract_sha256": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35",
+  "target": {
+    "id": "target_cube",
+    "center_m": [0.24695465627174787, 0.1218646928533295, 0.205],
+    "size_m": [0.05, 0.05, 0.05]
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.19946281649811778,
+      0.38019026690132723,
+      0.8150060012713882,
+      0.38914671228183106
+    ],
+    "grasp": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "arm_joint_order": [
+    "shoulder_pan",
+    "shoulder_lift",
+    "elbow_flex",
+    "wrist_flex",
+    "wrist_roll"
+  ],
+  "stages": {
+    "home": {
+      "positions_rad": [0.0, 0.0, 0.0, 0.0, 0.0],
+      "gripper_rad": 1.5
+    },
+    "approach": {
+      "role": "collision_routing_via",
+      "position_m": [
+        0.18606933614192925,
+        0.11976423272744036,
+        0.38721872836424076
+      ],
+      "orientation_ref": "approach",
+      "positions_rad": [
+        -0.6421585994574873,
+        -0.9246271118103603,
+        0.32986220616684103,
+        -0.0885068622681707,
+        -1.559811739955395
+      ],
+      "gripper_rad": 1.5
+    },
+    "descend": {
+      "position_m": [
+        0.2462364349184608,
+        0.15125054509958977,
+        0.21671404504175756
+      ],
+      "orientation_ref": "grasp",
+      "positions_rad": [
+        -0.6000000442835862,
+        -0.8693352717737928,
+        0.8640595639082524,
+        0.005275710769147334,
+        -1.5708000280690093
+      ],
+      "gripper_rad": 1.5,
+      "target_center_error_m": 0.0
+    },
+    "lift": {
+      "position_m": [
+        0.2462364349184608,
+        0.15125054509958977,
+        0.25671404504175754
+      ],
+      "orientation_ref": "grasp",
+      "positions_rad": null,
+      "gripper_rad": 0.6
+    }
+  },
+  "plan_only_observation": {
+    "status": "RUNTIME_SELECTIVE_ACM_ROUTED_PTP_ALL_SEGMENTS_ACCEPTED",
+    "recorded_at": "2026-08-27T17:56:48.4001277+08:00",
+    "service": "/plan_kinematic_path",
+    "service_type": "moveit_msgs/srv/GetMotionPlan",
+    "pipeline_id": "pilz_industrial_motion_planner",
+    "planner_id": "PTP",
+    "execution_attempted": false,
+    "scene_policy": {
+      "service": "/edgegrasp/set_target_pad_contacts",
+      "target_cube_retained": true,
+      "confirmed": true,
+      "allowed_target_contact_links": [
+        "edgegrasp_fixed_finger_pad_link",
+        "edgegrasp_moving_finger_pad_link"
+      ],
+      "forbidden_target_contact_links": [
+        "gripper_link",
+        "moving_jaw_so101_v1_link"
+      ]
+    },
+    "direct_path_baselines": {
+      "pilz_lin": {
+        "attempts": 1,
+        "accepted": 0,
+        "moveit_error_code": 99999,
+        "source_point_count": 24,
+        "gate_ready_point_count": 23,
+        "invalid_state_indices": [12, 13, 14, 15, 16, 17],
+        "collision_pair": ["edgegrasp_target_cube", "gripper_link"]
+      },
+      "ompl_rrt_connect": {
+        "attempts": 10,
+        "moveit_success_responses": 7,
+        "edgegrasp_accepted": 6,
+        "edgegrasp_rejected": 4,
+        "deterministic": false
+      }
+    },
+    "routed_pose_segments": [
+      {
+        "name": "home_to_approach_via",
+        "attempts": 10,
+        "accepted": 10,
+        "moveit_error_code": 1,
+        "source_point_count": 83,
+        "gate_ready_point_count": 82,
+        "planning_time_p50_s": 0.0009613945,
+        "planning_time_p95_s": 0.0015309448,
+        "planning_time_max_s": 0.00177433
+      },
+      {
+        "name": "approach_via_to_descend",
+        "attempts": 10,
+        "accepted": 10,
+        "moveit_error_code": 1,
+        "source_point_count": 32,
+        "gate_ready_point_count": 31,
+        "planning_time_p50_s": 0.0006303195,
+        "planning_time_p95_s": 0.0008773769,
+        "planning_time_max_s": 0.001008713
+      },
+      {
+        "name": "descend_to_lift_closed",
+        "attempts": 10,
+        "accepted": 10,
+        "moveit_error_code": 1,
+        "source_point_count": 22,
+        "gate_ready_point_count": 21,
+        "planning_time_p50_s": 0.0005885435,
+        "planning_time_p95_s": 0.000679309,
+        "planning_time_max_s": 0.000707389
+      }
+    ]
+  },
+  "geometry_preflight": {
+    "status": "PASS_STATIC_ROUTED_APPROACH_ONLY",
+    "contact_method": "exact_oriented_box_sat_in_gripper_frame",
+    "approach_state_validity_runtime": true,
+    "approach_state_contacts": [],
+    "minimum_required_overlap_m": 0.001,
+    "fixed_pad_minimum_normalized_overlap_m": 0.011083351662,
+    "moving_pad_minimum_normalized_overlap_m": 0.00219765713,
+    "gripper_contact_position_rad": 0.6
+  },
+  "prior_runtime_evidence": {
+    "candidate003_physics_result": "NEGATIVE",
+    "candidate003_observation": "docs/observations/2026-08-27-candidate003-runtime.json",
+    "candidate004_direct_descend_result": "REJECTED_TARGET_CUBE_GRIPPER_LINK",
+    "candidate004_observation": "docs/observations/2026-08-27-candidate004-selective-acm-plan-only.json"
+  },
+  "runtime_execution_observation": {
+    "path": "docs/observations/2026-08-27-candidate005-simultaneous-proxy-runtime.json",
+    "task_id": "candidate005-simultaneous-proxy-retry-001",
+    "edgegrasp_proxy_move_group_used": true,
+    "sequence_completed": true,
+    "sequence_wrapper_status": 4,
+    "last_terminal_command_id": "candidate005-simultaneous-proxy-retry-001|lift|3",
+    "last_trajectory_digest": "88f16a929ba73754e9c84c274beddce09f94883d157afe2d1ec802e1b97911334",
+    "gripper_contact_observed": true,
+    "gripper_contact_count": 1313,
+    "matched_gripper_collision": "edgegrasp_grasp_proxy_fixed_finger_pad_collision_2",
+    "per_pad_contact_histogram_captured": true,
+    "gripper_contact_counts_by_token": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": 1125,
+      "edgegrasp_grasp_proxy_moving_finger_pad": 188
+    },
+    "all_gripper_tokens_observed": true,
+    "simultaneous_gripper_contact_sample_count": 35,
+    "simultaneous_contact_samples_observed": true,
+    "simultaneous_bilateral_force_closure_verified": false,
+    "peak_lift_m": 0.0003324296461977849,
+    "required_lift_m": 0.02,
+    "retention_observed": false,
+    "physics_grasp_verified": false
+  },
+  "contact_quality_runtime_observation": {
+    "path": "docs/observations/2026-08-27-candidate006-contact-quality-runtime.json",
+    "task_id": "candidate006-contact-quality-retry2-001",
+    "sequence_completed": true,
+    "physics_grasp_verified": false,
+    "gripper_contact_counts_by_token": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": 920,
+      "edgegrasp_grasp_proxy_moving_finger_pad": 170
+    },
+    "simultaneous_gripper_contact_sample_count": 36,
+    "per_pad_contact_quality": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": {
+        "max_penetration_depth_m": 8.547757796647782e-06,
+        "max_force_magnitude_n": 59.9090143888954,
+        "max_abs_normal_force_n": 54.42113207395235
+      },
+      "edgegrasp_grasp_proxy_moving_finger_pad": {
+        "max_penetration_depth_m": 3.4254473509111316e-06,
+        "max_force_magnitude_n": 18.33552170560071,
+        "max_abs_normal_force_n": 16.010887428367003
+      }
+    },
+    "same_sample_weak_side_maxima": {
+      "max_min_penetration_depth_m": 3.0225924236050583e-06,
+      "max_min_force_magnitude_n": 18.33552170560071,
+      "max_min_abs_normal_force_n": 16.010887428367003
+    },
+    "gripper_effort_sample_count": 2424,
+    "gripper_effort_peak_abs": 0.765042819463647,
+    "gripper_effort_latest": -0.0001469314991016889,
+    "peak_lift_m": 0.0003332013017728347,
+    "required_lift_m": 0.02,
+    "retention_observed": false,
+    "evidence_digest": "472a9b54f39953ca8718c9f23fbce65c0e01df877b2999e212bff64676aa47bb",
+    "diagnostic_boundary": "Contact depths and wrench values are Gazebo/DART maxima, not calibrated hardware force, sustained bilateral loading, or force closure."
+  },
+  "contact_timing_runtime_observation": {
+    "path": "docs/observations/2026-08-27-candidate007-contact-timing-runtime.json",
+    "task_id": "candidate007-contact-timing-retry2-001",
+    "sequence_completed": true,
+    "sequence_completed_source_timestamp_ns": 39350000000,
+    "physics_grasp_verified": false,
+    "simultaneous_gripper_contact_sample_count": 39,
+    "simultaneous_contact_first_source_timestamp_ns": 37504000000,
+    "simultaneous_contact_last_source_timestamp_ns": 37603000000,
+    "simultaneous_contact_ended_before_sequence_completion_ns": 1747000000,
+    "moving_pad_contact_last_source_timestamp_ns": 37950000000,
+    "moving_pad_contact_ended_before_sequence_completion_ns": 1400000000,
+    "gripper_effort_at_sequence_completion": -0.00014914254898974486,
+    "gripper_effort_peak_abs_at_sequence_completion": 0.610797739467835,
+    "peak_lift_m": 0.000359390144894218,
+    "required_lift_m": 0.02,
+    "retention_observed": false,
+    "evidence_digest": "286b1909a67be367ccf51ce27bc0be56947cd689aa9abfeb2688f23ce06acf6d",
+    "diagnostic_boundary": "Both pad tokens overlapped for 0.099 simulated seconds, but same-sample bilateral contact ended 1.747 simulated seconds before sequence completion. This is transient-contact evidence, not force closure or physics grasp success."
+  },
+  "candidate008_tighter_closure_runtime_observation": {
+    "path": "docs/observations/2026-08-27-candidate008-q0p50-runtime.json",
+    "task_id": "candidate008-q0p50-001",
+    "grasp_geometry_filename": "so101_grasp_geometry_candidate008_q0p50.json",
+    "gripper_closed_position_rad": 0.5,
+    "predicted_inner_gap_m": 0.03770846055627684,
+    "sequence_completed": true,
+    "sequence_completed_source_timestamp_ns": 33590000000,
+    "physics_grasp_verified": false,
+    "simultaneous_gripper_contact_sample_count": 98,
+    "simultaneous_contact_first_source_timestamp_ns": 31550000000,
+    "simultaneous_contact_last_source_timestamp_ns": 31802000000,
+    "simultaneous_contact_observed_span_ns": 252000000,
+    "simultaneous_contact_ended_before_sequence_completion_ns": 1788000000,
+    "moving_pad_contact_last_source_timestamp_ns": 32068000000,
+    "moving_pad_contact_ended_before_sequence_completion_ns": 1522000000,
+    "gripper_effort_at_sequence_completion": -0.00015646887556150166,
+    "gripper_effort_peak_abs_at_sequence_completion": 1.4389524863446082,
+    "peak_lift_m": 0.00266662576599772,
+    "required_lift_m": 0.02,
+    "retention_observed": false,
+    "approximate_final_xy_drift_m": 0.016569792010805887,
+    "evidence_digest": "4c37ed1c981512ecce82164630b59fff61fa04d119d8518cffed799bf12a83db",
+    "comparison_to_candidate007": {
+      "simultaneous_sample_ratio": 2.5128205128205128,
+      "simultaneous_span_ratio": 2.5454545454545454,
+      "peak_lift_ratio": 7.419863354301515,
+      "physics_grasp_status_unchanged": true
+    },
+    "diagnostic_boundary": "The generated 0.50 rad profile improved transient engagement and peak lift versus candidate007, but bilateral contact still ended before sequence completion, the cube returned to table height, and retention failed. This is a stronger negative/control result, not physics grasp success."
+  },
+  "candidate009_plan_only_runtime_observation": {
+    "path": "docs/observations/2026-08-27-candidate009-plan-only-runtime.json",
+    "profile": "so101_grasp_geometry_candidate009_centered_q0p50.json",
+    "target_center_x_offset_from_candidate008_m": -0.0009,
+    "home_to_approach_plan_accepted": true,
+    "approach_to_descend_plan_accepted": false,
+    "moveit_service_error_code": 99999,
+    "move_group_log_error_name": "NO_IK_SOLUTION",
+    "lift_plan_attempted": false,
+    "trajectory_publication_count": 0,
+    "execute_trajectory_goal_count": 0,
+    "fjt_goal_count": 0,
+    "execution_attempted": false,
+    "execution_authorized": false,
+    "diagnostic_boundary": "The static 0.9 mm symmetry offset is not kinematically accepted by the current chained Pilz PTP plan-only path. No EdgeGrasp motion node or execution action was present."
+  },
+  "candidate009_reachability_scan_observation": {
+    "path": "docs/observations/2026-08-27-candidate009-reachability-scan.json",
+    "zero_offset_three_segment_attempts_accepted": "10/10",
+    "first_negative_grid_step_m": -0.0001,
+    "first_negative_grid_step_result": "NO_IK_SOLUTION",
+    "negative_translation_search_stopped": true,
+    "execution_attempted": false,
+    "diagnostic_boundary": "At the fixed grasp orientation, zero offset passed while every sampled negative translation failed the approach-to-descend IK gate. This is plan-only reachability evidence."
+  },
+  "candidate010_q0p45_runtime_observation": {
+    "plan_only_path": "docs/observations/2026-08-27-candidate010-q0p45-plan-only.json",
+    "path": "docs/observations/2026-08-27-candidate010-q0p45-runtime.json",
+    "profile": "so101_grasp_geometry_candidate010_q0p45.json",
+    "gripper_closed_position_rad": 0.45,
+    "predicted_inner_gap_m": 0.035436673911051694,
+    "plan_only_three_segment_attempts_accepted": "10/10",
+    "sequence_completed": true,
+    "simultaneous_gripper_contact_sample_count": 144,
+    "simultaneous_contact_span_ns": 368000000,
+    "peak_lift_m": 0.00332253259846774,
+    "required_lift_m": 0.02,
+    "retention_observed": false,
+    "physics_grasp_verified": false,
+    "diagnostic_boundary": "The smaller gap improved transient engagement and peak lift versus candidate008, but contact ended before sequence completion and the cube returned to table height."
+  },
+  "candidate011_q0p40_runtime_observation": {
+    "plan_only_path": "docs/observations/2026-08-27-candidate011-q0p40-plan-only.json",
+    "path": "docs/observations/2026-08-27-candidate011-q0p40-runtime.json",
+    "profile": "so101_grasp_geometry_candidate011_q0p40.json",
+    "gripper_closed_position_rad": 0.4,
+    "predicted_inner_gap_m": 0.03314530015699046,
+    "plan_only_three_segment_attempts_accepted": "10/10",
+    "sequence_completed": true,
+    "simultaneous_gripper_contact_sample_count": 171,
+    "simultaneous_contact_span_ns": 463000000,
+    "peak_lift_m": 0.00371110591130963,
+    "required_lift_m": 0.02,
+    "retention_observed": false,
+    "physics_grasp_verified": false,
+    "closure_angle_search_stopped": true,
+    "diagnostic_boundary": "This is the strongest transient result in the current close-angle series, but bilateral contact ended before sequence completion and the cube returned to table height."
+  },
+  "candidate012_pad_friction_runtime_observation": {
+    "path": "docs/observations/2026-08-28-candidate012-pad-friction-runtime.json",
+    "experiment_contract": "candidate012_pad_friction_experiment.json",
+    "geometry_profile": "so101_grasp_geometry_candidate011_q0p40.json",
+    "plan_only_attempts_accepted_per_material_row": "10/10",
+    "control_mu": 1.0,
+    "treatment_mu": 1.5,
+    "control_peak_lift_m": 0.003392324103008465,
+    "treatment_peak_lift_m": 0.003468446740193115,
+    "peak_lift_delta_m": 0.00007612263718465018,
+    "control_simultaneous_contact_span_ns": 437000000,
+    "treatment_simultaneous_contact_span_ns": 450000000,
+    "both_sequence_completed": true,
+    "both_retention_observed": false,
+    "physics_grasp_verified": false,
+    "friction_search_stopped": true,
+    "diagnostic_boundary": "The bounded 1.0-to-1.5 explicit pad-friction change produced only a 0.076 mm peak-lift increase; both cubes returned to table height and failed lift/retention, so friction is not established as the current bottleneck."
+  },
+  "clock_fail_closed_observation": {
+    "task_id": "candidate005-simultaneous-proxy-001",
+    "reason": "clock_rollback:115405000000<115406000000",
+    "sequence_completed": false,
+    "terminal_phase": "SAFE_STOP",
+    "fresh_graph_retry_required": true,
+    "safety_rule_relaxed": false
+  },
+  "execution_authorized": false,
+  "execution_blocker": "force_closure_required_lift_and_retention_unverified",
+  "runtime_execution_status": "LATEST_CANDIDATE012_PAIRED_SEQUENCE_COMPLETED_NO_PHYSICS_GRASP",
+  "physics_grasp_status": "FAILED_LIFT_AND_RETENTION",
+  "claim_boundary": [
+    "Candidate005 keeps the target cube collision-active and never permits target collision with gripper_link or moving_jaw_so101_v1_link.",
+    "A distinct immutable approach quaternion routes the palm around the cube; descend and lift retain the candidate004 grasp quaternion.",
+    "All three pose-constrained Pilz PTP arm segments passed 10/10 read-only planning repetitions, and a later candidate005 run completed the correlated typed sequence under the EdgeGrasp proxy MoveGroup overlay.",
+    "The correct-overlay run counted 1125 fixed-pad-token and 188 moving-pad-token contacts, including 35 samples containing both tokens; same-sample contact is not force-closure evidence.",
+    "The later candidate006 observer recorded per-pad contact depth/solver-wrench maxima and gripper effort while preserving the same failed lift/retention result; those maxima remain diagnostic only.",
+    "Peak cube lift was only 0.332 mm versus the required 20 mm and retention was false, so physics_grasp_verified remains false.",
+    "A preceding clean attempt observed a 1 ms ros_sim clock rollback and correctly SAFE_STOPped; the one retry used a fresh graph without weakening the rollback gate.",
+    "The earlier histogram run accidentally used pinned upstream MoveGroup. Its physical contact counts remain historical evidence, but it is not proxy-planning evidence.",
+    "The 10-run OMPL baseline was not deterministic and is not the selected execution path.",
+    "Static OBB overlap and MoveIt plan acceptance do not prove contact dynamics, friction, cube lift, retention, or simulated grasp success.",
+    "Candidate012 statically mapped explicit mu=mu2 values onto both generated pads and completed paired runtime sequences, but the 1.0-to-1.5 treatment changed peak lift by only 0.076 mm and did not produce retention."
+  ]
+}

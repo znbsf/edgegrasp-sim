@@ -1,0 +1,172 @@
+{
+  "observation_id": "candidate004-selective-acm-plan-only-2026-08-27",
+  "observation_window": {
+    "started_at": "2026-08-27T17:10:39.540791+08:00",
+    "finished_at": "2026-08-27T17:18:40.094517463+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "environment": {
+    "host": "Windows with WSL2 Ubuntu-24.04",
+    "ros_distribution": "jazzy",
+    "gazebo_sim_version": "8.11.0",
+    "physics_engine": "DART",
+    "ros_domain_id": 231,
+    "ros_workspace": "/home/edgegrasp/ros2_ws",
+    "so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "logs": {
+    "gazebo_ros_launch": "/home/edgegrasp/.ros/log/2026-08-27-17-10-39-540791-DESKTOP-MGV04IT-466",
+    "gazebo_server": "/home/edgegrasp/.gz/sim/log/2026-08-27T17:10:41.245636453/server_console.log",
+    "gazebo_server_sha256": "9d4ce17bed62eb449b364a53a8b8838ba7a1e2954ef9203321ba98bf8215609a",
+    "move_group_launch": "/home/edgegrasp/.ros/log/2026-08-27-17-12-01-366075-DESKTOP-MGV04IT-836",
+    "move_group_node": "/home/edgegrasp/.ros/log/move_group_847_1787821922564.log",
+    "move_group_node_sha256": "f671671dffa8d80e554bf7232dcce0310cef9cf449815e18d4774042f84655a4",
+    "planning_scene_launch": "/home/edgegrasp/.ros/log/2026-08-27-17-12-13-910462-DESKTOP-MGV04IT-903"
+  },
+  "commands": {
+    "gazebo": "ros2 launch edgegrasp_ros edgegrasp_proxy_gazebo.launch.py use_camera:=false use_rviz:=false launch_edgegrasp_nodes:=true launch_physics_observer:=false target_id:=target_cube target_x_m:=0.24695465627174787 target_y_m:=0.1218646928533295 target_z_m:=0.205",
+    "move_group": "ros2 launch edgegrasp_ros edgegrasp_proxy_move_group.launch.py robot_name:=so101 use_camera:=false use_gazebo:=true use_sim_time:=true use_rviz:=false",
+    "planning_scene": "ros2 launch edgegrasp_ros planning_scene.launch.py use_sim_time:=true clock_domain:=ros_sim clock_epoch:=0 target_frame:=base_link include_optional_cube:=true",
+    "enable_selective_contacts": "ros2 service call /edgegrasp/set_target_pad_contacts std_srvs/srv/SetBool '{data: true}'",
+    "approach_to_descend_open": "python3 scripts/probe_so101_joint_plan.py --label candidate004_approach_to_descend_pad_only --start -0.6000000524768894 -0.4249611950204053 -0.04600904468898089 0.47097024253202446 -1.5708000280600944 --start-gripper 1.5 --target-position 0.2462364349184608 0.15125054509958977 0.21671404504175756 --target-orientation 0.3450298741758752 0.6172118344266647 0.6332767577280262 0.3145862131297726 --pipeline-id pilz_industrial_motion_planner --planner-id PTP --allowed-planning-time-s 2 --velocity-scaling .1 --acceleration-scaling .1",
+    "descend_to_lift_closed": "python3 scripts/probe_so101_joint_plan.py --label candidate004_descend_to_lift_pad_only --start -0.6000000442835862 -0.8693352717379274 0.8640595639082524 0.005275710769147334 -1.5708000280690093 --start-gripper 0.60 --target-position 0.2462364349184608 0.15125054509958977 0.25671404504175754 --target-orientation 0.3450298741758752 0.6172118344266647 0.6332767577280262 0.3145862131297726 --pipeline-id pilz_industrial_motion_planner --planner-id PTP --allowed-planning-time-s 2 --velocity-scaling .1 --acceleration-scaling .1",
+    "approach_to_descend_closed_control": "python3 scripts/probe_so101_joint_plan.py --label candidate004_approach_to_descend_gripper_060_control --start -0.6000000524768894 -0.4249611950204053 -0.04600904468898089 0.47097024253202446 -1.5708000280600944 --start-gripper 0.60 --target-position 0.2462364349184608 0.15125054509958977 0.21671404504175756 --target-orientation 0.3450298741758752 0.6172118344266647 0.6332767577280262 0.3145862131297726 --pipeline-id pilz_industrial_motion_planner --planner-id PTP --allowed-planning-time-s 2 --velocity-scaling .1 --acceleration-scaling .1"
+  },
+  "runtime_preconditions": {
+    "controllers_active": [
+      "joint_state_broadcaster",
+      "arm_controller",
+      "gripper_controller"
+    ],
+    "joint_states_observed": true,
+    "action_endpoints": {
+      "/arm_controller/follow_joint_trajectory": "control_msgs/action/FollowJointTrajectory",
+      "/gripper_controller/follow_joint_trajectory": "control_msgs/action/FollowJointTrajectory",
+      "/edgegrasp/execute_trajectory": "edgegrasp_interfaces/action/ExecuteTrajectory"
+    },
+    "moveit_services": {
+      "/apply_planning_scene": "moveit_msgs/srv/ApplyPlanningScene",
+      "/get_planning_scene": "moveit_msgs/srv/GetPlanningScene",
+      "/plan_kinematic_path": "moveit_msgs/srv/GetMotionPlan"
+    }
+  },
+  "planning_scene": {
+    "scene_digest": "8fb303a83b4d8c22ef6e491d5a33ea73b39371a17adc8511db47a5f1c89b6f35",
+    "planning_frame": "base_link",
+    "objects_confirmed": [
+      "edgegrasp_table",
+      "edgegrasp_target_cube"
+    ],
+    "target_cube_retained": true,
+    "target_pad_contact_service": "/edgegrasp/set_target_pad_contacts",
+    "service_response_success": true,
+    "post_confirmation_ready": true,
+    "post_confirmation_reason": "confirmed",
+    "allowed_target_contact_links": [
+      "edgegrasp_fixed_finger_pad_link",
+      "edgegrasp_moving_finger_pad_link"
+    ],
+    "forbidden_target_contact_links": [
+      "gripper_link",
+      "moving_jaw_so101_v1_link"
+    ],
+    "observed_target_row_permissions": {
+      "edgegrasp_fixed_finger_pad_link": true,
+      "edgegrasp_moving_finger_pad_link": true,
+      "gripper_link": false,
+      "moving_jaw_so101_v1_link": false
+    },
+    "periodic_status_observation": {
+      "ready": true,
+      "reason": "awaiting_planning_scene_confirmation",
+      "follow_up_fix": "renamed to confirmed_revalidation_pending when readiness remains true"
+    }
+  },
+  "plan_only_cases": [
+    {
+      "case": "approach_to_descend_gripper_1_5",
+      "start_gripper_rad": 1.5,
+      "moveit_error_code": 99999,
+      "moveit_error_name": "INVALID_MOTION_PLAN",
+      "source_point_count": 51,
+      "gate_ready_point_count": 50,
+      "response_trajectory_validator_reason": "valid",
+      "plan_accepted": false,
+      "invalid_state_indices": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
+      "collision_pair": ["edgegrasp_target_cube", "gripper_link"],
+      "planning_time_s": 0.001128031,
+      "elapsed_wall_s": 3.2782173790000115,
+      "probe_exit_code": 2,
+      "execution_attempted": false
+    },
+    {
+      "case": "approach_to_descend_gripper_0_6_control",
+      "start_gripper_rad": 0.6,
+      "moveit_error_code": 99999,
+      "moveit_error_name": "INVALID_MOTION_PLAN",
+      "source_point_count": 51,
+      "gate_ready_point_count": 50,
+      "response_trajectory_validator_reason": "valid",
+      "plan_accepted": false,
+      "invalid_state_indices": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
+      "collision_pair": ["edgegrasp_target_cube", "gripper_link"],
+      "planning_time_s": 0.00065572,
+      "elapsed_wall_s": 0.7872139259999358,
+      "probe_exit_code": 2,
+      "execution_attempted": false
+    },
+    {
+      "case": "descend_to_lift_gripper_0_6",
+      "start_gripper_rad": 0.6,
+      "moveit_error_code": 1,
+      "moveit_error_name": "SUCCESS",
+      "source_point_count": 22,
+      "gate_ready_point_count": 21,
+      "response_trajectory_validator_reason": "valid",
+      "plan_accepted": true,
+      "planning_time_s": 0.00132506,
+      "elapsed_wall_s": 1.2637078720000545,
+      "probe_exit_code": 0,
+      "execution_attempted": false
+    }
+  ],
+  "move_group_log_evidence": {
+    "planning_requests": 3,
+    "invalid_motion_plan_responses": 2,
+    "target_cube_gripper_link_contact_lines": 32,
+    "first_invalid_state_range": "27-42 of 51",
+    "second_invalid_state_range": "27-42 of 51"
+  },
+  "gazebo_health": {
+    "dart_collision_construction_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "new_contact_or_grasp_trial_run": false
+  },
+  "cleanup": {
+    "launch_parent_exit_codes": {
+      "gazebo_launch": 0,
+      "move_group_launch": 0,
+      "planning_scene_launch": 0
+    },
+    "gazebo_server_child_required_exact_pid_sigint": 508,
+    "matching_process_count_after_exact_cleanup": 0,
+    "clock_publisher_count_after_cleanup": 0,
+    "ros2_daemon_stopped": true
+  },
+  "claim_boundary": {
+    "verified": [
+      "The target cube remained in the MoveIt PlanningScene while only two dedicated distal-pad links were permitted to contact it.",
+      "The two parent links remained forbidden in the observed MoveIt allowed-collision matrix.",
+      "MoveIt fail-closed rejected the current approach-to-descend path for target-cube versus gripper_link collision.",
+      "The candidate004 closed-gripper descend-to-lift path returned SUCCESS and a valid 22-point RobotTrajectory without execution."
+    ],
+    "not_verified": [
+      "a collision-free approach-to-descend path for candidate004",
+      "candidate004 trajectory execution",
+      "distal-pad contact dynamics",
+      "cube lift or retention",
+      "simulated grasp success",
+      "full-arm proxy collision fidelity"
+    ]
+  }
+}

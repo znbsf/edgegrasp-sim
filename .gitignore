@@ -1,0 +1,29 @@
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+ros_ws/build/
+ros_ws/install/
+ros_ws/log/
+evidence/generated/
+
+# Local credentials and machine-only configuration
+.env
+.env.*
+!.env.example
+
+# Local logs, editor state, and OS metadata
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "name": "edgegrasp_so101_candidate016_reverse_lateral_pregrasp",
+  "planning_frame": "base_link",
+  "planning_group": "arm",
+  "target": {
+    "id": "target_cube"
+  },
+  "orientations_xyzw": {
+    "approach": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ],
+    "grasp": [
+      0.3450298741758752,
+      0.6172118344266647,
+      0.6332767577280262,
+      0.3145862131297726
+    ]
+  },
+  "stages": {
+    "approach": {
+      "role": "reverse_lateral_pregrasp_no_execution_until_plan_only_passes",
+      "position_m": [
+        0.1942405524686608,
+        0.11567768735635443,
+        0.21671354893315634
+      ]
+    }
+  },
+  "changed_variable": {
+    "name": "approach_waypoint",
+    "baseline": "high collision-routing waypoint with orientation transition",
+    "candidate": "63 mm along grasp-frame -Z at the final grasp orientation",
+    "purpose": "place the open fingers outside the cube and make the final segment lateral instead of top-down"
+  },
+  "claim_boundary": [
+    "This file defines a plan-only candidate and does not authorize motion.",
+    "The pose is derived from Candidate011 descend minus 63 mm along grasp-frame Z; the first 60 mm revision was statically rejected at 2.45 mm pad clearance, below the 5 mm contract. Contact normals, lift, and retention still require a fresh runtime trial.",
+    "A MoveIt plan does not prove collision-free Gazebo dynamics or grasp success."
+  ]
+}

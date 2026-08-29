@@ -1,0 +1,175 @@
+{
+  "observation_id": "candidate011_q0p40_runtime_20260827",
+  "recorded_timezone": "Asia/Shanghai",
+  "evidence_status": "SEQUENCE_COMPLETE_BEST_TRANSIENT_CONTACT_PHYSICS_GRASP_FAILED",
+  "environment": {
+    "ros_distro": "jazzy",
+    "gazebo": "Harmonic / Gazebo Sim 8.11",
+    "physics_engine": "gz-physics-dartsim-plugin",
+    "upstream_sha": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "invocation": {
+    "command": "bash scripts/run_candidate005_contact_quality.sh 64 /home/edgegrasp/ros2_ws/test_results/candidate011_q0p40_runtime_20260827_2320 candidate011-q0p40-001 so101_grasp_geometry_candidate011_q0p40.json 0.40 true",
+    "ros_domain_id": 64,
+    "task_id": "candidate011-q0p40-001",
+    "started_at": "2026-08-27T22:06:16.750678060+08:00",
+    "capture_finished_at": "2026-08-27T22:08:17.922528978+08:00",
+    "cleanup_finished_at": "2026-08-27T22:08:29.105811942+08:00",
+    "artifact_directory": "/home/edgegrasp/ros2_ws/test_results/candidate011_q0p40_runtime_20260827_2320",
+    "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-27T22:06:19.779034314/server_console.log"
+  },
+  "candidate": {
+    "profile": "so101_grasp_geometry_candidate011_q0p40.json",
+    "profile_sha256": "50f2fbc4758806c9c9eaaf64fcce25b6c189a82cc771db139803a3ebec5ba1e6",
+    "gripper_closed_position_rad": 0.4,
+    "prior_gripper_closed_position_rad": 0.45,
+    "predicted_inner_gap_m": 0.03314530015699046,
+    "target_center_x_offset_m": 0.0,
+    "single_changed_variable": "generated moving-pad geometry and commanded gripper closure at 0.40 rad"
+  },
+  "preflight": {
+    "status": "PASS",
+    "plan_only_observation": "docs/observations/2026-08-27-candidate011-q0p40-plan-only.json",
+    "plan_only_all_segments_accepted": "10/10",
+    "derive_descend_and_lift_from_profile": true,
+    "typed_gripper_preparation_succeeded": true,
+    "direct_fjt_bypass": false,
+    "controllers_active_count": 3,
+    "edgegrasp_actions_present_count": 4,
+    "clock_publisher_count": 1,
+    "clock_publisher_node": "ros_gz_bridge"
+  },
+  "sequence_result": {
+    "client_exit_code": 11,
+    "wrapper_status": 4,
+    "sequence_completed": true,
+    "terminal_phase": "COMPLETE",
+    "reason": "correlated_sequence_completed;physics_unverified",
+    "source_timestamp_ns": 37243000000,
+    "last_terminal_command_id": "candidate011-q0p40-001|lift|3",
+    "last_trajectory_digest": "c2a267098bef3bc2142799656d3ed5ee001227d5562fa65ab555a850941f01ef"
+  },
+  "physics_result": {
+    "wrapper_status": 6,
+    "phase": "FAULT",
+    "reason": "observation_wall_timeout",
+    "physics_grasp_verified": false,
+    "gripper_contact_observed": true,
+    "gripper_contact_count": 1385,
+    "gripper_contact_counts_by_token": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": 999,
+      "edgegrasp_grasp_proxy_moving_finger_pad": 386
+    },
+    "all_gripper_tokens_observed": true,
+    "simultaneous_gripper_contact_sample_count": 171,
+    "per_pad_contact_quality": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": {
+        "max_penetration_depth_m": 0.00005257385858938319,
+        "max_force_magnitude_n": 66.67039544637525,
+        "max_abs_normal_force_n": 53.695343199502595
+      },
+      "edgegrasp_grasp_proxy_moving_finger_pad": {
+        "max_penetration_depth_m": 0.000024386304850784746,
+        "max_force_magnitude_n": 61.72441087111837,
+        "max_abs_normal_force_n": 61.2440113876541
+      }
+    },
+    "same_sample_weak_side_maxima": {
+      "max_min_penetration_depth_m": 0.000009726709320125038,
+      "max_min_force_magnitude_n": 51.01243757150627,
+      "max_min_abs_normal_force_n": 37.39027812222794
+    },
+    "contact_timing_by_token": {
+      "edgegrasp_grasp_proxy_fixed_finger_pad": {
+        "first_source_timestamp_ns": 32885000000,
+        "last_source_timestamp_ns": 35506000000,
+        "observed_span_ns": 2621000000,
+        "ended_before_sequence_completion_ns": 1737000000
+      },
+      "edgegrasp_grasp_proxy_moving_finger_pad": {
+        "first_source_timestamp_ns": 35043000000,
+        "last_source_timestamp_ns": 36022000000,
+        "observed_span_ns": 979000000,
+        "ended_before_sequence_completion_ns": 1221000000
+      }
+    },
+    "simultaneous_contact_timing": {
+      "first_source_timestamp_ns": 35043000000,
+      "last_source_timestamp_ns": 35506000000,
+      "observed_span_ns": 463000000,
+      "ended_before_sequence_completion_ns": 1737000000,
+      "sample_count_at_sequence_completion": 171
+    },
+    "gripper_effort": {
+      "sample_count": 2474,
+      "peak_abs": 2.74598421323944,
+      "latest": -0.00016179351421422432,
+      "at_sequence_completion": -0.0001631575883888228,
+      "peak_abs_at_sequence_completion": 2.74598421323944,
+      "units": "simulated joint effort as published by /joint_states"
+    },
+    "table_contact_count": 9554,
+    "pose_sample_count": 2474,
+    "baseline_z_m": 0.20499999990200096,
+    "peak_z_m": 0.2087111058133106,
+    "peak_lift_m": 0.00371110591130963,
+    "required_lift_m": 0.02,
+    "final_z_m": 0.20499994384718986,
+    "lift_observed": false,
+    "retention_observed": false,
+    "evidence_digest": "571e8f8d969f7aa057de09046bd5e67ce4e1e8ebaed5f08735877f7594c880a0"
+  },
+  "runtime_health": {
+    "robot_pose_xyz_rpy": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "initial_cube_pose_xyz": [0.24695465627174787, 0.1218646928533295, 0.205],
+    "final_cube_pose_xyz_rpy_cli_precision": [
+      0.253716,
+      0.133619,
+      0.205,
+      0.000001,
+      0.0,
+      0.332735
+    ],
+    "approximate_final_xy_drift_m": 0.0135602177530393,
+    "controllers_still_active": true,
+    "dart_mesh_construction_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "cleanup_exact_domain_processes_remaining": 0,
+    "clock_topic_after_cleanup": "unknown"
+  },
+  "comparison_to_candidate010": {
+    "candidate010_observation": "docs/observations/2026-08-27-candidate010-q0p45-runtime.json",
+    "simultaneous_sample_ratio": 1.1875,
+    "simultaneous_span_ratio": 1.25815217391304,
+    "peak_lift_ratio": 1.11695094068347,
+    "peak_effort_ratio": 1.187305813973,
+    "final_xy_drift_ratio": 0.960282001866581,
+    "physics_grasp_status_unchanged": true
+  },
+  "hashes": {
+    "gazebo_server_log_sha256": "57fcf34bdfca4661718cd3b7389d2d6ae3454457bbe805b495079d7160beca53",
+    "trial_log_sha256": "f1b3a6b80b3f134938e8305f4efb9edcb6e71864a63fbeec6efeae7991876f3e",
+    "gazebo_log_sha256": "ab0f10022599bf99b043d6361247d5d2ca860204f1d7d2dc5985a7d00f2140a0",
+    "move_group_log_sha256": "dd8e18bcfe1e271260cc009319b8a89ea6bc87b94c451658176e29443f91b44e",
+    "adapter_log_sha256": "ed373be3a4a3ab6a8b6e48db79239b37cf12023a9f87869acad20b1ec6555f7a",
+    "sequence_log_sha256": "1a88113fb63ac72f5bd6a8df3702aa498001ec15e06bf0157b31ff22715af994",
+    "cleanup_log_sha256": "a099484db492f4fa90147dfd122ef077b2229401724c40e00de6d11e48d94bc2",
+    "joint_states_final_sha256": "cbd1cb3fb6e9b6fe12d0ebf2de105024d9034ee56678deede3ebe9857c548a47"
+  },
+  "decision": {
+    "observed": "Candidate011 produced the strongest transient contact in the 0.50/0.45/0.40 rad series: 171 simultaneous samples, 0.463 s span, 3.711 mm peak lift, and 13.56 mm approximate final XY drift.",
+    "failed_gate": "Contact still disappeared before lift completed, the cube returned to table height, peak lift was below 20 mm, and retention was false.",
+    "closure_angle_search_stopped": true,
+    "reason_for_stop": "Three controlled close-angle steps show monotonic transient improvement but no retention. Continuing to close risks tuning proxy penetration rather than solving contact holding.",
+    "next_shortest_fix": "Add a bounded, documented finger-pad friction/contact-material experiment or revise distal-pad proxy contact geometry; keep the same success gate and rerun plan-only before motion if geometry changes."
+  },
+  "claim_boundary": {
+    "sequence_completed": true,
+    "typed_gate_and_both_fjt_controllers_observed": true,
+    "best_transient_contact_in_current_series": true,
+    "physics_grasp_verified": false,
+    "force_closure_verified": false,
+    "simulator_determinism_verified": false,
+    "real_hardware_verified": false
+  }
+}
