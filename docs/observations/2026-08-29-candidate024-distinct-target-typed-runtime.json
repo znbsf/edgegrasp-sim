@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "status": "THREE_REPRESENTATIVE_TYPED_RUNTIME_PASS",
+  "recorded_at": {
+    "start": "2026-08-29T20:11:56.153034898+08:00",
+    "end": "2026-08-29T20:22:15.715684733+08:00",
+    "timezone": "Asia/Shanghai"
+  },
+  "capability": "three_selected_distinct_targets_through_plan_target_execute_trajectory_fjt_and_physics_observer",
+  "environment": {
+    "guest": "Ubuntu 24.04 WSL2",
+    "python": "3.12.3",
+    "ros_distro": "jazzy",
+    "gazebo_sim": "8.11.0",
+    "upstream_so101_commit": "0305e03ab54e64aae9263fcbf339622e654012f3"
+  },
+  "source_plan_only_matrix": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_target_matrix_pan_plan_only_20260829T2000",
+    "result_sha256": "940b61feb47ac53f1a5674a0349b67f1535bad238e2e3d10987f9329acb2a2c1",
+    "matrix_source_sha256": "1bc8aecf6ebf3d8eba785b93c765f43d6f27ffbbd89f5270e7a1add090ae7f03",
+    "runner_sha256": "724948fdc41d9b642701521277b7baecb3e1b7d6b6285b3786bdd3889d4ea081",
+    "selection_policy": "one near-control target and both declared shoulder-pan range endpoints; each was executed once only after its three-segment zero-execution plan-only pass"
+  },
+  "execution_contract": {
+    "path": "GraspSequence -> PlanTarget -> ExecuteTrajectory -> FollowJointTrajectory",
+    "stages": [
+      "approach",
+      "descend",
+      "close_gripper",
+      "lift"
+    ],
+    "required_wrapper_status": 4,
+    "required_fjt_error_code": 0,
+    "minimum_cube_lift_m": 0.02,
+    "minimum_retention_s": 0.5,
+    "required_contact_tokens": [
+      "fixed_finger_pad",
+      "moving_finger_pad"
+    ],
+    "clock_domain": "ros_sim",
+    "single_clock_authority": "Gazebo /clock"
+  },
+  "aggregate": {
+    "selected_targets": 3,
+    "sequence_completed": 3,
+    "physics_grasp_verified": 3,
+    "typed_commands": 12,
+    "typed_terminal_successes": 12,
+    "fjt_successful_results": 12,
+    "missing_command_events": 0,
+    "retained_lift_range_m": [
+      0.028965292863427305,
+      0.029095378187923876
+    ],
+    "retained_lift_median_m": 0.029075601496632436,
+    "dart_mesh_diagnostic_count": 0,
+    "geometry_creation_failure_count": 0,
+    "motion_processes_after_cleanup": 0,
+    "clock_publishers_after_cleanup": 0,
+    "timing_ms": {
+      "sample_count": 12,
+      "percentile_method": "linear interpolation at (n-1)*p",
+      "source_observation_to_stage_dispatch": {
+        "minimum": 8.0,
+        "p50": 22.5,
+        "p95": 83.1,
+        "maximum": 93.0
+      },
+      "stage_dispatch_to_correlated_terminal": {
+        "minimum": 2199.0,
+        "p50": 3106.0,
+        "p95": 7226.85,
+        "maximum": 7245.0,
+        "boundary": "Arm intervals include MoveIt planning, gate admission and FJT execution; they are not pure controller latency."
+      }
+    }
+  },
+  "runs": [
+    {
+      "case_id": "reachable_pan_p005",
+      "shoulder_pan_delta_rad": 0.005,
+      "ros_domain_id": 226,
+      "task_id": "candidate024-pan-p005-20260829T2012",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_pan_p005_typed_20260829T2012",
+      "target_center_m": [
+        0.24172969095289437,
+        0.1285737997388309,
+        0.205
+      ],
+      "inputs": {
+        "candidate": "egm_3e4a76c3_reachable_pan_p005_candidate.json",
+        "candidate_sha256": "de22a669d37f01f4c9cbf92cec5c5a14f17e3bdfaa6e6acc1d2739320ba77521",
+        "scene": "egm_3e4a76c3_reachable_pan_p005_scene.json",
+        "scene_sha256": "d167b4c0f202a9bbc1eec1080c9a082bbe16edce19dcde3c94431578c25ca230",
+        "world": "egm_3e4a76c3_reachable_pan_p005_world.sdf",
+        "world_sha256": "fcee0507945a21e7c919da970a3cc1e2d24dbd445311422c21c96690441dead6"
+      },
+      "result": {
+        "sequence_completed": true,
+        "sequence_wrapper_status": 4,
+        "physics_grasp_verified": true,
+        "physics_wrapper_status": 4,
+        "physics_reason": "contact_lift_retention_verified",
+        "retained_lift_m": 0.028965292863427305,
+        "retention_observed": true,
+        "contact_counts": {
+          "fixed_finger_pad": 993,
+          "moving_finger_pad": 1405,
+          "simultaneous": 993
+        },
+        "evidence_digest": "2b7f059fd35e7b2728c216a1fae275ab1f5ba3f19ea47363479c4f0a46c7ca4b"
+      },
+      "command_terminals": [
+        {
+          "command_id": "candidate024-pan-p005-20260829T2012|approach|0",
+          "controller": "arm_controller",
+          "trajectory_digest": "632cbbb8741bc20055c6a252eb1378e1bc242e7701f43faefe899932644678b6"
+        },
+        {
+          "command_id": "candidate024-pan-p005-20260829T2012|descend|1",
+          "controller": "arm_controller",
+          "trajectory_digest": "37954eb6cbfb76de83790655940609dc569689b194077cfb09bcfbc2092f25b3"
+        },
+        {
+          "command_id": "candidate024-pan-p005-20260829T2012|close_gripper|2",
+          "controller": "gripper_controller",
+          "trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4"
+        },
+        {
+          "command_id": "candidate024-pan-p005-20260829T2012|lift|3",
+          "controller": "arm_controller",
+          "trajectory_digest": "fb89ab5b21a0a5dd551515cf248f20330d5dd7a7b563a110d3c1db12c2ff3fc4"
+        }
+      ],
+      "artifacts": {
+        "trial_log_sha256": "f852581a10968f1f23477c1eb4a42fc086ed49ee61faa53be53ac11fb9b8f29b",
+        "timeline_sha256": "4f91a3f9c87905729477e06443b68e37d5bf8fa686664500d458e07560a719b9",
+        "mcap_sha256": "142aaac7affc922f3721d6e023cbb43355e0e00aa943aa30051f6108be635b3d",
+        "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-29T20:12:00.581092899/server_console.log"
+      }
+    },
+    {
+      "case_id": "reachable_pan_n040",
+      "shoulder_pan_delta_rad": -0.04,
+      "ros_domain_id": 227,
+      "task_id": "candidate024-pan-n040-20260829T2017",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_pan_n040_typed_20260829T2017",
+      "target_center_m": [
+        0.2357404261709475,
+        0.13757080717036466,
+        0.205
+      ],
+      "inputs": {
+        "candidate": "egm_3e4a76c3_reachable_pan_n040_candidate.json",
+        "candidate_sha256": "0fee9cd47101c47354a1ba9e94d35dd25935809941fb44826e3c0a86e0d15dd5",
+        "scene": "egm_3e4a76c3_reachable_pan_n040_scene.json",
+        "scene_sha256": "af64b2473f24943e81f1b7cb1c637ebc31e2b5ddf9ab402aaf0ca5382b569f33",
+        "world": "egm_3e4a76c3_reachable_pan_n040_world.sdf",
+        "world_sha256": "d3f0d7af71585e8829c22c5fe89ee34fe09d4913e101dcfd5345a7a6e0faffc3"
+      },
+      "result": {
+        "sequence_completed": true,
+        "sequence_wrapper_status": 4,
+        "physics_grasp_verified": true,
+        "physics_wrapper_status": 4,
+        "physics_reason": "contact_lift_retention_verified",
+        "retained_lift_m": 0.029095378187923876,
+        "retention_observed": true,
+        "contact_counts": {
+          "fixed_finger_pad": 951,
+          "moving_finger_pad": 1353,
+          "simultaneous": 951
+        },
+        "evidence_digest": "8e506a96f771797896e0c2e487bf01304c122dbdfbb46e34eefd375944f8e0f5"
+      },
+      "command_terminals": [
+        {
+          "command_id": "candidate024-pan-n040-20260829T2017|approach|0",
+          "controller": "arm_controller",
+          "trajectory_digest": "abca2e47ce02ee97eb6db76e2aa6a5ae9ecda46249832040e29ee7165bb7be2d"
+        },
+        {
+          "command_id": "candidate024-pan-n040-20260829T2017|descend|1",
+          "controller": "arm_controller",
+          "trajectory_digest": "89e578c3823369a84734b14e13cbf93b6f4a4bd647fdfeedf63d4868af06470b"
+        },
+        {
+          "command_id": "candidate024-pan-n040-20260829T2017|close_gripper|2",
+          "controller": "gripper_controller",
+          "trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4"
+        },
+        {
+          "command_id": "candidate024-pan-n040-20260829T2017|lift|3",
+          "controller": "arm_controller",
+          "trajectory_digest": "6aed49bfc73982c6e715139b5df857cddd06cd25f4985fe2757d17689e059291"
+        }
+      ],
+      "artifacts": {
+        "trial_log_sha256": "3417065c6e7100614dd33f5a648a0b0411d373351f50a19e48fe1d5b6871729a",
+        "timeline_sha256": "8e14d3200d4b07ae86a4a1a87a3b969ffab4e0a6673b80f1ad55a682610fbd10",
+        "mcap_sha256": "40020615b766c453a2060dda89c6d356770a2a9e29eec4e20d897a88b624d938",
+        "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-29T20:16:02.438394508/server_console.log"
+      }
+    },
+    {
+      "case_id": "reachable_pan_p040",
+      "shoulder_pan_delta_rad": 0.04,
+      "ros_domain_id": 228,
+      "task_id": "candidate024-pan-p040-20260829T2021",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_pan_p040_typed_20260829T2021",
+      "target_center_m": [
+        0.24610459541840465,
+        0.1213952023972258,
+        0.205
+      ],
+      "inputs": {
+        "candidate": "egm_3e4a76c3_reachable_pan_p040_candidate.json",
+        "candidate_sha256": "c362c0615a362390ae1b1d7ff51a373f51453d8118569ce59bf17778333c19c0",
+        "scene": "egm_3e4a76c3_reachable_pan_p040_scene.json",
+        "scene_sha256": "6303ef196da11914f4e07655fd0b86b6eb4840488fd2d072201fc5d327d41a0d",
+        "world": "egm_3e4a76c3_reachable_pan_p040_world.sdf",
+        "world_sha256": "c92749a86a5556eaa1ecf60383f2940ba0dddce39535b6479ba8b62d5d0b5fbe"
+      },
+      "result": {
+        "sequence_completed": true,
+        "sequence_wrapper_status": 4,
+        "physics_grasp_verified": true,
+        "physics_wrapper_status": 4,
+        "physics_reason": "contact_lift_retention_verified",
+        "retained_lift_m": 0.029075601496632436,
+        "retention_observed": true,
+        "contact_counts": {
+          "fixed_finger_pad": 1023,
+          "moving_finger_pad": 1464,
+          "simultaneous": 1023
+        },
+        "evidence_digest": "59fe070fd474538f6858d206da4cc13c818bf849b961c7eb715b6b4520069377"
+      },
+      "command_terminals": [
+        {
+          "command_id": "candidate024-pan-p040-20260829T2021|approach|0",
+          "controller": "arm_controller",
+          "trajectory_digest": "30c555b9ac056503d8501a2dfa504f6c4f2bd1283841537e4f6ae53945ddf4c3"
+        },
+        {
+          "command_id": "candidate024-pan-p040-20260829T2021|descend|1",
+          "controller": "arm_controller",
+          "trajectory_digest": "c48459d0ec0f5eeaac680f81581d2db9d70c28ad34f675636ef7e247baa077c2"
+        },
+        {
+          "command_id": "candidate024-pan-p040-20260829T2021|close_gripper|2",
+          "controller": "gripper_controller",
+          "trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4"
+        },
+        {
+          "command_id": "candidate024-pan-p040-20260829T2021|lift|3",
+          "controller": "arm_controller",
+          "trajectory_digest": "e70f29156431ffe312d5ba35b05d63ce4c13ce7ca0ce23efe4e87bed1df00413"
+        }
+      ],
+      "artifacts": {
+        "trial_log_sha256": "49ffaacffdaf0874e86589994a18593e6f6d3a893adf2c70b2d8df7f79f64c28",
+        "timeline_sha256": "78edcc0a8fccfb241bd2202c7e31125ab516410d1ca982320406c7f8038bf208",
+        "mcap_sha256": "22008664b89062b026a407a6cce3fecd1bbdedaddc1dddaebf97c9f7a3815a81",
+        "gazebo_server_log": "/home/edgegrasp/.gz/sim/log/2026-08-29T20:20:05.51496305/server_console.log"
+      }
+    }
+  ],
+  "evidence_notes": [
+    "Each generated candidate, scene and world file matched the SHA-256 recorded by the accepted plan-only matrix before execution and was removed from the install share after its run.",
+    "All twelve correlated typed terminals had action_goal_status=4, downstream_terminal_observed=true and FollowJointTrajectory error_code=0.",
+    "The independent physics observer returned physics_grasp_verified=true. The separate MCAP timeline analyzer intentionally keeps its own generic claim_boundary.physics_grasp_verified=false and does not promote derived metrics into an observer result.",
+    "Post-release cube pose is not the retention endpoint. The bounded zero-effort release intentionally lets the cube return to the table before final capture.",
+    "The three selected targets were each executed once. This is not a repeatability percentage, workspace-wide success rate, physics determinism result, collision-fidelity proof, or hardware grasp evidence."
+  ],
+  "claim_boundary": {
+    "scoped_simulation_physics_evidence": true,
+    "three_distinct_target_poses": true,
+    "repeatability_per_distinct_target": false,
+    "whole_workspace_coverage": false,
+    "full_collision_fidelity": false,
+    "hardware_verified": false
+  }
+}

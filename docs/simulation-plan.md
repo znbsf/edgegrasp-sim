@@ -20,7 +20,7 @@ Snapshot on 2026-08-29:
 | --- | --- | --- |
 | Target model, predictor, state machine, safety/controller contracts, mock backend | Verified locally | Pure Python plus project structure passed 332 current CPython 3.14.5 project tests; all three 100-run replay scenarios passed |
 | Core deterministic replay | Verified locally | 100 identical replays for each synthetic 0/20/40 mm/s scenario |
-| Four-stage grasp sequence | Runtime verified (scoped) | 60 dependency-free tests plus 45 Jazzy action/client tests pass; Candidate024 passed 10/10 isolated plan-only attempts and produced 10 simulation-physics successes across 11 runtime attempts; post-fix r03-r11 passed 9/9 |
+| Four-stage grasp sequence | Runtime verified (scoped) | 60 dependency-free tests plus 45 Jazzy action/client tests pass; the fixed Candidate024 control produced 10 simulation-physics successes across 11 attempts, and three selected distinct target poses each completed one bounded typed run |
 | Standard Python install/import | Verified locally | The root package installs into a clean target and imports without source `PYTHONPATH` |
 | ROS packages and safety/trajectory gate | Runtime verified (scoped) | Jazzy colcon plus 49 ROS tests; typed target publication/correlation, selective PlanningScene/ACM confirmation, all-pad physics observation, fake-clock and live permission/watchdog/cancel paths observed |
 | Correlated target observation | Runtime verified (mock scope) | `TrackedTarget` and legacy `PointStamped` were emitted with matching stamp/point; target ID/domain/epoch were preserved |
@@ -31,9 +31,9 @@ Snapshot on 2026-08-29:
 | MCAP single-clock record/replay | Runtime verified (wrapper scope) | ros_sim record, time-domain check, raw-input replay, and clock-conflict guard ran |
 | Pinned SO-101 MJCF | Original XML/joint/actuator/mesh structure verified | Windows MuJoCo runtime blocked before model-specific execution |
 | Camera topics | Runtime verified (topic scope) | Simulated color/depth/info published; no calibration/localization claim |
-| Primitive-proxy contact | Runtime verified (narrow scope) | Generated primitives replaced 13 collision meshes; Candidate024's 11 runtime logs had zero tracked DART mesh/geometry diagnostics, and ten runs retained both configured pad contacts through lift |
-| Physics grasp observer | Runtime verified (scoped positive evidence) | Candidate024 produced 10 correlated `physics_grasp_verified=true` results with 28.858-29.128 mm retained lift and the configured 0.5 s retention; one pre-fix attempt stopped before motion on stale target |
-| Full collision fidelity and real hardware | Unverified/future | Only one target pose and conservative proxy geometry are covered; all-link fidelity, diverse targets, force calibration, real stops, and hardware remain unverified |
+| Primitive-proxy contact | Runtime verified (narrow scope) | Generated primitives replaced 13 collision meshes; Candidate024's 14 fixed-plus-selected runtime logs had zero tracked DART mesh/geometry diagnostics, and 13 successful runs retained both configured pad contacts through lift |
+| Physics grasp observer | Runtime verified (scoped positive evidence) | Candidate024 produced 13 correlated `physics_grasp_verified=true` results: ten at the fixed control and one at each of three selected distinct poses, with 28.858-29.128 mm retained lift and the configured 0.5 s retention; one fixed-control pre-fix attempt stopped before motion on stale target |
+| Full collision fidelity and real hardware | Unverified/future | Three selected shoulder-pan-symmetry target poses and conservative proxy geometry are covered; per-pose repeatability, workspace-wide behavior, all-link fidelity, force calibration, real stops, and hardware remain unverified |
 
 The dependency-free sequence core is now wrapped by `GraspSequence.action`.
 A task freezes one finite normalized approach orientation for collision routing
@@ -522,25 +522,25 @@ Completed on the dedicated Ubuntu 24.04 WSL2/Jazzy workspace:
    their declared layer. All 20 outcomes matched with zero mis-forward,
    unverified, or motion-side-effect counts. See
    [the matrix observation](observations/2026-08-29-candidate024-target-matrix-plan-only.json).
+6. Executed only the selected near-control pose and both declared range
+   endpoints once each. All 12 correlated typed commands reached matching FJT
+   success terminals; all three independent observer results retained both pad
+   contacts, 28.965-29.095 mm lift, and the 0.5 s retention window. See
+   [the typed-runtime observation](observations/2026-08-29-candidate024-distinct-target-typed-runtime.json).
 
 Remaining gates, in order:
 
 1. Preserve Candidate024 as the fixed simulation control. Do not continue
    blind friction, close-angle, or pad-length sweeps; any new scene or grasp
    pose must again pass the isolated plan-only gate before typed execution.
-2. Select three representative matrix positives (two range endpoints and one
-   near-control pose) for one bounded typed execution each. They must go
-   through `PlanTarget` -> `ExecuteTrajectory` -> FJT, with P50/P95
-   target-to-command and execution timing reported separately. Do not execute
-   all ten merely because their plans were accepted.
-3. Exercise MoveIt cancel/timeout and late-result paths against the real
+2. Exercise MoveIt cancel/timeout and late-result paths against the real
    move_group process, not only fake servers.
-4. For the selected executed targets, record endpoint error, bilateral contact,
-   lift, and retention independently. A sequence terminal without correlated
-   contact and retained cube lift remains sequence-only evidence.
-5. Investigate the move_group Ctrl-C shutdown segmentation fault and the
+3. If a per-pose repeatability claim is needed, pre-register a small repeat
+   count and rerun the three selected poses; the current one-run-per-pose result
+   must not be converted into a workspace success percentage.
+4. Investigate the move_group Ctrl-C shutdown segmentation fault and the
    `use_camera=false` SRDF torso warnings.
-6. Begin a real follower-arm bring-up only with calibration, conservative
+5. Begin a real follower-arm bring-up only with calibration, conservative
    unloaded motion, explicit stop/release checks, and no autonomous grasp until
    the hardware frame/timestamp/gripper mapping is measured.
 

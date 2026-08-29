@@ -18,9 +18,10 @@ Snapshot date: 2026-08-29, Asia/Shanghai.
 | MoveIt | The unique EdgeGrasp overlay loaded OMPL/Pilz/STOMP, injected Pilz `ValidateSolution`, disabled direct MoveGroup execution, and exposed both distal-pad links in the runtime model; candidate005 then completed through that proxy planning model | These are scoped path/execution checks, not minimum-clearance or whole-robot collision fidelity |
 | Shared PlanningScene | The scene contract generated Gazebo's table/cube world; MoveIt runtime-confirmed both objects and a selective ACM where only the two distal-pad child links may contact the retained cube | The selective transition is still manual; parent links remain forbidden and no target-to-pad physics claim follows from ACM configuration |
 | Target-to-controller path | A reachable immutable pose ran through tf2, `/compute_ik`, MoveGroup `plan_only`, trajectory validation, EdgeGrasp gate, and arm FJT; controller returned status 4 | One simulated arm trajectory, not autonomous pick-and-place |
-| Four-stage sequence and physics observer | 60 dependency-free sequence tests and 45 Jazzy action/client tests pass. Candidate024 passed 10/10 isolated three-segment plan-only attempts, then produced 10 correlated simulation-physics grasp successes across 11 runtime attempts; the sole failure was a pre-motion stale-target SAFE_STOP. After the scheduling fix, r03-r11 passed 9/9 | Success is limited to one fixed proxy scene and target pose; it is not physics determinism or hardware grasp evidence |
+| Four-stage sequence and physics observer | 60 dependency-free sequence tests and 45 Jazzy action/client tests pass. The fixed Candidate024 control produced 10 correlated simulation-physics successes across 11 runtime attempts; three selected distinct target poses then passed one bounded typed execution each | Evidence is limited to the fixed control plus three shoulder-pan-symmetry poses in the same proxy setup; it is not physics determinism or hardware grasp evidence |
 | Distinct-target plan-only matrix | A fixed Candidate024-derived matrix matched 20/20 hypotheses: ten shoulder-pan-symmetry targets passed all 30 arm segments, four invalid scenes were rejected before ROS startup, and six distant targets were rejected by MoveIt. False accept, false reject, unverified, and motion-side-effect counts were all zero | Each distinct target ran once and every trajectory was discarded; this is planning coverage, not execution or grasp evidence |
-| Camera/world/contact | Pinned world published color/depth/camera-info; generated primitives replaced 13 collision meshes. Candidate024's 11 runtime logs contained zero tracked DART mesh/geometry-construction diagnostics, and every successful run had both configured distal-pad contacts through lift retention | Log absence alone is not collision proof; only one base proxy has isolated behavior evidence and the robot still uses conservative primitive collision proxies |
+| Representative distinct-target typed runtime | The near-control pose and both declared shoulder-pan range endpoints each completed `PlanTarget -> ExecuteTrajectory -> FJT`; all 12 correlated command terminals succeeded, both pad tokens remained observed, retained lift was 28.965-29.095 mm, and the 0.5 s retention gate passed | Three selected targets, one run each; not a per-target repeatability result, workspace-wide success rate, full collision-fidelity proof, or hardware evidence |
+| Camera/world/contact | Pinned world published color/depth/camera-info; generated primitives replaced 13 collision meshes. Candidate024's 14 fixed-plus-selected runtime logs contained zero tracked DART mesh/geometry-construction diagnostics, and all 13 successful runs had both configured distal-pad contacts through lift retention | Log absence alone is not collision proof; only one base proxy has isolated behavior evidence and the robot still uses conservative primitive collision proxies |
 | MCAP | Jazzy ros_sim record and raw-input replay ran; 27 target records matched bag receive time within ±1 ms | Wrapper/gate replay only; no planner/backend/physics replay |
 | Real hardware | Not run | Hardware, calibration, camera extrinsics, and grasp success remain unverified |
 
@@ -136,6 +137,17 @@ hypotheses, and zero motion side effects. The superseded translation result is
 kept in the
 [diagnostic observation](docs/observations/2026-08-29-candidate024-translation-matrix-plan-only.json)
 rather than being hidden or relabelled.
+The next bounded step executed only the planned three representatives: the
+near-control `reachable_pan_p005` pose and both declared endpoints
+`reachable_pan_n040` / `reachable_pan_p040`. All three completed the four
+correlated typed stages, returned FJT status 0 for all 12 commands, retained
+both configured pad contacts, lifted the cube 28.965-29.095 mm, and passed the
+0.5 s observer retention gate. The
+[distinct-target typed-runtime observation](docs/observations/2026-08-29-candidate024-distinct-target-typed-runtime.json)
+records input, trajectory, evidence, timeline, MCAP, and Gazebo-log hashes.
+Each target was executed once, so this upgrades the scope from one fixed pose
+to three selected poses but does not establish repeatability at each pose or a
+workspace-wide success rate.
 The preceding histogram run is retained as physical-contact history but is
 explicitly excluded from proxy-planning evidence because it launched pinned
 upstream MoveGroup by operator mistake.

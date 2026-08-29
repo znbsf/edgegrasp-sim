@@ -244,6 +244,57 @@ The authoritative records are
 retained failed-method record
 `docs/observations/2026-08-29-candidate024-translation-matrix-plan-only.json`.
 
+### Candidate024 representative distinct-target typed runtime
+
+Recorded 2026-08-29 20:11:56-20:22:15 Asia/Shanghai in the same isolated
+Ubuntu 24.04 Jazzy / Gazebo Sim 8.11 WSL workspace. Only three accepted matrix
+cases were selected: near-control `reachable_pan_p005` and the two declared
+range endpoints `reachable_pan_n040` and `reachable_pan_p040`. Each exact
+candidate/scene/world triplet was checked against the plan-only artifact hash,
+installed for one run, then removed by exact path.
+
+Each run used the existing `run_candidate005_contact_quality.sh` harness with
+ROS domains 226-228, the Candidate024 q0.40 geometry, the fixed
+`candidate012_control_mu1p0` material profile, and the bounded -0.02 N m
+effort-PID preload. No test case or alternate motion path was added.
+
+| Metric | Observed |
+| --- | ---: |
+| Selected targets | 3 |
+| Sequence completions | 3/3 |
+| Independent physics observer passes | 3/3 |
+| Correlated typed command terminals | 12/12 |
+| FJT `error_code=0` | 12/12 |
+| Missing command events | 0 |
+| Retained cube lift | 28.965-29.095 mm |
+| Bilateral configured-pad contact | 3/3 |
+| Configured 0.5 s retention | 3/3 |
+| Tracked DART mesh / geometry diagnostics | 0 / 0 |
+| Post-run matching processes / `/clock` publishers | 0 / 0 |
+
+Across the 12 stage commands, source-observation-to-stage-dispatch latency was
+22.5 ms P50 and 83.1 ms P95. Stage-dispatch-to-correlated-terminal was
+3106.0 ms P50 and 7226.85 ms P95. These percentiles use linear interpolation
+at `(n-1)*p`; the latter arm interval includes MoveIt planning, typed-gate
+admission, and FJT execution, so it is not pure controller latency or a stable
+performance benchmark.
+
+The sequence action intentionally reports `physics_unverified`; only the
+separate read-only observer may promote the result after correlated terminal,
+bilateral contact, at least 20 mm lift, and retention all pass. Its three
+results returned `physics_grasp_verified=true` with reason
+`contact_lift_retention_verified`. The MCAP analyzer independently keeps its
+generic claim boundary false rather than converting derived statistics into an
+observer result; that is not a contradiction.
+
+This is scoped simulation-physics evidence for three selected poses, each run
+once. It is not a per-pose repeatability result, a 3/3 estimate of workspace
+success probability, full collision fidelity, physics determinism, or
+real-hardware grasp evidence. Machine-readable inputs, command IDs, trajectory
+digests, observer metrics, MCAP hashes, Gazebo log paths, and cleanup evidence
+are in
+`docs/observations/2026-08-29-candidate024-distinct-target-typed-runtime.json`.
+
 ### Candidate009-011 admission and physics runtime
 
 Candidate009 introduced an isolated chained plan-only harness. The graph

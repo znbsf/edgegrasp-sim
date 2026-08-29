@@ -218,3 +218,9 @@
   scenes and six distant targets are rejected as declared. The 20-case matrix
   has zero false accepts, false rejects, unverified cases, motion dispatches,
   tracked DART mesh diagnostics, or geometry-construction failures.
+- Execute only the preselected near-control target and both shoulder-pan range
+  endpoints once each through `PlanTarget -> ExecuteTrajectory -> FJT`. All 12
+  correlated typed terminals return wrapper status 4 and FJT error code 0; the
+  independent observer verifies bilateral pad contact, 28.965-29.095 mm
+  retained lift, and the 0.5 s retention window in all three runs. Preserve the
+  one-run-per-pose, proxy-physics, collision-fidelity, and hardware boundaries.
