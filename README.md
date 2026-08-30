@@ -6,16 +6,17 @@ a MoveIt plan-only adapter without copying the upstream robot configuration.
 
 ## Current evidence
 
-Snapshot date: 2026-08-30, Asia/Shanghai. The core and simulator counts below
-remain from the 2026-08-29 snapshot; the 2026-08-30 addition is limited to the
-in-process fail-closed artifact recorded in the matrix below.
+Snapshot date: 2026-08-30, Asia/Shanghai. Simulator runtime counts below remain
+from the 2026-08-29 snapshot. The latest additions are the current Windows
+static/replay rerun, the P12d in-process fail-closed artifact, and its
+package-scoped verification.
 
 | Layer | Observed result | Claim boundary |
 | --- | --- | --- |
-| Deterministic core | 332 Windows CPython 3.14.5 project tests pass; 0/20/40 mm/s scenarios replay identically 100 times | Core replay determinism, not physics determinism |
-| Python/ROS packaging | Root distribution import, complete-monorepo ament adapter, negative isolated-copy test, and Jazzy colcon build pass | `edgegrasp_core` is intentionally monorepo-layout dependent |
+| Deterministic core | The current Windows checkout collected 332 tests: 330 passed and two pinned-local-checkout tests skipped because that optional checkout was absent; the earlier fully pinned snapshot passed 332/332. The 0/20/40 mm/s scenarios replay identically 100 times | Core replay determinism, not physics determinism |
+| Python/ROS packaging | Root distribution import, complete-monorepo ament adapter, negative isolated-copy test, and the five-package Jazzy verification pass 129/129 selected tests (`core=1`, `interfaces=0`, `ros=49`, `adapter=34`, `grasp_sequence=45`) | `edgegrasp_core` is intentionally monorepo-layout dependent |
 | ROS safety boundary | `edgegrasp_ros` collects and passes 49 Jazzy tests, including typed target publication, ExecuteTrajectory correlation, fake FJT, simulated-clock watchdog, PlanningScene/ACM confirmation, all-pad physics observation, and injected/fake fail-closed late/cancel/send/result paths | These dependency-injected contracts are not real MoveGroup or physical-stop evidence; XML has zero failures/errors/skips, and an earlier intermittent rclpy teardown warning remains tracked |
-| MoveIt adapter | `edgegrasp_moveit_adapter` collects and passes 23 Jazzy tests | Fake IK/MoveGroup tests prove injected failure contracts; normal and historical-negative real-process evidence is listed separately |
+| MoveIt adapter | The P12d five-package artifact passed 34/34 `edgegrasp_moveit_adapter` tests; its focused in-process fake runner passed 12/12 tests, 12 JSONL records, and 15/15 required facets | The focused result is fake-dependency evidence, not real MoveGroup health; package and historical-negative real-process evidence remain separately classified |
 | Gazebo controllers | Three controllers active, six joint states observed, arm and gripper FJT actions accepted conservative gated goals | Controller execution is not grasp success |
 | MoveIt | The unique EdgeGrasp overlay loaded OMPL/Pilz/STOMP, injected Pilz `ValidateSolution`, disabled direct MoveGroup execution, and exposed both distal-pad links in the runtime model; candidate005 then completed through that proxy planning model | These are scoped path/execution checks, not minimum-clearance or whole-robot collision fidelity |
 | Shared PlanningScene | The scene contract generated Gazebo's table/cube world; MoveIt runtime-confirmed both objects and a selective ACM where only the two distal-pad child links may contact the retained cube | The selective transition is still manual; parent links remain forbidden and no target-to-pad physics claim follows from ACM configuration |
@@ -36,7 +37,7 @@ real MoveGroup health:
 | Evidence class | Result | Strict boundary |
 | --- | --- | --- |
 | `REAL_MOVEGROUP_NORMAL` | `PASS_SCOPED`: the independent Candidate024 target matrix used the real MoveGroup process under the EdgeGrasp proxy overlay for normal `GetMotionPlan`; 20/20 outcomes matched, 30 accepted trajectories were validated and discarded, and trajectory publication, ExecuteTrajectory, FJT, and execution counts were all zero | Normal plan-response/validation evidence only; it does not prove cancel, timeout, late-result, or whole-process health |
-| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true`: the 2026-08-30 safe artifact `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525` ran the two existing in-process fake MoveGroup tests; `2 passed` in 2.04 s, covering explicit cancel and goal-response timeout, with the late accepted fake goal canceled and trajectory-publication/fake-gate goal counts at zero | Injected runtime only: no real MoveGroup, controller, or hardware evidence. `accepted_goal_result_timeout_verified=false` remains unverified |
+| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true`: `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d` passed 12 focused tests, 12 JSONL records, and independently validated 15/15 facets with zero failures, errors, skips, and validator errors. It directly observes accepted-goal result-future timeout, exact request/generation/UUID joins, delayed MoveGroup and typed-gate goal responses, gate `get_result_async()->None` and `result()` exception, terminal-confirmed/unconfirmed paths, success-after-cancel fail-closed behavior, MoveGroup result-future-unavailable fail-closed behavior, old-generation late-CANCELED isolation, old-generation late-SUCCEEDED isolation, and explicit cancel | Injected in-process fake runtime only. The MoveGroup result-future-unavailable case is an adapter-seam monkeypatch before a real ClientGoalHandle result future exists; it is not real MoveGroup evidence. The injected positives are `accepted_goal_result_timeout_verified_injected`, `accepted_goal_result_future_timeout_verified_injected`, `strong_move_group_request_id_correlation_verified_injected`, `gate_delayed_goal_response_cancel_verified_injected`, `gate_result_future_unavailable_verified_injected`, `gate_result_exception_verified_injected`, `move_group_result_future_unavailable_verified_injected`, and `old_generation_late_success_isolation_verified_injected`; unqualified `accepted_goal_result_timeout_verified=false`, `accepted_goal_result_future_timeout_verified=false`, `strong_move_group_request_id_correlation=false`, `move_group_result_future_unavailable_verified=false`, and `old_generation_late_success_isolation_verified=false` remain unchanged. All real MoveGroup, controller, simulation-physics, and hardware fields remain false. P12d does not establish real MoveGroup, controller, simulation-physics, or hardware evidence |
 | `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false`: the two frozen 2026-08-29 P2 runs kept `edgegrasp_fail_closed=true` and zero actual motion goals, but each real MoveGroup run recorded one SIGSEGV and exit `-11` in `libmoveit_plan_execution.so.2.12.4` `PlanExecution::stop()`; `move_group_survived=false` | Historical negative artifact only; it is not a healthy-runtime PASS and the OS-process interruption is not rerun. `accepted_goal_result_timeout_verified=false` and `strong_move_group_request_id_correlation=false` remain boundaries |
 
 Track A and Track B are complementary, not cumulative: Track A shows the
@@ -48,10 +49,20 @@ The machine-readable P2 boundaries and hashes are in the
 [MoveIt evidence matrix](docs/observations/2026-08-29-moveit-evidence-matrix.json)
 and the full frozen P2 details are in the
 [real MoveGroup negative observation](docs/observations/2026-08-29-real-moveit-fail-closed-runtime.json).
-The separate
-[in-process injected observation](docs/observations/2026-08-30-injected-moveit-fail-closed-runtime.json)
-records the 2026-08-30 safe artifact and its source/artifact hashes; it is not
-represented as real MoveGroup evidence in those P2 files.
+The earlier two-test baseline remains in the
+[initial in-process injected observation](docs/observations/2026-08-30-injected-moveit-fail-closed-runtime.json).
+The historical P8 8-test result and its source/artifact hashes remain in the
+[P8 accepted-result timeout and correlation observation](docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-runtime.json).
+The historical P10 10-test result remains in the
+[P10 injected observation](docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v2-runtime.json).
+The P11 result remains historical in the
+[P11 injected observation](docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v3-runtime.json).
+The current injected result is recorded in the
+[P12d injected observation](docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json).
+The current P12d artifact path, source pins, hashes, package-scoped 129/129
+verification, and claim boundary are in the [validation report](docs/validation-report.md)
+and [Ubuntu/Jazzy runbook](docs/ubuntu-jazzy-runbook.md).
+Neither injected result is represented as real MoveGroup evidence in the frozen P2 files.
 The executable P2 OS-signal harness is intentionally excluded from this
 standalone repository; only its frozen hashes and negative-result metadata are
 retained. Repository-specific automation boundaries are in [AGENTS.md](AGENTS.md).

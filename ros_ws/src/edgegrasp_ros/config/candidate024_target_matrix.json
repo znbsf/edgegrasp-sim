@@ -24,7 +24,7 @@
     },
     "world": {
       "filename": "table_cube_candidate024_face_aligned.sdf",
-      "sha256": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5"
+      "sha256": "058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba"
     },
     "candidate": {
       "filename": "so101_side_grasp_candidate024_face_aligned.json",

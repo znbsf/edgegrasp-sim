@@ -1,8 +1,8 @@
 # EdgeGrasp validation report
 
-Current stable snapshot: 2026-08-30, Asia/Shanghai (`+08:00`). The core and
-package counts in this report are from the 2026-08-29 snapshot; the
-2026-08-30 addition is limited to the in-process fail-closed artifact below.
+Current stable snapshot: 2026-08-30, Asia/Shanghai (`+08:00`). Simulator
+runtime counts remain from the 2026-08-29 snapshot; the current Windows,
+package-scoped, and in-process fail-closed results are recorded below.
 
 This report separates the ROS-independent core, EdgeGrasp ROS packages,
 pinned-upstream tests, scoped simulator observations, and unverified claims.
@@ -12,11 +12,11 @@ An earlier success count is never reused as current evidence.
 
 ### Windows core, structure, replay, and syntax
 
-The final stable Windows command started at
+The prior fully pinned Windows command started at
 `2026-08-29T03:29:58.2221980+08:00` and ended at
 `2026-08-29T03:30:22.1056596+08:00`. Pytest reported 21.64 s; the timestamped
-wrapper interval was 23.883 s. This run supersedes every older count below and
-collected/passed 332/332 from one stable filesystem snapshot.
+wrapper interval was 23.883 s and collected/passed 332/332 from one stable
+filesystem snapshot.
 
 ```powershell
 scripts\check.ps1 -ReplayRuns 100
@@ -59,49 +59,65 @@ All were deterministic, accepted 20/20 cycles, rejected zero, and produced
 digests `0a6ba6f7...`, `854cf2da...`, and `da7fcd92...` respectively. This is
 core replay determinism only.
 
+The current P12d worktree was rerun on Windows on 2026-08-30 after the SDF
+source pins and ROS integration tests changed. `scripts/check.ps1` collected
+332 tests: 330 passed and two were skipped solely because the optional pinned
+local SO-101 checkout was absent; it exited zero, structural validation passed,
+and all three 100-run replay digests remained deterministic. The explicit
+post-run gates also passed: Ruff over the full tree, 66/66 unignored
+project-source JSON files, 12/12 Bash scripts, 4/4 PowerShell scripts, and
+`git diff --check`. A 67th JSON under ignored `build/lib` was also parseable but
+is excluded from the reproducible source-file count. This current
+checkout result does not replace the older fully pinned 332/332 artifact; it
+states the exact dependency availability of this worktree.
+
 ### Ubuntu 24.04 / ROS 2 Jazzy packages
 
 The complete project layout already existed in the disposable guest. This turn
-synchronized only the explicitly changed source/test files, compared each
-Windows/guest SHA-256, and used no `--delete`. Latest build and test logs:
+synchronized the exact changed adapter, integration test, runner, and two SDF
+contract JSON files with no broad delete; the P12d artifact verified the exact
+adapter/test/runner SHA-256 values. The adapter package was rebuilt before the
+current package-scoped P12d result:
 
 ```text
-/home/edgegrasp/ros2_ws/log/build_2026-08-29_03-17-32
-/home/edgegrasp/ros2_ws/log/test_2026-08-29_03-17-46
+/home/edgegrasp/ros2_ws/test_results/edgegrasp_all_packages_20260830T121257P12d
 ```
 
 ```bash
-colcon build --symlink-install --packages-select \
-  edgegrasp_core edgegrasp_interfaces edgegrasp_ros \
-  edgegrasp_moveit_adapter edgegrasp_grasp_sequence \
+colcon build --packages-select edgegrasp_moveit_adapter --symlink-install \
   --event-handlers console_direct+
-python3 -m pytest \
-  /home/edgegrasp/ros2_ws/src/edgegrasp-sim/tests/test_grasp_evidence.py -q
 colcon test --packages-select \
   edgegrasp_core edgegrasp_interfaces edgegrasp_ros \
   edgegrasp_moveit_adapter edgegrasp_grasp_sequence \
-  --event-handlers console_direct+ --return-code-on-test-failure
-colcon test-result --test-result-base build/PACKAGE --all --verbose
+  --test-result-base \
+  /home/edgegrasp/ros2_ws/test_results/edgegrasp_all_packages_20260830T121257P12d \
+  --event-handlers console_cohesion+ --return-code-on-test-failure
+colcon test-result --test-result-base \
+  /home/edgegrasp/ros2_ws/test_results/edgegrasp_all_packages_20260830T121257P12d \
+  --all --verbose
 ```
 
-The build completed all five selected packages in 12.6 seconds. The focused
-Linux core evidence test passed 35/35. The package-scoped colcon test completed
-in 20.1 seconds under Ubuntu Python 3.12.3, pytest 7.4.4, and pluggy 1.4.0:
+The P12d package-scoped verification completed all five selected packages with
+129/129 tests passed, zero failures/errors/skips, under the same disposable
+Ubuntu/Jazzy package environment. Its package breakdown is:
 
 | Package | Collected | Passed | Failed | Errors | Skipped |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `edgegrasp_core` | 1 | 1 | 0 | 0 | 0 |
 | `edgegrasp_interfaces` | 0 | 0 | 0 | 0 | 0 |
 | `edgegrasp_ros` | 49 | 49 | 0 | 0 | 0 |
-| `edgegrasp_moveit_adapter` | 23 | 23 | 0 | 0 | 0 |
+| `edgegrasp_moveit_adapter` | 34 | 34 | 0 | 0 | 0 |
 | `edgegrasp_grasp_sequence` | 45 | 45 | 0 | 0 | 0 |
 
-EdgeGrasp total: 118/118, zero XML failure/error/skip. Results were queried from
-each package's exact build result base. Whole-workspace
+EdgeGrasp total: 129/129, zero XML failure/error/skip. Results were queried from
+the P12d package artifact and each package's exact build result base. The
+standalone adapter result at
+`/home/edgegrasp/ros2_ws/test_results/edgegrasp_moveit_adapter_20260830T121050P12d`
+also passed 34/34 after one stale reason assertion was corrected. Whole-workspace
 `colcon test-result --all` is not used as the EdgeGrasp verdict because the same
 workspace retains older pinned-upstream lint results. Earlier intermittent ROS
-teardown/timing observations remain historical evidence below; neither recurred
-in this final package-scoped run, and no timeout or safety policy was relaxed.
+teardown/timing observations remain historical evidence below; the corrected
+P12d package run was green, and no timeout or safety policy was relaxed.
 
 One earlier wrapper invocation enabled shell nounset before
 sourcing `/opt/ros/jazzy/setup.bash`; the ROS setup script referenced the
@@ -122,7 +138,7 @@ does not expand the real MoveGroup runtime claim:
 | Evidence class | Result | Evidence and boundary |
 | --- | --- | --- |
 | `REAL_MOVEGROUP_NORMAL` | `PASS_SCOPED` | The independent Candidate024 target-matrix artifact ran the real MoveGroup process under the EdgeGrasp proxy overlay for normal `GetMotionPlan`. It matched 20/20 declared outcomes, validated and discarded 30 accepted trajectories, and recorded zero trajectory publications, ExecuteTrajectory goals, FJT goals, or execution attempts. This proves only normal planning/validation, not cancel or process health. |
-| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true` | `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525` ran the two existing integration tests with an in-process fake MoveGroup ActionServer: 2 passed in 2.04 s. Explicit cancel and goal-response timeout remained fail closed; the late accepted fake goal was canceled, and trajectory-publication/fake-gate goal counts were zero. This is injected runtime, not real MoveGroup, controller, or hardware evidence. |
+| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true` | `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d` ran 12 focused integration tests with in-process fake MoveGroup and typed-gate ActionServers. All 12 tests, 12 JSONL records, and 15/15 required facets passed with zero failures/errors/skips and validator error count zero. It directly observes accepted result-future timeout, strong request/generation/UUID correlation, delayed MoveGroup and typed-gate goal-response cancellation, gate `get_result_async()->None` and result exception, terminal confirmation/non-confirmation, success-after-cancel fail-closed behavior, MoveGroup result-future unavailability, old-generation late-CANCELED isolation, old-generation late-SUCCEEDED isolation, and explicit cancel. The MoveGroup unavailable-future case is injected at the adapter seam before a real ClientGoalHandle result future exists; it is not real MoveGroup evidence. Injected-scoped positives are `accepted_goal_result_timeout_verified_injected`, `accepted_goal_result_future_timeout_verified_injected`, `strong_move_group_request_id_correlation_verified_injected`, `gate_delayed_goal_response_cancel_verified_injected`, `gate_result_future_unavailable_verified_injected`, `gate_result_exception_verified_injected`, `move_group_result_future_unavailable_verified_injected`, and `old_generation_late_success_isolation_verified_injected`; unqualified, real MoveGroup, controller, simulation-physics, and hardware fields remain false. |
 | `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false` | The two frozen 2026-08-29 P2 artifacts kept `edgegrasp_fail_closed=true` with zero actual motion goals, but each real MoveGroup run recorded one SIGSEGV and exit `-11` in `libmoveit_plan_execution.so.2.12.4` `PlanExecution::stop()` at address `0x5c`; both have `move_group_survived=false`. They are historical negative artifacts and the process-interruption injection is not rerun. |
 
 Track A consists of these two read-only WSL artifacts:
@@ -132,25 +148,91 @@ Track A consists of these two read-only WSL artifacts:
 /home/edgegrasp/ros2_ws/test_results/real_moveit_fail_closed_goal_response_timeout_20260829T2302P2
 ```
 
-The 2026-08-30 safe artifact's summary SHA-256 is
-`65690cc93192bb27896edd88c4ebcd8ed671e5e88fe8814c6974d75adf293100` and its
-focused two-test JUnit SHA-256 is
-`9bb22f292e3814c432895bbc386e7fd460d0e03af8717467280a021c3f0b22b3`.
-It ran after the concrete late send-future race fix; the adapter now cancels a
-late accepted goal even if `_finish()` has not yet cleared the active request
-identity. The existing test count remains 23; the focused safe artifact has two
-passes and zero failures/errors/skips.
-After the production fix and focused package rebuild, the complete
-`edgegrasp_moveit_adapter` Jazzy package rerun remained 23/23 with zero
-failures/errors/skips; its `pytest.xml` SHA-256 is
-`4d3a5bee82ee9c27c006d3a70c5d87fc8ef9433fc3224f86b8be1ef7cfac46cf`.
-Accepted-goal `result_future` timeout remains
-`accepted_goal_result_timeout_verified=false`. The P2 observations also retain
-`strong_move_group_request_id_correlation=false`; their late status was
-observed from a fresh graph after the wrapper terminal, not established by a
-strong request-ID join. The safe in-process artifact covers goal-response
-timeout and late accepted-goal cancellation, not accepted-goal result-future
-timeout or real MoveGroup health.
+The current P12d safe artifact started at
+`2026-08-30T12:11:24,512653509+08:00` and ended at
+`2026-08-30T12:11:31,390345731+08:00`. Its summary SHA-256 is
+`11aefd9dbc2ead97b7445e35bf38e9df6cf9df8581e022aa9a1f977f99e8492d`;
+focused 12-test JUnit SHA-256 is
+`b1565f63afe8759e0c6b3313ec7248ac0858763fbdcb0dad59b44cf1682385ec`;
+12-record JSONL ledger SHA-256 is
+`b4dcdc675bb174c3f96edcf8e2d9aef5144bca0bfa4202361ab2d8bbaa5a19a4`;
+pytest log SHA-256 is
+`fd762f3022eed4ff751d9663899773eedef7525321375d83167a138005e827e2`;
+`start.txt` SHA-256 is
+`7bf2ebaa853dd06de11449a722729d0c2a4b90dad13fd77ad373edeb2b94564c`;
+and `end.txt` SHA-256 is
+`6c3941628ef71009fe5ec3887b6630faf8ef855552b85200a79172db98a7b113`.
+The runner checked all 15 required facets and reported no validation errors.
+The source snapshot hashes are: adapter
+`065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672`
+(3,243 lines), integration test
+`c6954f1fa18715f523833da30312790498c8c9c0f6fb73b462d0b71d5a20f54f`
+(2,604 lines), and runner
+`6f4e613157cea3dd39d130de1b1a5540d79f6754b57bd1dcd28bb476bb660333`
+(2,297 lines). The exact accepted MoveGroup client handle, its result future,
+the monotonic attempt generation, the `edgegrasp:<request_id>` constraint,
+and canonical client/server UUIDs are joined before the injected-scoped
+strong-correlation flag can become true. Cancel acceptance is not treated as
+terminal completion. P12d also directly tests MoveGroup result-future
+unavailability at the adapter seam and old-generation late-SUCCEEDED isolation;
+the former is not a real MoveGroup ClientGoalHandle observation.
+The superseded P11 artifact remains historical lineage at
+`/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T023710P11`
+with 10 tests, 10 records, and 13 facets; its exact hashes remain in the P11
+observation and are not current P12d provenance.
+The complete machine-readable current record is the
+[P12d injected observation](observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json).
+
+The current source-contract byte pins use the checked-in LF SDF bytes:
+Candidate012 `table_cube.sdf` is
+`8a4b436cd4863a0801602d15bfafebecaadfbe104d4b7db93e4a5f33415bb4c4`, and
+Candidate024 `table_cube_candidate024_face_aligned.sdf` is
+`058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba`.
+Historical observations that captured CRLF working copies retain their
+original hashes and remain historical provenance, not current canonical-LF
+source pins.
+
+The historical P10 safe artifact started at
+`2026-08-30T02:29:45.815253993+08:00` and ended at
+`2026-08-30T02:29:50.904413574+08:00`. Its summary SHA-256 is
+`47a6d7194589b83c3efc67613b37aa8a4568a6a1075f711801f2965a57b823b1`;
+focused 10-test JUnit SHA-256 is
+`d6547c72a0eecab4e536d54d558f086fcf1398fdcdeec36d0e21e78561ba24f5`;
+10-record JSONL ledger SHA-256 is
+`b1862752eafb44ef9cc42fb56e2c11d3ced9fadd302cd3e51ce13a8d962c5389`;
+pytest log SHA-256 is
+`ed49f7a1f5ef55b1d99a0398acdd028e1267f6eb1b98a497dd968163fa1413d8`;
+`start.txt` SHA-256 is
+`5cd1ad960b11da45a673a0874d212b9bf2942235e9f86680970720e28b03aae9`;
+and `end.txt` SHA-256 is
+`21b3027eb7cff5198e5c0adc3a8be81e89b7603c54f1bbc8a8aa3d1c51406170`.
+The runner checked all 13 required facets and reported no validation errors.
+The source snapshot hashes are: adapter
+`477bb7b95b41f5019e60020d6d7e6830da2040104edc5de508d383f5a4124b4d`
+(3,239 lines), integration test
+`d1b21f86b2a7dd4c18feb7d4de172c05995a50a6b365d61efd5fa9d36003a6e5`
+(2,293 lines), and runner
+`4458fd4c384313d3990bf57d07da86eb1fa09589ca41cdb2169863dc7d62af3e`
+(1,862 lines). The exact accepted MoveGroup client handle, its result future,
+the monotonic attempt generation, the `edgegrasp:<request_id>` constraint,
+and canonical client/server UUIDs are joined before the injected-scoped
+strong-correlation flag can become true. Cancel acceptance is not treated as
+terminal completion.
+
+The earlier complete-package result remains a historical 23/23 result for its
+earlier source, with `pytest.xml` SHA-256
+`4d3a5bee82ee9c27c006d3a70c5d87fc8ef9433fc3224f86b8be1ef7cfac46cf`. The P11
+artifact is also historical lineage at the path recorded above; its exact
+source and artifact hashes remain in the P11 observation. P11 directly covered
+the accepted-result timeout, gate unavailable/exception, and late-CANCELED
+generation cases available at that snapshot, but did not directly claim the
+MoveGroup unavailable-future seam or stale late-SUCCEEDED isolation now covered
+by P12d. Current injected-scoped positives and all unqualified/real,
+controller, simulation-physics, and hardware boundaries are defined by the
+P12d summary above.
+The superseded P8 baseline remains archived at
+`/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T021211P8`
+with 8 tests and 11 facets; it is not used for the current claim.
 
 The P2 capture manifests record byte identity between the WSL capture and a
 Windows incubator recheck. This standalone repository preserves the actually
@@ -167,9 +249,9 @@ zero, joint drift `6.2449966191115345e-19` /
 `9.714448921889736e-19` rad, and late MoveGroup status 4 occurring
 14,464,841 / 25,449,221 ns after the wrapper terminal. Cleanup succeeded with
 zero remaining scoped processes and `/clock` unknown. Correlation is explicitly
-fresh-graph runtime inference, so
-`strong_move_group_request_id_correlation=false`; accepted-goal result timeout
-is also unverified. See the machine-readable
+fresh-graph runtime inference, so within those historical real-process P2
+artifacts `strong_move_group_request_id_correlation=false`; accepted-goal
+result timeout is also unverified. See the machine-readable
 [MoveIt evidence matrix](observations/2026-08-29-moveit-evidence-matrix.json)
 and [frozen negative observation](observations/2026-08-29-real-moveit-fail-closed-runtime.json).
 
@@ -1759,10 +1841,10 @@ current claims:
    Jazzy regression test forbids false after first true.
 8. Counts such as 26, 30, 108, 121, 124, 171, 181, 184, 187, 190, 206, 210, 25,
    44, 45, 46, 52, 74, 97, 98, 259, 260, 262, and 269 belong to recorded or
-   superseded snapshots. The current stable facts are 332/332 Windows CPython
-   3.14.5 project tests, 60/60 focused dependency-free sequence tests, and
-   118/118 for the latest
-   package-scoped EdgeGrasp colcon run.
+   superseded snapshots. The current Windows CPython 3.14.5 checkout collected
+   332 project tests: 330 passed and two optional pinned-local-checkout tests
+   skipped because that checkout was absent. The latest package-scoped
+   EdgeGrasp colcon run passed 129/129 selected tests.
 9. The first 22-test sequence package rerun passed but emitted unfetched
    Jazzy `InvalidHandle / Destroyable` teardown exceptions. The test harness
    had treated an empty sequence slot as executor quiescence even though the

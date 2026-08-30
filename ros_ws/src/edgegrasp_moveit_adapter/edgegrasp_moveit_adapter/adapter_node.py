@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, replace
+from functools import partial
 import json
 import math
-from threading import Event, Lock
+from threading import Event, Lock, Timer
 import time
+import uuid
 
 from action_msgs.msg import GoalStatus
 from control_msgs.action import FollowJointTrajectory
@@ -58,6 +60,7 @@ from .trajectory_validation import validate_and_convert_robot_trajectory
 
 PINNED_PLANNING_PIPELINES = frozenset(SO101_PLANNING_PIPELINES)
 ARM_EXECUTION_STAGES = {"approach", "descend", "lift", "diagnostic"}
+_STATUS_ATTEMPT_UNSET = object()
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,6 +92,14 @@ class MoveItPlanOnlyAdapter(Node):
 
     def __init__(self, **node_kwargs) -> None:
         super().__init__("edgegrasp_moveit_plan_only_adapter", **node_kwargs)
+        # Late-result watchdogs run on daemon Timer threads.  Serialize the
+        # final publisher access with shutdown so a watchdog can either
+        # publish before teardown or observe the destroying flag, but can
+        # never race a destroyed rclpy publisher handle.
+        self._destroying = Event()
+        self._status_publish_lock = Lock()
+        self._late_terminal_watchdog_lock = Lock()
+        self._late_terminal_watchdogs: set[Timer] = set()
         self.declare_parameter("plan_target_action", "/edgegrasp/plan_target")
         self.declare_parameter("move_group_action", "/move_action")
         self.declare_parameter(
@@ -134,6 +145,11 @@ class MoveItPlanOnlyAdapter(Node):
         self.declare_parameter("goal_response_timeout_ms", 1000.0)
         self.declare_parameter("cancel_response_timeout_ms", 500.0)
         self.declare_parameter("result_timeout_margin_ms", 500.0)
+        # A MoveGroup cancellation response only acknowledges the cancel
+        # request.  Keep a separate, bounded wall-clock wait for the same
+        # accepted goal's result future so a late success cannot reach the
+        # trajectory gate without terminal evidence.
+        self.declare_parameter("move_group_terminal_timeout_ms", 500.0)
         self.declare_parameter("gate_discovery_timeout_ms", 1000.0)
         self.declare_parameter("gate_result_timeout_margin_ms", 3000.0)
         # The typed gate owns ROS-time execution liveness and cancellation.
@@ -186,6 +202,9 @@ class MoveItPlanOnlyAdapter(Node):
         self._goal_response_s = self._seconds("goal_response_timeout_ms")
         self._cancel_response_s = self._seconds("cancel_response_timeout_ms")
         self._result_margin_s = self._seconds("result_timeout_margin_ms")
+        self._move_group_terminal_s = self._seconds(
+            "move_group_terminal_timeout_ms"
+        )
         self._gate_discovery_s = self._seconds("gate_discovery_timeout_ms")
         self._gate_result_margin_s = self._seconds(
             "gate_result_timeout_margin_ms"
@@ -236,7 +255,11 @@ class MoveItPlanOnlyAdapter(Node):
         self._fault_latched: str | None = None
         self._reserved_request_id: str | None = None
         self._active_request_id: str | None = None
+        self._attempt_generation_counter = 0
+        self._active_attempt_generation: int | None = None
         self._active_moveit_goal = None
+        self._active_moveit_goal_id: str | None = None
+        self._active_moveit_result_future = None
         self._dispatched_command_ids: set[str] = set()
         self._planning_scene_status: _PlanningSceneStatus | None = None
         self._planning_scene_status_generation = 0
@@ -344,6 +367,86 @@ class MoveItPlanOnlyAdapter(Node):
             int(request.sequence_no),
         )
 
+    @staticmethod
+    def _goal_id_hex(goal_handle) -> str | None:
+        """Return a ROS action goal UUID as stable lowercase hexadecimal.
+
+        ``rclpy`` exposes ``ClientGoalHandle.goal_id`` as a
+        ``unique_identifier_msgs/UUID`` message, while the small fake
+        dependencies used by the injected runner may expose ``uuid.UUID`` or
+        raw bytes.  Normalize all of those representations at the adapter
+        boundary so status records can join a request with the exact action
+        goal that was accepted.
+        """
+
+        goal_id = getattr(goal_handle, "goal_id", None)
+        if goal_id is None:
+            return None
+        raw = getattr(goal_id, "uuid", goal_id)
+        try:
+            if isinstance(raw, uuid.UUID):
+                return raw.hex
+            if isinstance(raw, str):
+                return uuid.UUID(raw).hex
+            if hasattr(raw, "bytes") and not isinstance(raw, (bytes, bytearray)):
+                raw = raw.bytes
+            value = bytes(raw)
+        except (TypeError, ValueError, AttributeError):
+            return None
+        if len(value) != 16:
+            return None
+        return value.hex()
+
+    def _active_matches(
+        self, request_id: str, attempt_generation: int
+    ) -> bool:
+        with self._state_lock:
+            return (
+                self._active_request_id == request_id
+                and self._active_attempt_generation == attempt_generation
+            )
+
+    def _new_attempt(self, request_id: str) -> int:
+        """Reserve a monotonically increasing execution generation."""
+
+        with self._state_lock:
+            self._attempt_generation_counter += 1
+            attempt_generation = self._attempt_generation_counter
+            self._active_request_id = request_id
+            self._active_attempt_generation = attempt_generation
+            self._active_moveit_goal = None
+            self._active_moveit_goal_id = None
+            self._active_moveit_result_future = None
+        return attempt_generation
+
+    def _latch_active_attempt_fault(
+        self,
+        reason: str,
+        request_id: str | None,
+        attempt_generation: int | None,
+    ) -> None:
+        """Latch a callback fault only while its captured attempt is active."""
+
+        if request_id is None or attempt_generation is None:
+            return
+        with self._state_lock:
+            if (
+                self._active_request_id != request_id
+                or self._active_attempt_generation != attempt_generation
+            ):
+                return
+            if self._fault_latched is None:
+                self._fault_latched = reason
+        # The identity check and fault mutation above are one atomic state
+        # transition.  Publish only the callback's captured identity after
+        # releasing the lock; a newer attempt cannot inherit this fault.
+        self._publish_status(
+            "ERROR",
+            reason,
+            request_id,
+            attempt_generation=attempt_generation,
+        )
+
     def _observe_now(self) -> tuple[int, str | None]:
         with self._state_lock:
             # Read and commit the observation under one lock.  Concurrent
@@ -364,21 +467,72 @@ class MoveItPlanOnlyAdapter(Node):
         self._publish_status("ERROR", reason)
 
     def _publish_status(
-        self, stage: str, reason: str, request_id: str = "<none>"
+        self,
+        stage: str,
+        reason: str,
+        request_id: str = "<none>",
+        *,
+        attempt_generation: int | None | object = _STATUS_ATTEMPT_UNSET,
+        move_group_goal_id: str | None = None,
+        result_future_pending_at_timeout: bool | None = None,
+        goal_response_future_pending_at_timeout: bool | None = None,
+        gate_goal_response_future_pending_at_timeout: bool | None = None,
+        move_group_cancel_requested: bool | None = None,
+        move_group_terminal_observed: bool | None = None,
+        move_group_terminal_status: int | None = None,
+        gate_goal_id: str | None = None,
+        gate_cancel_requested: bool | None = None,
+        gate_terminal_observed: bool | None = None,
+        gate_terminal_status: int | None = None,
+        action_goal_status: int | None = None,
+        cancel_response_accepted: bool | None = None,
     ) -> None:
+        # Request-specific callbacks pass their captured generation and goal
+        # id explicitly.  For ordinary in-flight status, infer the current
+        # values under the same lock used by the execute state machine.
+        if attempt_generation is _STATUS_ATTEMPT_UNSET:
+            with self._state_lock:
+                attempt_generation = (
+                    self._active_attempt_generation
+                    if request_id == self._active_request_id
+                    else None
+                )
         message = String()
         message.data = json.dumps(
             {
                 "stage": stage,
                 "reason": reason,
                 "request_id": request_id,
+                "attempt_generation": attempt_generation,
+                "move_group_goal_id": move_group_goal_id,
+                "result_future_pending_at_timeout": (
+                    result_future_pending_at_timeout
+                ),
+                "goal_response_future_pending_at_timeout": (
+                    goal_response_future_pending_at_timeout
+                ),
+                "gate_goal_response_future_pending_at_timeout": (
+                    gate_goal_response_future_pending_at_timeout
+                ),
+                "move_group_cancel_requested": move_group_cancel_requested,
+                "move_group_terminal_observed": move_group_terminal_observed,
+                "move_group_terminal_status": move_group_terminal_status,
+                "gate_goal_id": gate_goal_id,
+                "gate_cancel_requested": gate_cancel_requested,
+                "gate_terminal_observed": gate_terminal_observed,
+                "gate_terminal_status": gate_terminal_status,
+                "action_goal_status": action_goal_status,
+                "cancel_response_accepted": cancel_response_accepted,
                 "clock_domain": self._clock_domain,
                 "clock_epoch": self._clock_epoch,
                 "plan_only": True,
             },
             sort_keys=True,
         )
-        self._status.publish(message)
+        with self._status_publish_lock:
+            if self._destroying.is_set():
+                return
+            self._status.publish(message)
 
     def _feedback(self, goal_handle, stage: str, request_id: str) -> None:
         feedback = PlanTarget.Feedback()
@@ -558,12 +712,12 @@ class MoveItPlanOnlyAdapter(Node):
             self._publish_status("rejected", "invalid_command_identity")
             return GoalResponse.REJECT
         with self._state_lock:
-            if self._reserved_request_id is not None:
-                self._publish_status(
-                    "rejected", "concurrent_request", request_id
-                )
-                return GoalResponse.REJECT
-            self._reserved_request_id = request_id
+            concurrent_request = self._reserved_request_id is not None
+            if not concurrent_request:
+                self._reserved_request_id = request_id
+        if concurrent_request:
+            self._publish_status("rejected", "concurrent_request", request_id)
+            return GoalResponse.REJECT
         return GoalResponse.ACCEPT
 
     def _on_cancel(self, goal_handle) -> CancelResponse:
@@ -870,6 +1024,48 @@ class MoveItPlanOnlyAdapter(Node):
     def _future_done(future) -> bool:
         return future is not None and future.done()
 
+    @staticmethod
+    def _get_move_group_result_future(goal_handle):
+        """Request the accepted MoveGroup result through an injectable seam."""
+
+        return goal_handle.get_result_async()
+
+    @staticmethod
+    def _get_gate_result_future(goal_handle):
+        """Request the accepted typed-gate result through an injectable seam."""
+
+        return goal_handle.get_result_async()
+
+    @staticmethod
+    def _is_terminal_status(status: int) -> bool:
+        return int(status) in {
+            GoalStatus.STATUS_SUCCEEDED,
+            GoalStatus.STATUS_CANCELED,
+            GoalStatus.STATUS_ABORTED,
+        }
+
+    @classmethod
+    def _result_future_terminal_observed(cls, result_future) -> bool:
+        if result_future is None or not result_future.done():
+            return False
+        try:
+            wrapped = result_future.result()
+            return cls._is_terminal_status(
+                int(getattr(wrapped, "status", GoalStatus.STATUS_UNKNOWN))
+            )
+        except Exception:
+            return False
+
+    @staticmethod
+    def _result_future_status(result_future) -> int | None:
+        if result_future is None or not result_future.done():
+            return None
+        try:
+            wrapped = result_future.result()
+            return int(getattr(wrapped, "status", GoalStatus.STATUS_UNKNOWN))
+        except Exception:
+            return None
+
     def _poll_future(
         self,
         future,
@@ -894,45 +1090,611 @@ class MoveItPlanOnlyAdapter(Node):
             time.sleep(0.01)
         return timeout_reason
 
-    def _cancel_move_group(self, request_id: str, reason: str) -> bool:
+    def _wait_for_move_group_terminal(
+        self,
+        result_future,
+        request_id: str,
+        attempt_generation: int | None,
+        move_group_goal_id: str | None,
+        *,
+        pending_at_timeout: bool | None,
+    ) -> bool:
+        """Wait for the exact accepted MoveGroup goal to become terminal.
+
+        A cancel response is not terminal evidence.  This wait deliberately
+        uses the result future obtained from the same ``ClientGoalHandle``
+        that was canceled, and it is fail-closed when that future remains
+        pending.  In particular, a later success is observed as a canceled
+        attempt and is never allowed to continue into gate dispatch.
+        """
+
+        if result_future is None:
+            self._latch_active_attempt_fault(
+                "move_group_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                "move_group_terminal_unconfirmed",
+                "result_future_unavailable",
+                request_id,
+                attempt_generation=attempt_generation,
+                move_group_goal_id=move_group_goal_id,
+                result_future_pending_at_timeout=pending_at_timeout,
+                move_group_cancel_requested=True,
+                move_group_terminal_observed=False,
+            )
+            return False
+        deadline = time.monotonic() + self._move_group_terminal_s
+        while (
+            self.context.ok()
+            and time.monotonic() < deadline
+            and not result_future.done()
+        ):
+            time.sleep(0.01)
+        if not result_future.done():
+            self._latch_active_attempt_fault(
+                "move_group_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                "move_group_terminal_unconfirmed",
+                "result_future_timeout",
+                request_id,
+                attempt_generation=attempt_generation,
+                move_group_goal_id=move_group_goal_id,
+                result_future_pending_at_timeout=pending_at_timeout,
+                move_group_cancel_requested=True,
+                move_group_terminal_observed=False,
+            )
+            return False
+        try:
+            wrapped = result_future.result()
+            status = int(getattr(wrapped, "status", GoalStatus.STATUS_UNKNOWN))
+        except Exception as error:
+            self._latch_active_attempt_fault(
+                f"move_group_terminal_result_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                "move_group_terminal_unconfirmed",
+                f"result_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation=attempt_generation,
+                move_group_goal_id=move_group_goal_id,
+                result_future_pending_at_timeout=pending_at_timeout,
+                move_group_cancel_requested=True,
+                move_group_terminal_observed=False,
+            )
+            return False
+        terminal = self._is_terminal_status(status)
+        if status == GoalStatus.STATUS_SUCCEEDED:
+            # A success arriving after cancellation is a race, not evidence
+            # that the canceled attempt may continue.  Keep it observable and
+            # fail closed for the remainder of this attempt.
+            self._latch_active_attempt_fault(
+                "move_group_cancel_success_race",
+                request_id,
+                attempt_generation,
+            )
+        self._publish_status(
+            "move_group_terminal_observed" if terminal else "move_group_terminal_unconfirmed",
+            "success_after_cancel"
+            if status == GoalStatus.STATUS_SUCCEEDED
+            else "observed_after_cancel"
+            if terminal
+            else "nonterminal_status",
+            request_id,
+            attempt_generation=attempt_generation,
+            move_group_goal_id=move_group_goal_id,
+            result_future_pending_at_timeout=pending_at_timeout,
+            move_group_cancel_requested=True,
+            move_group_terminal_observed=terminal,
+            move_group_terminal_status=status,
+            action_goal_status=status,
+        )
+        if not terminal:
+            self._latch_active_attempt_fault(
+                "move_group_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+        return terminal and status != GoalStatus.STATUS_SUCCEEDED
+
+    def _cancel_move_group(
+        self,
+        request_id: str,
+        reason: str,
+        *,
+        attempt_generation: int | None = None,
+        moveit_goal=None,
+        result_future=None,
+    ) -> bool:
+        explicit_moveit_goal = moveit_goal is not None
         with self._state_lock:
-            moveit_goal = self._active_moveit_goal
+            active_matches = (
+                attempt_generation is None
+                or (
+                    self._active_request_id == request_id
+                    and self._active_attempt_generation == attempt_generation
+                )
+            )
+            if moveit_goal is None and active_matches:
+                moveit_goal = self._active_moveit_goal
+            if (
+                result_future is None
+                and active_matches
+                and not explicit_moveit_goal
+            ):
+                result_future = self._active_moveit_result_future
+            move_group_goal_id = self._goal_id_hex(moveit_goal)
+            if (
+                move_group_goal_id is None
+                and active_matches
+                and not explicit_moveit_goal
+            ):
+                move_group_goal_id = self._active_moveit_goal_id
+        pending_at_timeout = (
+            None if result_future is None else not result_future.done()
+        )
         if moveit_goal is None:
-            return True
+            if result_future is None:
+                return self._wait_for_move_group_terminal(
+                    None,
+                    request_id,
+                    attempt_generation,
+                move_group_goal_id,
+                pending_at_timeout=None,
+                )
+            return self._wait_for_move_group_terminal(
+                result_future,
+                request_id,
+                attempt_generation,
+                move_group_goal_id,
+                pending_at_timeout=pending_at_timeout,
+            )
+        cancel_requested = False
+        cancel_accepted = False
         try:
             future = moveit_goal.cancel_goal_async()
+            cancel_requested = True
         except Exception as error:
-            self._latch_fault(f"move_group_cancel_exception:{type(error).__name__}")
-            return False
-        deadline = time.monotonic() + self._cancel_response_s
-        while self.context.ok() and time.monotonic() < deadline and not future.done():
-            time.sleep(0.01)
-        if not future.done():
-            self._latch_fault("move_group_cancel_timeout")
-            return False
+            self._latch_active_attempt_fault(
+                f"move_group_cancel_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+        else:
+            deadline = time.monotonic() + self._cancel_response_s
+            while (
+                self.context.ok()
+                and time.monotonic() < deadline
+                and not future.done()
+            ):
+                time.sleep(0.01)
+            if not future.done():
+                self._latch_active_attempt_fault(
+                    "move_group_cancel_timeout",
+                    request_id,
+                    attempt_generation,
+                )
+            else:
+                try:
+                    response = future.result()
+                    cancel_accepted = bool(
+                        getattr(response, "goals_canceling", ())
+                    )
+                    if not cancel_accepted:
+                        self._latch_active_attempt_fault(
+                            "move_group_cancel_rejected",
+                            request_id,
+                            attempt_generation,
+                        )
+                except Exception as error:
+                    self._latch_active_attempt_fault(
+                        f"move_group_cancel_failed:{type(error).__name__}",
+                        request_id,
+                        attempt_generation,
+                    )
+        self._publish_status(
+            "cancelled_move_group",
+            reason,
+            request_id,
+            attempt_generation=attempt_generation,
+            move_group_goal_id=move_group_goal_id,
+            result_future_pending_at_timeout=pending_at_timeout,
+            move_group_cancel_requested=cancel_requested,
+            cancel_response_accepted=cancel_accepted,
+        )
+        terminal_observed = False
+        if result_future is None:
+            # The accepted goal exists, but there is no result future that can
+            # prove its terminal state.  A cancel acknowledgement alone is
+            # never sufficient to proceed.
+            terminal_observed = self._wait_for_move_group_terminal(
+                None,
+                request_id,
+                attempt_generation,
+                move_group_goal_id,
+                pending_at_timeout=pending_at_timeout,
+            )
+        else:
+            terminal_observed = self._wait_for_move_group_terminal(
+                result_future,
+                request_id,
+                attempt_generation,
+                move_group_goal_id,
+                pending_at_timeout=pending_at_timeout,
+            )
+        return cancel_requested and cancel_accepted and terminal_observed
+
+    def _late_cancel_response_callback(
+        self,
+        future,
+        *,
+        request_id: str | None,
+        attempt_generation: int | None,
+        goal_id: str | None,
+        kind: str,
+    ) -> None:
+        prefix = "move_group" if kind == "move_group" else "trajectory_gate"
         try:
             response = future.result()
-            if len(getattr(response, "goals_canceling", ())) < 1:
-                self._latch_fault("move_group_cancel_rejected")
-                return False
+            accepted = bool(getattr(response, "goals_canceling", ()))
         except Exception as error:
-            self._latch_fault(f"move_group_cancel_failed:{type(error).__name__}")
-            return False
-        self._publish_status("cancelled_move_group", reason, request_id)
-        return True
+            self._latch_active_attempt_fault(
+                f"late_{prefix}_goal_cancel_failed:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                f"late_{kind}_goal_cancel_response",
+                f"exception:{type(error).__name__}",
+                request_id or "<none>",
+                attempt_generation=attempt_generation,
+                move_group_goal_id=goal_id if kind == "move_group" else None,
+                gate_goal_id=goal_id if kind == "gate" else None,
+                gate_cancel_requested=True if kind == "gate" else None,
+                move_group_cancel_requested=True
+                if kind == "move_group"
+                else None,
+                cancel_response_accepted=False,
+            )
+            return
+        if not accepted:
+            self._latch_active_attempt_fault(
+                f"late_{prefix}_goal_cancel_rejected",
+                request_id,
+                attempt_generation,
+            )
+        self._publish_status(
+            f"late_{kind}_goal_cancel_response",
+            "accepted" if accepted else "rejected",
+            request_id or "<none>",
+            attempt_generation=attempt_generation,
+            move_group_goal_id=goal_id if kind == "move_group" else None,
+            gate_goal_id=goal_id if kind == "gate" else None,
+            gate_cancel_requested=True if kind == "gate" else None,
+            move_group_cancel_requested=True if kind == "move_group" else None,
+            cancel_response_accepted=accepted,
+        )
 
-    def _late_cancel_callback(self, future) -> None:
+    def _late_goal_terminal_callback(
+        self,
+        future,
+        *,
+        request_id: str | None,
+        attempt_generation: int | None,
+        goal_id: str | None,
+        kind: str,
+    ) -> None:
+        try:
+            wrapped = future.result()
+            status = int(getattr(wrapped, "status", GoalStatus.STATUS_UNKNOWN))
+        except Exception as error:
+            self._latch_active_attempt_fault(
+                f"late_{kind}_goal_terminal_failed:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                f"late_{kind}_goal_terminal",
+                f"exception:{type(error).__name__}",
+                request_id or "<none>",
+                attempt_generation=attempt_generation,
+                move_group_goal_id=goal_id if kind == "move_group" else None,
+                gate_goal_id=goal_id if kind == "gate" else None,
+                move_group_cancel_requested=True if kind == "move_group" else None,
+                gate_cancel_requested=True if kind == "gate" else None,
+                move_group_terminal_observed=False
+                if kind == "move_group"
+                else None,
+                gate_terminal_observed=False if kind == "gate" else None,
+                gate_terminal_status=None,
+            )
+            return
+        terminal = self._is_terminal_status(status)
+        if status == GoalStatus.STATUS_SUCCEEDED:
+            self._latch_active_attempt_fault(
+                f"late_{kind}_goal_success_after_cancel",
+                request_id,
+                attempt_generation,
+            )
+        self._publish_status(
+            f"late_{kind}_goal_terminal",
+            "observed" if terminal else "nonterminal",
+            request_id or "<none>",
+            attempt_generation=attempt_generation,
+            move_group_goal_id=goal_id if kind == "move_group" else None,
+            gate_goal_id=goal_id if kind == "gate" else None,
+            move_group_cancel_requested=True if kind == "move_group" else None,
+            gate_cancel_requested=True if kind == "gate" else None,
+            move_group_terminal_observed=terminal if kind == "move_group" else None,
+            gate_terminal_observed=terminal if kind == "gate" else None,
+            gate_terminal_status=status if kind == "gate" else None,
+            move_group_terminal_status=status if kind == "move_group" else None,
+            action_goal_status=status,
+        )
+        if not terminal:
+            self._latch_active_attempt_fault(
+                f"late_{kind}_goal_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+
+    def _late_goal_terminal_watchdog(
+        self,
+        result_future,
+        *,
+        request_id: str | None,
+        attempt_generation: int | None,
+        goal_id: str | None,
+        kind: str,
+    ) -> None:
+        """Record a bounded late-goal terminal miss without stopping a controller."""
+
+        if self._destroying.is_set() or result_future.done():
+            return
+        self._latch_active_attempt_fault(
+            f"late_{kind}_goal_terminal_unconfirmed",
+            request_id,
+            attempt_generation,
+        )
+        self._publish_status(
+            f"late_{kind}_goal_terminal_unconfirmed",
+            "terminal_timeout",
+            request_id or "<none>",
+            attempt_generation=attempt_generation,
+            move_group_goal_id=goal_id if kind == "move_group" else None,
+            gate_goal_id=goal_id if kind == "gate" else None,
+            move_group_cancel_requested=True if kind == "move_group" else None,
+            gate_cancel_requested=True if kind == "gate" else None,
+            move_group_terminal_observed=False
+            if kind == "move_group"
+            else None,
+            gate_terminal_observed=False if kind == "gate" else None,
+        )
+
+    def _schedule_late_terminal_watchdog(
+        self,
+        result_future,
+        *,
+        request_id: str | None,
+        attempt_generation: int | None,
+        goal_id: str | None,
+        kind: str,
+    ) -> None:
+        if (
+            result_future is None
+            or result_future.done()
+            or self._destroying.is_set()
+        ):
+            return
+
+        watchdog: Timer
+
+        def run_watchdog() -> None:
+            try:
+                self._late_goal_terminal_watchdog(
+                    result_future,
+                    request_id=request_id,
+                    attempt_generation=attempt_generation,
+                    goal_id=goal_id,
+                    kind=kind,
+                )
+            finally:
+                with self._late_terminal_watchdog_lock:
+                    self._late_terminal_watchdogs.discard(watchdog)
+
+        watchdog = Timer(
+            self._move_group_terminal_s,
+            run_watchdog,
+        )
+        watchdog.daemon = True
+        with self._late_terminal_watchdog_lock:
+            if self._destroying.is_set():
+                return
+            self._late_terminal_watchdogs.add(watchdog)
+            watchdog.start()
+
+        def cancel_watchdog(_future) -> None:
+            watchdog.cancel()
+            with self._late_terminal_watchdog_lock:
+                self._late_terminal_watchdogs.discard(watchdog)
+
+        result_future.add_done_callback(cancel_watchdog)
+
+    def _publish_late_result_future_unavailable(
+        self,
+        *,
+        request_id: str | None,
+        attempt_generation: int | None,
+        goal_id: str | None,
+        kind: str,
+        reason: str,
+    ) -> None:
+        """Expose a late accepted goal whose exact terminal future is absent."""
+
+        self._publish_status(
+            f"late_{kind}_goal_terminal_unconfirmed",
+            reason,
+            request_id or "<none>",
+            attempt_generation=attempt_generation,
+            move_group_goal_id=goal_id if kind == "move_group" else None,
+            gate_goal_id=goal_id if kind == "gate" else None,
+            goal_response_future_pending_at_timeout=True
+            if kind == "move_group"
+            else None,
+            gate_goal_response_future_pending_at_timeout=True
+            if kind == "gate"
+            else None,
+            result_future_pending_at_timeout=None,
+            move_group_cancel_requested=True if kind == "move_group" else None,
+            gate_cancel_requested=True if kind == "gate" else None,
+            move_group_terminal_observed=False
+            if kind == "move_group"
+            else None,
+            gate_terminal_observed=False if kind == "gate" else None,
+        )
+
+    def _observe_unconfirmed_move_group_terminal(
+        self,
+        result_future,
+        *,
+        request_id: str,
+        attempt_generation: int,
+        goal_id: str,
+    ) -> None:
+        """Record a terminal that arrives after the bounded cancel wait.
+
+        The callback carries the original attempt identity.  Its fault path is
+        generation-aware, so observing an old terminal cannot mutate a newer
+        retry, while the old goal lifecycle remains directly observable.
+        """
+
+        if result_future is None or result_future.done():
+            return
+        result_future.add_done_callback(
+            partial(
+                self._late_goal_terminal_callback,
+                request_id=request_id,
+                attempt_generation=attempt_generation,
+                goal_id=goal_id,
+                kind="move_group",
+            )
+        )
+
+    def _late_cancel_callback(
+        self,
+        future,
+        request_id: str | None = None,
+        attempt_generation: int | None = None,
+    ) -> None:
         # This callback is installed only after the send future has already
         # timed out or the wrapper request has failed closed.  The future can
         # become ready before _execute() reaches its finally block, so active
         # request identity is not evidence that normal goal handling continues.
-        # Always cancel a late accepted planning goal.
+        # Always cancel the accepted planning goal returned by this future.
+        # Do not inspect active state here: a newer attempt must not make this
+        # older accepted goal safe to leave running.
         try:
             goal = future.result()
-            if goal is not None and goal.accepted:
-                goal.cancel_goal_async()
+            if goal is None or not goal.accepted:
+                self._publish_status(
+                    "late_move_group_goal_response",
+                    "rejected",
+                    request_id or "<none>",
+                    attempt_generation=attempt_generation,
+                )
+                return
+            goal_id = self._goal_id_hex(goal)
+            self._publish_status(
+                "late_move_group_goal_response",
+                "accepted_cancel_requested",
+                request_id or "<none>",
+                attempt_generation=attempt_generation,
+                move_group_goal_id=goal_id,
+                goal_response_future_pending_at_timeout=True,
+                move_group_cancel_requested=True,
+            )
+            try:
+                cancel_future = goal.cancel_goal_async()
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"late_move_group_goal_cancel_failed:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+            else:
+                add_done_callback = getattr(cancel_future, "add_done_callback", None)
+                if callable(add_done_callback):
+                    add_done_callback(
+                        partial(
+                            self._late_cancel_response_callback,
+                            request_id=request_id,
+                            attempt_generation=attempt_generation,
+                            goal_id=goal_id,
+                            kind="move_group",
+                        )
+                    )
+            try:
+                result_future = goal.get_result_async()
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"late_move_group_goal_result_request_failed:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+                self._publish_late_result_future_unavailable(
+                    request_id=request_id,
+                    attempt_generation=attempt_generation,
+                    goal_id=goal_id,
+                    kind="move_group",
+                    reason=f"result_exception:{type(error).__name__}",
+                )
+            else:
+                if result_future is None:
+                    self._latch_active_attempt_fault(
+                        "late_move_group_goal_result_future_unavailable",
+                        request_id,
+                        attempt_generation,
+                    )
+                    self._publish_late_result_future_unavailable(
+                        request_id=request_id,
+                        attempt_generation=attempt_generation,
+                        goal_id=goal_id,
+                        kind="move_group",
+                        reason="result_future_unavailable",
+                    )
+                else:
+                    add_done_callback = getattr(
+                        result_future, "add_done_callback", None
+                    )
+                    if callable(add_done_callback):
+                        add_done_callback(
+                            partial(
+                                self._late_goal_terminal_callback,
+                                request_id=request_id,
+                                attempt_generation=attempt_generation,
+                                goal_id=goal_id,
+                                kind="move_group",
+                            )
+                        )
+                    self._schedule_late_terminal_watchdog(
+                        result_future,
+                        request_id=request_id,
+                        attempt_generation=attempt_generation,
+                        goal_id=goal_id,
+                        kind="move_group",
+                    )
         except Exception as error:
-            self._latch_fault(f"late_goal_cancel_failed:{type(error).__name__}")
+            self._latch_active_attempt_fault(
+                f"late_goal_cancel_failed:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
 
     @staticmethod
     def _trajectory_point_payload(point) -> dict[str, object]:
@@ -976,38 +1738,284 @@ class MoveItPlanOnlyAdapter(Node):
         goal.clock_epoch = request.clock_epoch
         return goal, digest
 
-    def _cancel_gate_goal(self, goal_handle, request_id: str) -> bool:
+    def _wait_for_gate_terminal(
+        self,
+        result_future,
+        request_id: str,
+        attempt_generation: int | None,
+        gate_goal_id: str | None,
+    ) -> bool:
+        """Observe the exact accepted gate goal after a cancel request."""
+
+        if result_future is None:
+            self._latch_active_attempt_fault(
+                "trajectory_gate_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                "gate_terminal_unconfirmed",
+                "result_future_unavailable",
+                request_id,
+                attempt_generation=attempt_generation,
+                gate_goal_id=gate_goal_id,
+                gate_cancel_requested=True,
+                gate_terminal_observed=False,
+            )
+            return False
+        deadline = time.monotonic() + self._move_group_terminal_s
+        while (
+            self.context.ok()
+            and time.monotonic() < deadline
+            and not result_future.done()
+        ):
+            time.sleep(0.01)
+        if not result_future.done():
+            self._latch_active_attempt_fault(
+                "trajectory_gate_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                "gate_terminal_unconfirmed",
+                "result_future_timeout",
+                request_id,
+                attempt_generation=attempt_generation,
+                gate_goal_id=gate_goal_id,
+                gate_cancel_requested=True,
+                gate_terminal_observed=False,
+            )
+            return False
+        try:
+            wrapped = result_future.result()
+            status = int(getattr(wrapped, "status", GoalStatus.STATUS_UNKNOWN))
+        except Exception as error:
+            self._latch_active_attempt_fault(
+                f"trajectory_gate_terminal_result_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+            self._publish_status(
+                "gate_terminal_unconfirmed",
+                f"result_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation=attempt_generation,
+                gate_goal_id=gate_goal_id,
+                gate_cancel_requested=True,
+                gate_terminal_observed=False,
+            )
+            return False
+        terminal = self._is_terminal_status(status)
+        self._publish_status(
+            "gate_terminal_observed" if terminal else "gate_terminal_unconfirmed",
+            "success_after_cancel"
+            if status == GoalStatus.STATUS_SUCCEEDED
+            else "observed_after_cancel"
+            if terminal
+            else "nonterminal_status",
+            request_id,
+            attempt_generation=attempt_generation,
+            gate_goal_id=gate_goal_id,
+            gate_cancel_requested=True,
+            gate_terminal_observed=terminal,
+            gate_terminal_status=status,
+            action_goal_status=status,
+        )
+        if not terminal:
+            self._latch_active_attempt_fault(
+                "trajectory_gate_terminal_unconfirmed",
+                request_id,
+                attempt_generation,
+            )
+        elif status == GoalStatus.STATUS_SUCCEEDED:
+            self._latch_active_attempt_fault(
+                "trajectory_gate_cancel_success_race",
+                request_id,
+                attempt_generation,
+            )
+        return terminal and status != GoalStatus.STATUS_SUCCEEDED
+
+    def _cancel_gate_goal(
+        self,
+        goal_handle,
+        request_id: str,
+        *,
+        attempt_generation: int | None = None,
+        result_future=None,
+    ) -> bool:
+        gate_goal_id = self._goal_id_hex(goal_handle)
+        cancel_requested = False
+        cancel_accepted = False
         try:
             future = goal_handle.cancel_goal_async()
+            cancel_requested = True
+            if (
+                future is None
+                or not callable(getattr(future, "done", None))
+                or not callable(getattr(future, "result", None))
+            ):
+                raise TypeError("cancel_goal_async returned no usable future")
         except Exception as error:
-            self._latch_fault(f"trajectory_gate_cancel_exception:{type(error).__name__}")
-            return False
-        deadline = time.monotonic() + self._cancel_response_s
-        while self.context.ok() and time.monotonic() < deadline and not future.done():
-            time.sleep(0.01)
-        if not future.done():
-            self._latch_fault("trajectory_gate_cancel_timeout")
-            return False
-        try:
-            response = future.result()
-            if len(getattr(response, "goals_canceling", ())) < 1:
-                self._latch_fault("trajectory_gate_cancel_rejected")
-                return False
-        except Exception as error:
-            self._latch_fault(f"trajectory_gate_cancel_failed:{type(error).__name__}")
-            return False
-        self._publish_status("cancelled_gate_command", "accepted", request_id)
-        return True
+            self._latch_active_attempt_fault(
+                f"trajectory_gate_cancel_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+        else:
+            try:
+                deadline = time.monotonic() + self._cancel_response_s
+                while (
+                    self.context.ok()
+                    and time.monotonic() < deadline
+                    and not future.done()
+                ):
+                    time.sleep(0.01)
+                if not future.done():
+                    self._latch_active_attempt_fault(
+                        "trajectory_gate_cancel_timeout",
+                        request_id,
+                        attempt_generation,
+                    )
+                else:
+                    response = future.result()
+                    cancel_accepted = bool(
+                        getattr(response, "goals_canceling", ())
+                    )
+                    if not cancel_accepted:
+                        self._latch_active_attempt_fault(
+                            "trajectory_gate_cancel_rejected",
+                            request_id,
+                            attempt_generation,
+                        )
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"trajectory_gate_cancel_failed:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+        self._publish_status(
+            "cancelled_gate_command",
+            "accepted" if cancel_accepted else "unconfirmed",
+            request_id,
+            attempt_generation=attempt_generation,
+            gate_goal_id=gate_goal_id,
+            gate_cancel_requested=cancel_requested,
+            cancel_response_accepted=cancel_accepted,
+        )
+        terminal_observed = self._wait_for_gate_terminal(
+            result_future,
+            request_id,
+            attempt_generation,
+            gate_goal_id,
+        )
+        return cancel_requested and cancel_accepted and terminal_observed
 
-    def _late_gate_cancel_callback(self, future) -> None:
-        # As above, a late accepted gate goal belongs to an already failed
-        # send path even if _finish() has not yet cleared the request identity.
+    def _late_gate_cancel_callback(
+        self,
+        future,
+        request_id: str | None = None,
+        attempt_generation: int | None = None,
+    ) -> None:
+        # A late accepted gate goal belongs to an already failed send path,
+        # even if _finish() has not yet cleared the request identity.  As with
+        # MoveGroup, always cancel the goal returned by this exact future and
+        # retain the captured request/generation for lifecycle evidence.
         try:
             goal = future.result()
-            if goal is not None and goal.accepted:
-                goal.cancel_goal_async()
+            if goal is None or not goal.accepted:
+                self._publish_status(
+                    "late_gate_goal_response",
+                    "rejected",
+                    request_id or "<none>",
+                    attempt_generation=attempt_generation,
+                )
+                return
+            goal_id = self._goal_id_hex(goal)
+            self._publish_status(
+                "late_gate_goal_response",
+                "accepted_cancel_requested",
+                request_id or "<none>",
+                attempt_generation=attempt_generation,
+                gate_goal_id=goal_id,
+                gate_goal_response_future_pending_at_timeout=True,
+                gate_cancel_requested=True,
+            )
+            try:
+                cancel_future = goal.cancel_goal_async()
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"late_gate_goal_cancel_failed:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+            else:
+                add_done_callback = getattr(cancel_future, "add_done_callback", None)
+                if callable(add_done_callback):
+                    add_done_callback(
+                        partial(
+                            self._late_cancel_response_callback,
+                            request_id=request_id,
+                            attempt_generation=attempt_generation,
+                            goal_id=goal_id,
+                            kind="gate",
+                        )
+                    )
+            try:
+                result_future = goal.get_result_async()
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"late_gate_goal_result_request_failed:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+                self._publish_late_result_future_unavailable(
+                    request_id=request_id,
+                    attempt_generation=attempt_generation,
+                    goal_id=goal_id,
+                    kind="gate",
+                    reason=f"result_exception:{type(error).__name__}",
+                )
+            else:
+                if result_future is None:
+                    self._latch_active_attempt_fault(
+                        "late_gate_goal_result_future_unavailable",
+                        request_id,
+                        attempt_generation,
+                    )
+                    self._publish_late_result_future_unavailable(
+                        request_id=request_id,
+                        attempt_generation=attempt_generation,
+                        goal_id=goal_id,
+                        kind="gate",
+                        reason="result_future_unavailable",
+                    )
+                else:
+                    add_done_callback = getattr(
+                        result_future, "add_done_callback", None
+                    )
+                    if callable(add_done_callback):
+                        add_done_callback(
+                            partial(
+                                self._late_goal_terminal_callback,
+                                request_id=request_id,
+                                attempt_generation=attempt_generation,
+                                goal_id=goal_id,
+                                kind="gate",
+                            )
+                        )
+                    self._schedule_late_terminal_watchdog(
+                        result_future,
+                        request_id=request_id,
+                        attempt_generation=attempt_generation,
+                        goal_id=goal_id,
+                        kind="gate",
+                    )
         except Exception as error:
-            self._latch_fault(f"late_gate_goal_cancel_failed:{type(error).__name__}")
+            self._latch_active_attempt_fault(
+                f"late_gate_goal_cancel_failed:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
 
     def _gate_outcome(
         self,
@@ -1077,8 +2085,17 @@ class MoveItPlanOnlyAdapter(Node):
         goal_handle,
         request: PlanTarget.Goal,
         trajectory: JointTrajectory,
+        *,
+        attempt_generation: int | None = None,
     ) -> _GateOutcome:
         request_id = self._request_id(request)
+        if goal_handle.is_cancel_requested:
+            return _GateOutcome(reason="plan_target_cancel_requested")
+        if (
+            attempt_generation is not None
+            and not self._active_matches(request_id, attempt_generation)
+        ):
+            return _GateOutcome(reason="late_result_ignored")
         try:
             gate_goal, digest = self._make_gate_goal(request, trajectory)
         except ValueError as error:
@@ -1090,14 +2107,85 @@ class MoveItPlanOnlyAdapter(Node):
                 trajectory_digest=digest,
                 reason="trajectory_gate_unavailable",
             )
+        # Re-run the admission checks after service discovery.  Discovery can
+        # consume enough wall time for cancellation or a newer attempt to win
+        # the boundary race.
+        if goal_handle.is_cancel_requested:
+            return _GateOutcome(
+                trajectory_digest=digest,
+                reason="plan_target_cancel_requested",
+            )
+        if (
+            attempt_generation is not None
+            and not self._active_matches(request_id, attempt_generation)
+        ):
+            return _GateOutcome(
+                trajectory_digest=digest,
+                reason="late_result_ignored",
+            )
+        with self._state_lock:
+            if (
+                attempt_generation is not None
+                and (
+                    self._active_request_id != request_id
+                    or self._active_attempt_generation != attempt_generation
+                )
+            ):
+                return _GateOutcome(
+                    trajectory_digest=digest,
+                    reason="late_result_ignored",
+                )
+            if goal_handle.is_cancel_requested:
+                return _GateOutcome(
+                    trajectory_digest=digest,
+                    reason="plan_target_cancel_requested",
+                )
+            if request_id in self._dispatched_command_ids:
+                self._fault_latched = "duplicate_dispatch_prevented"
+                return _GateOutcome(
+                    trajectory_digest=digest,
+                    reason="duplicate_dispatch_prevented",
+                )
+            # This is the final atomic admission point.  Keep the command id
+            # reserved once the send path passes its last check; release it
+            # if a cancellation/identity race wins before the call exists or
+            # if send_goal_async itself fails.
+            self._dispatched_command_ids.add(request_id)
+        if goal_handle.is_cancel_requested or (
+            attempt_generation is not None
+            and not self._active_matches(request_id, attempt_generation)
+        ):
+            with self._state_lock:
+                self._dispatched_command_ids.discard(request_id)
+            return _GateOutcome(
+                trajectory_digest=digest,
+                reason=(
+                    "plan_target_cancel_requested"
+                    if goal_handle.is_cancel_requested
+                    else "late_result_ignored"
+                ),
+            )
         try:
             send_future = self._trajectory_gate.send_goal_async(gate_goal)
         except Exception as error:
-            self._latch_fault(f"trajectory_gate_send_exception:{type(error).__name__}")
+            with self._state_lock:
+                self._dispatched_command_ids.discard(request_id)
+            self._latch_active_attempt_fault(
+                f"trajectory_gate_send_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
             return _GateOutcome(
                 trajectory_digest=digest,
                 reason="trajectory_gate_send_exception",
             )
+        self._publish_status(
+            "trajectory_gate_goal_sent",
+            "goal_response_pending",
+            request_id,
+            attempt_generation=attempt_generation,
+            gate_goal_response_future_pending_at_timeout=True,
+        )
         send_reason = self._poll_future(
             send_future,
             time.monotonic() + self._goal_response_s,
@@ -1106,8 +2194,21 @@ class MoveItPlanOnlyAdapter(Node):
             timeout_reason="trajectory_gate_goal_response_timeout",
         )
         if send_reason is not None:
+            self._publish_status(
+                "trajectory_gate_goal_response_timeout"
+                if send_reason == "trajectory_gate_goal_response_timeout"
+                else "trajectory_gate_goal_response_failed",
+                send_reason,
+                request_id,
+                attempt_generation=attempt_generation,
+                gate_goal_response_future_pending_at_timeout=True,
+            )
             send_future.add_done_callback(
-                self._late_gate_cancel_callback
+                partial(
+                    self._late_gate_cancel_callback,
+                    request_id=request_id,
+                    attempt_generation=attempt_generation,
+                )
             )
             return _GateOutcome(
                 trajectory_digest=digest,
@@ -1116,8 +2217,10 @@ class MoveItPlanOnlyAdapter(Node):
         try:
             gate_handle = send_future.result()
         except Exception as error:
-            self._latch_fault(
-                f"trajectory_gate_goal_response_exception:{type(error).__name__}"
+            self._latch_active_attempt_fault(
+                f"trajectory_gate_goal_response_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
             )
             return _GateOutcome(
                 trajectory_digest=digest,
@@ -1128,17 +2231,113 @@ class MoveItPlanOnlyAdapter(Node):
                 trajectory_digest=digest,
                 reason="trajectory_gate_goal_rejected",
             )
-        try:
-            result_future = gate_handle.get_result_async()
-        except Exception as error:
-            self._latch_fault(
-                f"trajectory_gate_result_request_exception:{type(error).__name__}"
+        gate_goal_id = self._goal_id_hex(gate_handle)
+        if gate_goal_id is None:
+            self._latch_active_attempt_fault(
+                "trajectory_gate_goal_id_unavailable",
+                request_id,
+                attempt_generation,
             )
-            self._cancel_gate_goal(gate_handle, request_id)
+            self._publish_status(
+                "trajectory_gate_goal_id_unavailable",
+                "accepted_goal_not_correlatable",
+                request_id,
+                attempt_generation=attempt_generation,
+                gate_cancel_requested=True,
+            )
+            try:
+                uncorrelatable_result_future = self._get_gate_result_future(
+                    gate_handle
+                )
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"trajectory_gate_result_request_exception:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+                self._cancel_gate_goal(
+                    gate_handle,
+                    request_id,
+                    attempt_generation=attempt_generation,
+                )
+                return _GateOutcome(
+                    dispatched=True,
+                    trajectory_digest=digest,
+                    accepted=True,
+                    cancel_requested=True,
+                    reason="trajectory_gate_goal_id_unavailable:gate_terminal_unconfirmed",
+                )
+            terminal_confirmed = self._cancel_gate_goal(
+                gate_handle,
+                request_id,
+                attempt_generation=attempt_generation,
+                result_future=uncorrelatable_result_future,
+            )
+            reason = "trajectory_gate_goal_id_unavailable"
+            if not terminal_confirmed:
+                reason += ":gate_terminal_unconfirmed"
             return _GateOutcome(
                 dispatched=True,
                 trajectory_digest=digest,
-                reason="trajectory_gate_result_request_exception",
+                accepted=True,
+                terminal=terminal_confirmed,
+                downstream_terminal_observed=terminal_confirmed,
+                cancel_requested=True,
+                action_goal_status=(
+                    GoalStatus.STATUS_CANCELED
+                    if terminal_confirmed
+                    else GoalStatus.STATUS_UNKNOWN
+                ),
+                reason=reason,
+            )
+        self._publish_status(
+            "gate_goal_accepted",
+            "result_pending",
+            request_id,
+            attempt_generation=attempt_generation,
+            gate_goal_id=gate_goal_id,
+        )
+        try:
+            result_future = self._get_gate_result_future(gate_handle)
+        except Exception as error:
+            self._latch_active_attempt_fault(
+                f"trajectory_gate_result_request_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+            self._cancel_gate_goal(
+                gate_handle,
+                request_id,
+                attempt_generation=attempt_generation,
+            )
+            return _GateOutcome(
+                dispatched=True,
+                trajectory_digest=digest,
+                accepted=True,
+                cancel_requested=True,
+                reason="trajectory_gate_result_request_exception:gate_terminal_unconfirmed",
+            )
+        if result_future is None:
+            self._latch_active_attempt_fault(
+                "trajectory_gate_result_future_unavailable",
+                request_id,
+                attempt_generation,
+            )
+            self._cancel_gate_goal(
+                gate_handle,
+                request_id,
+                attempt_generation=attempt_generation,
+                result_future=None,
+            )
+            return _GateOutcome(
+                dispatched=True,
+                trajectory_digest=digest,
+                accepted=True,
+                cancel_requested=True,
+                reason=(
+                    "trajectory_gate_result_future_unavailable:"
+                    "gate_terminal_unconfirmed"
+                ),
             )
         duration_ns = (
             trajectory.points[-1].time_from_start.sec * 1_000_000_000
@@ -1165,37 +2364,110 @@ class MoveItPlanOnlyAdapter(Node):
             # wrapper's identity/drift monitor own active-motion freshness.
             require_source_freshness=False,
         )
+        gate_cancel_already_requested = False
+        gate_cancel_terminal_confirmed = False
         if result_reason is not None:
-            self._cancel_gate_goal(gate_handle, request_id)
-            terminal_deadline = time.monotonic() + self._gate_result_margin_s
-            while (
-                self.context.ok()
-                and time.monotonic() < terminal_deadline
-                and not result_future.done()
-            ):
-                time.sleep(0.01)
+            gate_cancel_terminal_confirmed = self._cancel_gate_goal(
+                gate_handle,
+                request_id,
+                attempt_generation=attempt_generation,
+                result_future=result_future,
+            )
+            gate_cancel_already_requested = True
             if not result_future.done():
-                self._latch_fault("trajectory_gate_terminal_unconfirmed")
                 return _GateOutcome(
                     dispatched=True,
                     trajectory_digest=digest,
+                    accepted=True,
                     cancel_requested=True,
                     reason=f"{result_reason}:gate_terminal_unconfirmed",
                 )
-        try:
-            wrapped = result_future.result()
-        except Exception as error:
-            self._latch_fault(
-                f"trajectory_gate_result_exception:{type(error).__name__}"
-            )
+        # The gate result and a PlanTarget cancel can complete concurrently.
+        # Even a successful gate result is unusable once this wrapper has
+        # observed cancellation; report the terminal gate state but never
+        # promote it to a successful PlanTarget result.
+        if goal_handle.is_cancel_requested:
+            if not gate_cancel_already_requested:
+                self._cancel_gate_goal(
+                    gate_handle,
+                    request_id,
+                    attempt_generation=attempt_generation,
+                    result_future=result_future,
+                )
+            if result_future.done():
+                try:
+                    wrapped = result_future.result()
+                    outcome = self._gate_outcome(request, digest, wrapped)
+                    if outcome.success:
+                        self._latch_active_attempt_fault(
+                            "trajectory_gate_cancel_success_race",
+                            request_id,
+                            attempt_generation,
+                        )
+                    return replace(
+                        outcome,
+                        success=False,
+                        cancel_requested=True,
+                        reason="plan_target_cancel_requested:gate_result_after_cancel",
+                    )
+                except Exception:
+                    pass
             return _GateOutcome(
                 dispatched=True,
                 trajectory_digest=digest,
-                reason="trajectory_gate_result_exception",
+                cancel_requested=True,
+                reason="plan_target_cancel_requested:gate_terminal_unconfirmed",
+            )
+        try:
+            wrapped = result_future.result()
+        except Exception as error:
+            self._latch_active_attempt_fault(
+                f"trajectory_gate_result_exception:{type(error).__name__}",
+                request_id,
+                attempt_generation,
+            )
+            terminal_confirmed = gate_cancel_terminal_confirmed
+            if not gate_cancel_already_requested:
+                terminal_confirmed = self._cancel_gate_goal(
+                    gate_handle,
+                    request_id,
+                    attempt_generation=attempt_generation,
+                    result_future=result_future,
+                )
+            reason = "trajectory_gate_result_exception"
+            if not terminal_confirmed:
+                reason += ":gate_terminal_unconfirmed"
+            return _GateOutcome(
+                dispatched=True,
+                trajectory_digest=digest,
+                accepted=True,
+                terminal=terminal_confirmed,
+                downstream_terminal_observed=terminal_confirmed,
+                cancel_requested=True,
+                action_goal_status=(
+                    GoalStatus.STATUS_CANCELED
+                    if terminal_confirmed
+                    else GoalStatus.STATUS_UNKNOWN
+                ),
+                reason=reason,
             )
         outcome = self._gate_outcome(request, digest, wrapped)
+        self._publish_status(
+            "gate_terminal",
+            "observed" if outcome.terminal else "unconfirmed",
+            request_id,
+            attempt_generation=attempt_generation,
+            gate_goal_id=gate_goal_id,
+            gate_cancel_requested=outcome.cancel_requested,
+            gate_terminal_observed=outcome.terminal,
+            gate_terminal_status=outcome.action_goal_status,
+        )
         if result_reason is not None and outcome.success:
-            self._latch_fault("trajectory_gate_cancel_success_race")
+            self._latch_active_attempt_fault(
+                "trajectory_gate_cancel_success_race",
+                request_id,
+                attempt_generation,
+            )
             return _GateOutcome(
                 dispatched=True,
                 trajectory_digest=digest,
@@ -1257,20 +2529,25 @@ class MoveItPlanOnlyAdapter(Node):
         result.fjt_error_string = gate.fjt_error_string
         return result
 
-    def _finish(self, request_id: str) -> None:
+    def _finish(self, request_id: str, attempt_generation: int) -> None:
         with self._state_lock:
-            if self._active_request_id == request_id:
+            if (
+                self._active_request_id == request_id
+                and self._active_attempt_generation == attempt_generation
+            ):
                 self._active_request_id = None
+                self._active_attempt_generation = None
                 self._active_moveit_goal = None
-            if self._reserved_request_id == request_id:
-                self._reserved_request_id = None
+                self._active_moveit_goal_id = None
+                self._active_moveit_result_future = None
+                if self._reserved_request_id == request_id:
+                    self._reserved_request_id = None
 
     def _execute(self, goal_handle) -> PlanTarget.Result:
         request = goal_handle.request
         request_id = self._request_id(request)
+        attempt_generation = self._new_attempt(request_id)
         requested_at = self.get_clock().now().to_msg()
-        with self._state_lock:
-            self._active_request_id = request_id
         try:
             self._feedback(goal_handle, "validating_request", request_id)
             reason = self._validate_request(request)
@@ -1371,7 +2648,11 @@ class MoveItPlanOnlyAdapter(Node):
             try:
                 send_future = self._move_group.send_goal_async(move_group_goal)
             except Exception as error:
-                self._latch_fault(f"move_group_send_exception:{type(error).__name__}")
+                self._latch_active_attempt_fault(
+                    f"move_group_send_exception:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
                 goal_handle.abort()
                 return self._result(
                     request,
@@ -1379,6 +2660,13 @@ class MoveItPlanOnlyAdapter(Node):
                     success=False,
                     reason="move_group_send_exception",
                 )
+            self._publish_status(
+                "move_group_goal_sent",
+                "goal_response_pending",
+                request_id,
+                attempt_generation=attempt_generation,
+                goal_response_future_pending_at_timeout=True,
+            )
             send_reason = self._poll_future(
                 send_future,
                 time.monotonic() + self._goal_response_s,
@@ -1386,8 +2674,21 @@ class MoveItPlanOnlyAdapter(Node):
                 request,
             )
             if send_reason is not None:
+                self._publish_status(
+                    "move_group_goal_response_timeout"
+                    if send_reason == "move_group_timeout"
+                    else "move_group_goal_response_failed",
+                    send_reason,
+                    request_id,
+                    attempt_generation=attempt_generation,
+                    goal_response_future_pending_at_timeout=True,
+                )
                 send_future.add_done_callback(
-                    self._late_cancel_callback
+                    partial(
+                        self._late_cancel_callback,
+                        request_id=request_id,
+                        attempt_generation=attempt_generation,
+                    )
                 )
                 if goal_handle.is_cancel_requested:
                     goal_handle.canceled()
@@ -1399,8 +2700,10 @@ class MoveItPlanOnlyAdapter(Node):
             try:
                 moveit_goal_handle = send_future.result()
             except Exception as error:
-                self._latch_fault(
-                    f"move_group_goal_response_exception:{type(error).__name__}"
+                self._latch_active_attempt_fault(
+                    f"move_group_goal_response_exception:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
                 )
                 goal_handle.abort()
                 return self._result(
@@ -1417,22 +2720,120 @@ class MoveItPlanOnlyAdapter(Node):
                     success=False,
                     reason="move_group_goal_rejected",
                 )
+            move_group_goal_id = self._goal_id_hex(moveit_goal_handle)
             with self._state_lock:
+                if (
+                    self._active_request_id != request_id
+                    or self._active_attempt_generation != attempt_generation
+                ):
+                    goal_handle.abort()
+                    return self._result(
+                        request,
+                        requested_at,
+                        success=False,
+                        reason="late_result_ignored",
+                    )
                 self._active_moveit_goal = moveit_goal_handle
+                self._active_moveit_goal_id = move_group_goal_id
+            if move_group_goal_id is None:
+                self._latch_active_attempt_fault(
+                    "move_group_goal_id_unavailable",
+                    request_id,
+                    attempt_generation,
+                )
+                self._publish_status(
+                    "move_group_goal_id_unavailable",
+                    "accepted_goal_not_correlatable",
+                    request_id,
+                    attempt_generation=attempt_generation,
+                )
+            else:
+                self._publish_status(
+                    "move_group_goal_accepted",
+                    "result_pending",
+                    request_id,
+                    attempt_generation=attempt_generation,
+                    move_group_goal_id=move_group_goal_id,
+                )
 
             try:
-                result_future = moveit_goal_handle.get_result_async()
-            except Exception as error:
-                self._latch_fault(
-                    f"move_group_result_request_exception:{type(error).__name__}"
+                result_future = self._get_move_group_result_future(
+                    moveit_goal_handle
                 )
-                self._cancel_move_group(request_id, "result_request_exception")
+            except Exception as error:
+                self._latch_active_attempt_fault(
+                    f"move_group_result_request_exception:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
+                )
+                self._cancel_move_group(
+                    request_id,
+                    "result_request_exception",
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                )
                 goal_handle.abort()
                 return self._result(
                     request,
                     requested_at,
                     success=False,
                     reason="move_group_result_request_exception",
+                )
+            if result_future is None:
+                self._latch_active_attempt_fault(
+                    "move_group_result_future_unavailable",
+                    request_id,
+                    attempt_generation,
+                )
+                self._publish_status(
+                    "move_group_result_future_unavailable",
+                    "accepted_goal_has_no_result_future",
+                    request_id,
+                    attempt_generation=attempt_generation,
+                    move_group_goal_id=move_group_goal_id,
+                    result_future_pending_at_timeout=None,
+                    move_group_cancel_requested=True,
+                    move_group_terminal_observed=False,
+                )
+                self._cancel_move_group(
+                    request_id,
+                    "result_future_unavailable",
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                    result_future=None,
+                )
+                goal_handle.abort()
+                return self._result(
+                    request,
+                    requested_at,
+                    success=False,
+                    reason="move_group_result_future_unavailable",
+                )
+            with self._state_lock:
+                if (
+                    self._active_request_id == request_id
+                    and self._active_attempt_generation == attempt_generation
+                ):
+                    self._active_moveit_result_future = result_future
+            if move_group_goal_id is None:
+                terminal_confirmed = self._cancel_move_group(
+                    request_id,
+                    "move_group_goal_id_unavailable",
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                    result_future=result_future,
+                )
+                result_reason = "move_group_goal_id_unavailable"
+                if not self._result_future_terminal_observed(result_future):
+                    result_reason += ":move_group_terminal_unconfirmed"
+                elif not terminal_confirmed:
+                    result_reason += ":move_group_cancel_unconfirmed"
+                goal_handle.abort()
+                return self._result(
+                    request,
+                    requested_at,
+                    success=False,
+                    reason=result_reason,
                 )
             result_reason = self._poll_future(
                 result_future,
@@ -1441,9 +2842,48 @@ class MoveItPlanOnlyAdapter(Node):
                 + self._result_margin_s,
                 goal_handle,
                 request,
+                timeout_reason="move_group_result_timeout",
             )
             if result_reason is not None:
-                self._cancel_move_group(request_id, result_reason)
+                pending_at_timeout = not result_future.done()
+                self._publish_status(
+                    "move_group_result_timeout"
+                    if result_reason == "move_group_result_timeout"
+                    else "move_group_cancel_requested",
+                    result_reason,
+                    request_id,
+                    attempt_generation=attempt_generation,
+                    move_group_goal_id=move_group_goal_id,
+                    result_future_pending_at_timeout=pending_at_timeout,
+                    move_group_cancel_requested=True,
+                )
+                terminal_confirmed = self._cancel_move_group(
+                    request_id,
+                    result_reason,
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                    result_future=result_future,
+                )
+                terminal_observed = self._result_future_terminal_observed(
+                    result_future
+                )
+                if not terminal_observed:
+                    self._observe_unconfirmed_move_group_terminal(
+                        result_future,
+                        request_id=request_id,
+                        attempt_generation=attempt_generation,
+                        goal_id=move_group_goal_id,
+                    )
+                    result_reason = (
+                        f"{result_reason}:move_group_terminal_unconfirmed"
+                    )
+                elif (
+                    self._result_future_status(result_future)
+                    == GoalStatus.STATUS_SUCCEEDED
+                ):
+                    result_reason = f"{result_reason}:move_group_success_after_cancel"
+                elif not terminal_confirmed:
+                    result_reason = f"{result_reason}:move_group_cancel_unconfirmed"
                 if goal_handle.is_cancel_requested:
                     goal_handle.canceled()
                 else:
@@ -1451,20 +2891,107 @@ class MoveItPlanOnlyAdapter(Node):
                 return self._result(
                     request, requested_at, success=False, reason=result_reason
                 )
+            # A done result and a client cancel can race between the poll loop
+            # and result parsing.  Admit the result only after this second
+            # cancellation check; a canceled wrapper must never reach gate.
+            if goal_handle.is_cancel_requested:
+                terminal_confirmed = self._cancel_move_group(
+                    request_id,
+                    "plan_target_cancel_requested",
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                    result_future=result_future,
+                )
+                reason = "plan_target_cancel_requested"
+                if not self._result_future_terminal_observed(result_future):
+                    reason += ":move_group_terminal_unconfirmed"
+                elif (
+                    self._result_future_status(result_future)
+                    == GoalStatus.STATUS_SUCCEEDED
+                ):
+                    reason += ":move_group_success_after_cancel"
+                elif not terminal_confirmed:
+                    reason += ":move_group_cancel_unconfirmed"
+                goal_handle.canceled()
+                return self._result(
+                    request,
+                    requested_at,
+                    success=False,
+                    reason=reason,
+                )
             try:
                 wrapped = result_future.result()
                 moveit_result = wrapped.result
             except Exception as error:
-                self._latch_fault(
-                    f"move_group_result_exception:{type(error).__name__}"
+                self._latch_active_attempt_fault(
+                    f"move_group_result_exception:{type(error).__name__}",
+                    request_id,
+                    attempt_generation,
                 )
+                terminal_confirmed = self._cancel_move_group(
+                    request_id,
+                    "result_exception",
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                    result_future=result_future,
+                )
+                result_reason = "move_group_result_exception"
+                if not self._result_future_terminal_observed(result_future):
+                    result_reason += ":move_group_terminal_unconfirmed"
+                elif (
+                    self._result_future_status(result_future)
+                    == GoalStatus.STATUS_SUCCEEDED
+                ):
+                    result_reason += ":move_group_success_after_cancel"
+                elif not terminal_confirmed:
+                    result_reason += ":move_group_cancel_unconfirmed"
                 goal_handle.abort()
                 return self._result(
                     request,
                     requested_at,
                     success=False,
-                    reason="move_group_result_exception",
+                    reason=result_reason,
                 )
+            # Parse-time cancellation can race with the result callback.  The
+            # accepted result belongs to this generation, but cancellation is
+            # still authoritative and no gate dispatch is permitted.
+            if goal_handle.is_cancel_requested:
+                terminal_confirmed = self._cancel_move_group(
+                    request_id,
+                    "plan_target_cancel_requested",
+                    attempt_generation=attempt_generation,
+                    moveit_goal=moveit_goal_handle,
+                    result_future=result_future,
+                )
+                reason = "plan_target_cancel_requested"
+                if not self._result_future_terminal_observed(result_future):
+                    reason += ":move_group_terminal_unconfirmed"
+                elif (
+                    self._result_future_status(result_future)
+                    == GoalStatus.STATUS_SUCCEEDED
+                ):
+                    reason += ":move_group_success_after_cancel"
+                elif not terminal_confirmed:
+                    reason += ":move_group_cancel_unconfirmed"
+                goal_handle.canceled()
+                return self._result(
+                    request,
+                    requested_at,
+                    success=False,
+                    reason=reason,
+                )
+            self._publish_status(
+                "move_group_terminal",
+                "observed" if self._is_terminal_status(int(wrapped.status)) else "unconfirmed",
+                request_id,
+                attempt_generation=attempt_generation,
+                move_group_goal_id=move_group_goal_id,
+                move_group_terminal_observed=self._is_terminal_status(
+                    int(wrapped.status)
+                ),
+                move_group_terminal_status=int(wrapped.status),
+                action_goal_status=int(wrapped.status),
+            )
             error_code = int(moveit_result.error_code.val)
             if wrapped.status != GoalStatus.STATUS_SUCCEEDED:
                 goal_handle.abort()
@@ -1540,7 +3067,10 @@ class MoveItPlanOnlyAdapter(Node):
                     moveit_error_code=error_code,
                 )
             with self._state_lock:
-                if self._active_request_id != request_id:
+                if (
+                    self._active_request_id != request_id
+                    or self._active_attempt_generation != attempt_generation
+                ):
                     goal_handle.abort()
                     return self._result(
                         request,
@@ -1549,25 +3079,38 @@ class MoveItPlanOnlyAdapter(Node):
                         reason="late_result_ignored",
                         moveit_error_code=error_code,
                     )
-                if request_id in self._dispatched_command_ids:
-                    self._fault_latched = "duplicate_dispatch_prevented"
-                    goal_handle.abort()
+                if goal_handle.is_cancel_requested:
+                    goal_handle.canceled()
                     return self._result(
                         request,
                         requested_at,
                         success=False,
-                        reason="duplicate_dispatch_prevented",
+                        reason="plan_target_cancel_requested",
                         moveit_error_code=error_code,
                     )
-                self._dispatched_command_ids.add(request_id)
+            # Last admission check immediately before sending the typed gate
+            # goal.  This closes the done/cancel race after all trajectory
+            # validation and request identity checks.
+            if goal_handle.is_cancel_requested:
+                goal_handle.canceled()
+                return self._result(
+                    request,
+                    requested_at,
+                    success=False,
+                    reason="plan_target_cancel_requested",
+                    moveit_error_code=error_code,
+                )
             self._feedback(goal_handle, "executing_through_gate", request_id)
             gate = self._dispatch_to_gate(
                 goal_handle,
                 request,
                 decision.joint_trajectory,
+                attempt_generation=attempt_generation,
             )
             if not gate.success:
-                if goal_handle.is_cancel_requested and gate.terminal:
+                if goal_handle.is_cancel_requested or gate.reason.startswith(
+                    "plan_target_cancel_requested"
+                ):
                     goal_handle.canceled()
                 else:
                     goal_handle.abort()
@@ -1579,7 +3122,26 @@ class MoveItPlanOnlyAdapter(Node):
                     moveit_error_code=error_code,
                     gate=gate,
                 )
-            self._publish_status("gate_terminal", "succeeded", request_id)
+            with self._state_lock:
+                active_attempt = (
+                    self._active_request_id == request_id
+                    and self._active_attempt_generation == attempt_generation
+                )
+            if goal_handle.is_cancel_requested or not active_attempt:
+                if goal_handle.is_cancel_requested:
+                    goal_handle.canceled()
+                    reason = "plan_target_cancel_requested"
+                else:
+                    goal_handle.abort()
+                    reason = "late_result_ignored"
+                return self._result(
+                    request,
+                    requested_at,
+                    success=False,
+                    reason=reason,
+                    moveit_error_code=error_code,
+                    gate=gate,
+                )
             goal_handle.succeed()
             return self._result(
                 request,
@@ -1590,7 +3152,7 @@ class MoveItPlanOnlyAdapter(Node):
                 gate=gate,
             )
         finally:
-            self._finish(request_id)
+            self._finish(request_id, attempt_generation)
 
     def _on_reset(
         self, request: Trigger.Request, response: Trigger.Response
@@ -1622,6 +3184,22 @@ class MoveItPlanOnlyAdapter(Node):
         return response
 
     def destroy_node(self) -> bool:
+        # Wait for any publisher already inside _publish_status, then prevent
+        # every late callback/watchdog from entering the publisher before the
+        # rclpy entities are destroyed.
+        with self._status_publish_lock:
+            self._destroying.set()
+        with self._late_terminal_watchdog_lock:
+            watchdogs = tuple(self._late_terminal_watchdogs)
+            self._late_terminal_watchdogs.clear()
+        for watchdog in watchdogs:
+            watchdog.cancel()
+        watchdog_deadline = time.monotonic() + 0.25
+        for watchdog in watchdogs:
+            remaining = watchdog_deadline - time.monotonic()
+            if remaining <= 0.0:
+                break
+            watchdog.join(timeout=remaining)
         self._plan_server.destroy()
         self._move_group.destroy()
         self._trajectory_gate.destroy()

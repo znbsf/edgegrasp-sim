@@ -15,21 +15,80 @@
   `PlanExecution::stop()`, so `overall_pass=false` and
   `move_group_survived=false`. The signal-injection scripts are not active
   release commands.
-- Stop rerunning OS-process interruption. Add an injected-only runner using the
-  existing in-process fake MoveGroup ActionServer; two existing tests cover
-  explicit cancel, goal-response timeout, late accepted-goal cancel, and zero
-  trajectory/gate publication without increasing test count. Accepted-goal
-  result-future timeout remains unverified.
-- Record the 2026-08-30 safe in-process artifact at
+- Stop rerunning OS-process interruption. Extend the injected-only runner to
+  twelve focused tests and a strict JSONL/JUnit validator. Its 15 required facets
+  cover explicit cancel, MoveGroup and typed-gate goal-response timeout,
+  accepted-goal result-future timeout, gate result-future unavailability and
+  exception, cancel/terminal confirmation and non-confirmation,
+  success-after-cancel, result-future request exception, MoveGroup
+  result-future unavailability, and old-generation late-terminal isolation
+  including a stale-SUCCEEDED regression.
+- Retain the earlier 2026-08-30 safe in-process baseline at
   `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525`:
   `summary.status=PASS`, `overall_pass=true`, and 2 tests passed in 2.04 s, covering
   explicit cancel and goal-response timeout; the late accepted fake goal was
   canceled and trajectory/fake-gate goal counts were zero. This is not real
   MoveGroup, controller, or hardware evidence.
+- Retain the P8 injected artifact as a historical baseline at
+  `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T021211P8`:
+  8/8 tests and 11/11 required facets passed with zero validator errors. Set
+  accepted-result-timeout and strong request/generation/UUID correlation true
+  only in the injected-scoped fields; preserve all unqualified, real MoveGroup,
+  controller, simulation-physics, and hardware flags as false.
+- Retain the P10 injected artifact as a historical baseline at
+  `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T022939P10`:
+  10/10 tests, 13/13 required facets, and 10 JSONL records passed with zero
+  failures/errors/skips and zero validator errors. The injected-scoped positives
+  include accepted result timeout/future, strong MoveGroup request/generation/
+  UUID correlation, delayed gate response cancellation, gate
+  `get_result_async()->None`, and gate `result()` exception. MoveGroup
+  `get_result_async()->None` remains untested (only its request exception is
+  injected); old-generation isolation observes late CANCELED, not stale SUCCESS.
+  Keep generic, real MoveGroup, controller, simulation-physics, and hardware
+  fields false.
+- Retain the P11 injected artifact as historical lineage at
+  `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T023710P11`:
+  10/10 tests, 13/13 required facets, and 10 JSONL records passed with zero
+  failures/errors/skips and zero validator errors. P11 also removes duplicate
+  gate terminal/unconfirmed emissions, prevents double cancel after gate result
+  timeout, and unifies the missing-UUID future seam and malformed-cancel-future
+  fail-closed paths. These are source/ledger hardening changes, not separately
+  claimed direct tests. Keep the same injected-only positives and all generic,
+  real MoveGroup, controller, simulation-physics, and hardware fields false.
+- Record the current P12d injected artifact at
+  `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d`:
+  12/12 focused tests, 12 JSONL records, and 15/15 required facets passed with
+  zero failures, errors, skips, and validator errors. P12d directly adds
+  MoveGroup result-future-unavailable fail-closed coverage and old-generation
+  late-`SUCCEEDED` isolation, while retaining the accepted-result timeout,
+  canonical request/generation/UUID correlation, delayed goal-response,
+  terminal, success-after-cancel, gate result-future, and explicit-cancel
+  injected claims. The unavailable MoveGroup future is injected at the adapter
+  seam and is not a real MoveGroup ClientGoalHandle observation. The old
+  P11 artifact remains historical lineage; keep generic, real MoveGroup,
+  controller, simulation-physics, and hardware fields false.
+- The P12d package-scoped Jazzy verification completed 129/129 selected tests
+  across five packages (`core=1`, `interfaces=0`, `ros=49`, `adapter=34`,
+  `grasp_sequence=45`) at
+  `/home/edgegrasp/ros2_ws/test_results/edgegrasp_all_packages_20260830T121257P12d`;
+  the standalone adapter package path
+  `/home/edgegrasp/ros2_ws/test_results/edgegrasp_moveit_adapter_20260830T121050P12d`
+  also passed 34/34 after correcting one stale reason assertion. These package
+  results do not change the injected-only and real-process evidence boundaries.
+- Refresh the current source-contract byte pins for the checked-in LF SDF bytes:
+  Candidate012 `table_cube.sdf` is
+  `8a4b436cd4863a0801602d15bfafebecaadfbe104d4b7db93e4a5f33415bb4c4`, and
+  Candidate024 `table_cube_candidate024_face_aligned.sdf` is
+  `058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba`.
+  Historical observations that captured CRLF working copies retain their
+  original hashes and are not current canonical-LF source pins.
 - Fix a late send-future cancellation race in the MoveIt adapter. A goal
   accepted after the wrapper has already failed closed is now canceled even
   when request cleanup has not yet cleared the active request identity; apply
-  the same rule to a late accepted typed-gate goal.
+  the same rule to a late accepted typed-gate goal. Bind accepted cancellation
+  to the exact client goal handle and result future, wait boundedly for the
+  terminal, carry a monotonic attempt generation and canonical goal UUID, and
+  keep stale callbacks from faulting or dispatching a newer attempt.
 - Add a zero-runtime-dependency deterministic grasp-pipeline core.
 - Add timestamped `Target3D`, constant-velocity prediction, a 200 ms stale
   source gate, active receive-stream watchdog, explicit frame/clock epoch,

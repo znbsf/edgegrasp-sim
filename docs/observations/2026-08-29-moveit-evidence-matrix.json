@@ -1,9 +1,18 @@
 {
   "schema_version": 1,
   "recorded_date": "2026-08-29",
+  "updated_date": "2026-08-30",
   "timezone": "Asia/Shanghai",
   "observation_id": "moveit_evidence_matrix_20260829",
   "status": "MIXED_SCOPED_EVIDENCE",
+  "current_injected_artifact": {
+    "observation": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json",
+    "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d",
+    "pytest_tests": 12,
+    "jsonl_record_count": 12,
+    "facet_count": 15,
+    "verified_facet_count": 15
+  },
   "rows": [
     {
       "evidence_class": "REAL_MOVEGROUP_NORMAL",
@@ -86,6 +95,326 @@
         "real_move_group_runtime_health": false,
         "real_controller_motion_observation": false,
         "hardware_evidence": false
+      }
+    },
+    {
+      "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+      "evidence_variant": "ACCEPTED_RESULT_TIMEOUT_AND_STRONG_CORRELATION",
+      "status": "PASS",
+      "runtime": {
+        "in_process_dependency_injection": true,
+        "fake_move_group_action_server": true,
+        "fake_typed_gate_action_server": true,
+        "real_move_group_process": false,
+        "os_process_signal_injection": false,
+        "controller": false,
+        "simulation_physics": false,
+        "hardware": false,
+        "physical_robot": false
+      },
+      "artifact": {
+        "observation": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-runtime.json",
+        "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T021211P8",
+        "summary_sha256": "8b585083edf10ca4fe40deb1c9df70572beed3363c45f4e69b2914896e46e12d",
+        "junit_sha256": "489f3c31dab6a6a661d9b6fb8b40fc3de2421099ac9c6a39fb2e44ec498feb75",
+        "pytest_log_sha256": "88fd121f8609a45c5f2184d070f2b48ce3da59bef928307cff18742dc4dd8438",
+        "scenarios_jsonl_sha256": "3b5a88a52146ded816f7d2a0568eeb20324eaa44e87718784a8ff13e67f25807"
+      },
+      "source": {
+        "runner": "scripts/run_injected_moveit_fail_closed.sh",
+        "runner_sha256": "70e16537ad717496658c14c422d076288c9f3614d4a78029724f4b6eaf67cf90",
+        "integration_test_sha256": "ba6a37e5202b896c62e94fb791cc47c27453fbe50f48ee7b41166dcf758592c6",
+        "adapter_sha256": "ebaedbc4ad47d58c3abe6dbfb10b28bfde515e4a1a3626354806355615d8ae62"
+      },
+      "observed": {
+        "pytest_tests": 8,
+        "pytest_failures": 0,
+        "pytest_errors": 0,
+        "pytest_skipped": 0,
+        "required_scenario_count": 11,
+        "required_scenario_verified_count": 11,
+        "accepted_goal_result_timeout_verified_injected": true,
+        "accepted_goal_result_future_timeout_verified_injected": true,
+        "strong_move_group_request_id_correlation_verified_injected": true,
+        "gate_delayed_goal_response_cancel_verified_injected": true,
+        "result_future_request_exception_is_fail_closed": true,
+        "terminal_unconfirmed_is_fail_closed": true,
+        "success_after_cancel_is_fail_closed": true,
+        "old_generation_late_canceled_terminal_isolated": true
+      },
+      "claim_boundary": {
+        "injected_runtime_only": true,
+        "accepted_goal_result_timeout_verified": false,
+        "accepted_goal_result_future_timeout_verified": false,
+        "strong_move_group_request_id_correlation": false,
+        "accepted_goal_result_timeout_verified_real": false,
+        "strong_move_group_request_id_correlation_verified_real": false,
+        "result_future_none_path_directly_tested": false,
+        "old_generation_late_success_directly_tested": false,
+        "real_move_group_runtime_health": false,
+        "controller_evidence": false,
+        "simulation_physics_evidence": false,
+        "hardware_evidence": false
+      }
+    },
+    {
+      "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+      "evidence_variant": "V2_ACCEPTED_RESULT_TIMEOUT_CORRELATION_AND_GATE_RESULT_FAILURES",
+      "status": "PASS",
+      "runtime": {
+        "in_process_dependency_injection": true,
+        "fake_move_group_action_server": true,
+        "fake_typed_gate_action_server": true,
+        "real_move_group_process": false,
+        "os_process_signal_injection": false,
+        "controller": false,
+        "simulation_physics": false,
+        "hardware": false,
+        "physical_robot": false
+      },
+      "artifact": {
+        "observation": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v2-runtime.json",
+        "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T022939P10",
+        "summary_sha256": "47a6d7194589b83c3efc67613b37aa8a4568a6a1075f711801f2965a57b823b1",
+        "junit_sha256": "d6547c72a0eecab4e536d54d558f086fcf1398fdcdeec36d0e21e78561ba24f5",
+        "pytest_log_sha256": "ed49f7a1f5ef55b1d99a0398acdd028e1267f6eb1b98a497dd968163fa1413d8",
+        "scenarios_jsonl_sha256": "b1862752eafb44ef9cc42fb56e2c11d3ced9fadd302cd3e51ce13a8d962c5389",
+        "start_txt_sha256": "5cd1ad960b11da45a673a0874d212b9bf2942235e9f86680970720e28b03aae9",
+        "end_txt_sha256": "21b3027eb7cff5198e5c0adc3a8be81e89b7603c54f1bbc8a8aa3d1c51406170"
+      },
+      "source": {
+        "runner": "scripts/run_injected_moveit_fail_closed.sh",
+        "runner_sha256": "4458fd4c384313d3990bf57d07da86eb1fa09589ca41cdb2169863dc7d62af3e",
+        "integration_test_sha256": "d1b21f86b2a7dd4c18feb7d4de172c05995a50a6b365d61efd5fa9d36003a6e5",
+        "adapter_sha256": "477bb7b95b41f5019e60020d6d7e6830da2040104edc5de508d383f5a4124b4d"
+      },
+      "observed": {
+        "pytest_tests": 10,
+        "pytest_failures": 0,
+        "pytest_errors": 0,
+        "pytest_skipped": 0,
+        "jsonl_record_count": 10,
+        "required_scenario_count": 13,
+        "required_scenario_verified_count": 13,
+        "validation_error_count": 0,
+        "accepted_goal_result_timeout_verified_injected": true,
+        "accepted_goal_result_future_timeout_verified_injected": true,
+        "strong_move_group_request_id_correlation_verified_injected": true,
+        "gate_delayed_goal_response_cancel_verified_injected": true,
+        "gate_result_future_unavailable_verified_injected": true,
+        "gate_result_exception_verified_injected": true,
+        "old_generation_late_canceled_terminal_isolated": true
+      },
+      "claim_boundary": {
+        "in_process_fake": true,
+        "injected_runtime_only": true,
+        "accepted_goal_result_timeout_verified": false,
+        "accepted_goal_result_future_timeout_verified": false,
+        "strong_move_group_request_id_correlation": false,
+        "accepted_goal_result_timeout_verified_real": false,
+        "accepted_goal_result_future_timeout_verified_real": false,
+        "strong_move_group_request_id_correlation_verified_real": false,
+        "gate_delayed_goal_response_cancel_verified_real": false,
+        "gate_result_future_unavailable_verified_real": false,
+        "gate_result_exception_verified_real": false,
+        "gate_result_future_none_directly_tested": true,
+        "gate_result_exception_directly_tested": true,
+        "move_group_result_future_none_path_directly_tested": false,
+        "move_group_result_future_request_exception_directly_tested": true,
+        "old_generation_late_success_directly_tested": false,
+        "real_move_group_runtime_health": false,
+        "controller_evidence": false,
+        "simulation_physics_evidence": false,
+        "hardware_evidence": false
+      }
+    },
+    {
+      "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+      "evidence_variant": "V3_ACCEPTED_RESULT_TIMEOUT_CORRELATION_AND_GATE_RESULT_FAILURES",
+      "status": "PASS",
+      "runtime": {
+        "in_process_dependency_injection": true,
+        "fake_move_group_action_server": true,
+        "fake_typed_gate_action_server": true,
+        "real_move_group_process": false,
+        "os_process_signal_injection": false,
+        "controller": false,
+        "simulation_physics": false,
+        "hardware": false,
+        "physical_robot": false
+      },
+      "artifact": {
+        "observation": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v3-runtime.json",
+        "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T023710P11",
+        "summary_sha256": "5499d45ac65362d1ee65efb6503d33f3e86f070a5e74fa219e3032d534801da4",
+        "junit_sha256": "27e649f07b8e2ba324cdfd733097b1951d5f3dc5069697a3e028eb42f15a6253",
+        "pytest_log_sha256": "ad4ba48a2e6ddb5e86eb22807d48e126a1a158110fb3f4e709f6b71e7af09f9d",
+        "scenarios_jsonl_sha256": "c4c42ebf75d3d3bd0a14a4e2c8c3a50231588bcf2365ebb521ac95add909ba13",
+        "start_txt_sha256": "5f8c2c5960c878998772d5f111281433d69165cc6fb8ec537dbe8ad02ac6f767",
+        "end_txt_sha256": "0bfab2401e2447e0c6910b7c893be1db75c819153b71193ea088172428f393c8"
+      },
+      "source": {
+        "runner": "scripts/run_injected_moveit_fail_closed.sh",
+        "runner_sha256": "4458fd4c384313d3990bf57d07da86eb1fa09589ca41cdb2169863dc7d62af3e",
+        "integration_test_sha256": "d1b21f86b2a7dd4c18feb7d4de172c05995a50a6b365d61efd5fa9d36003a6e5",
+        "adapter_sha256": "065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672"
+      },
+      "observed": {
+        "pytest_tests": 10,
+        "pytest_failures": 0,
+        "pytest_errors": 0,
+        "pytest_skipped": 0,
+        "jsonl_record_count": 10,
+        "required_scenario_count": 13,
+        "required_scenario_verified_count": 13,
+        "validation_error_count": 0,
+        "accepted_goal_result_timeout_verified_injected": true,
+        "accepted_goal_result_future_timeout_verified_injected": true,
+        "strong_move_group_request_id_correlation_verified_injected": true,
+        "gate_delayed_goal_response_cancel_verified_injected": true,
+        "gate_result_future_unavailable_verified_injected": true,
+        "gate_result_exception_verified_injected": true,
+        "old_generation_late_canceled_terminal_isolated": true
+      },
+      "code_state": {
+        "additional_fixes": [
+          "duplicate gate status publication",
+          "duplicate cancel request",
+          "gate result/cancel seam",
+          "malformed cancel fail-closed"
+        ],
+        "direct_artifact_claims_limited_to_runner_scenarios": true
+      },
+      "claim_boundary": {
+        "in_process_fake": true,
+        "injected_runtime_only": true,
+        "accepted_goal_result_timeout_verified": false,
+        "accepted_goal_result_future_timeout_verified": false,
+        "strong_move_group_request_id_correlation": false,
+        "accepted_goal_result_timeout_verified_injected": true,
+        "accepted_goal_result_future_timeout_verified_injected": true,
+        "strong_move_group_request_id_correlation_verified_injected": true,
+        "gate_delayed_goal_response_cancel_verified_injected": true,
+        "gate_result_future_unavailable_verified_injected": true,
+        "gate_result_exception_verified_injected": true,
+        "accepted_goal_result_timeout_verified_real": false,
+        "accepted_goal_result_future_timeout_verified_real": false,
+        "strong_move_group_request_id_correlation_verified_real": false,
+        "gate_delayed_goal_response_cancel_verified_real": false,
+        "gate_result_future_unavailable_verified_real": false,
+        "gate_result_exception_verified_real": false,
+        "gate_result_future_none_directly_tested": true,
+        "gate_result_exception_directly_tested": true,
+        "move_group_result_future_none_path_directly_tested": false,
+        "move_group_result_future_request_exception_directly_tested": true,
+        "old_generation_late_success_directly_tested": false,
+        "old_generation_late_canceled_terminal_isolated": true,
+        "real_move_group_runtime_health": false,
+        "controller_evidence": false,
+        "simulation_physics_evidence": false,
+        "hardware_evidence": false
+      }
+    },
+    {
+      "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+      "evidence_variant": "V4_RESULT_FUTURE_UNAVAILABLE_AND_OLD_GENERATION_LATE_SUCCESS",
+      "status": "PASS",
+      "current": true,
+      "runtime": {
+        "in_process_dependency_injection": true,
+        "in_process_fake": true,
+        "fake_move_group_action_server": true,
+        "fake_typed_gate_action_server": true,
+        "real_move_group_process": false,
+        "os_process_signal_injection": false,
+        "controller": false,
+        "simulation_physics": false,
+        "hardware": false,
+        "physical_robot": false
+      },
+      "artifact": {
+        "observation": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json",
+        "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d",
+        "summary_sha256": "11aefd9dbc2ead97b7445e35bf38e9df6cf9df8581e022aa9a1f977f99e8492d",
+        "junit_sha256": "b1565f63afe8759e0c6b3313ec7248ac0858763fbdcb0dad59b44cf1682385ec",
+        "pytest_log_sha256": "fd762f3022eed4ff751d9663899773eedef7525321375d83167a138005e827e2",
+        "scenarios_jsonl_sha256": "b4dcdc675bb174c3f96edcf8e2d9aef5144bca0bfa4202361ab2d8bbaa5a19a4",
+        "start_txt_sha256": "7bf2ebaa853dd06de11449a722729d0c2a4b90dad13fd77ad373edeb2b94564c",
+        "end_txt_sha256": "6c3941628ef71009fe5ec3887b6630faf8ef855552b85200a79172db98a7b113"
+      },
+      "source": {
+        "adapter": {
+          "path": "ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+          "sha256": "065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672",
+          "line_count": 3243
+        },
+        "integration_test": {
+          "path": "ros_ws/src/edgegrasp_moveit_adapter/test/test_moveit_adapter_integration.py",
+          "sha256": "c6954f1fa18715f523833da30312790498c8c9c0f6fb73b462d0b71d5a20f54f",
+          "line_count": 2604
+        },
+        "runner": {
+          "path": "scripts/run_injected_moveit_fail_closed.sh",
+          "sha256": "6f4e613157cea3dd39d130de1b1a5540d79f6754b57bd1dcd28bb476bb660333",
+          "line_count": 2297
+        }
+      },
+      "observed": {
+        "pytest_tests": 12,
+        "pytest_failures": 0,
+        "pytest_errors": 0,
+        "pytest_skipped": 0,
+        "jsonl_record_count": 12,
+        "required_scenario_count": 15,
+        "required_scenario_present_count": 15,
+        "required_scenario_verified_count": 15,
+        "validation_error_count": 0,
+        "validation_errors": [],
+        "accepted_goal_result_timeout_verified_injected": true,
+        "accepted_goal_result_future_timeout_verified_injected": true,
+        "strong_move_group_request_id_correlation_verified_injected": true,
+        "gate_delayed_goal_response_cancel_verified_injected": true,
+        "gate_result_future_unavailable_verified_injected": true,
+        "gate_result_exception_verified_injected": true,
+        "move_group_result_future_unavailable_verified_injected": true,
+        "old_generation_late_success_isolation_verified_injected": true
+      },
+      "claim_boundary": {
+        "in_process_fake": true,
+        "injected_runtime_only": true,
+        "accepted_goal_result_timeout_verified": false,
+        "accepted_goal_result_future_timeout_verified": false,
+        "strong_move_group_request_id_correlation": false,
+        "accepted_goal_result_timeout_verified_real": false,
+        "accepted_goal_result_future_timeout_verified_real": false,
+        "strong_move_group_request_id_correlation_verified_real": false,
+        "gate_delayed_goal_response_cancel_verified_real": false,
+        "gate_result_future_unavailable_verified_real": false,
+        "gate_result_exception_verified_real": false,
+        "move_group_result_future_none_path_directly_tested": true,
+        "move_group_result_future_none_via_monkeypatched_adapter_seam": true,
+        "real_client_goal_handle_get_result_async_none_directly_tested": false,
+        "move_group_result_future_request_exception_directly_tested": true,
+        "old_generation_late_success_directly_tested": true,
+        "real_move_group_runtime_health": false,
+        "controller_evidence": false,
+        "simulation_physics_evidence": false,
+        "hardware_evidence": false
+      },
+      "lineage": {
+        "supersedes": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v3-runtime.json",
+        "excluded_development_artifacts": [
+          {
+            "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T120552P12",
+            "status": "FAIL",
+            "reason": "validator-only old-generation late-success ledger completeness failure; not positive evidence"
+          },
+          {
+            "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T120759P12b",
+            "status": "FAIL",
+            "reason": "validator-only old-generation late-success ledger completeness failure; not positive evidence"
+          }
+        ]
       }
     },
     {

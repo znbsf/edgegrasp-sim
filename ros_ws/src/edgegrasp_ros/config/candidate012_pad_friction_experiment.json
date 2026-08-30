@@ -14,7 +14,7 @@
     "scene_filename": "scene.json",
     "scene_sha256": "0773b0e888481e69ae93e1898bdfe2805f6b83e1f80f545635519155dcfc4a33",
     "gazebo_world_filename": "table_cube.sdf",
-    "gazebo_world_sha256": "1b690a817a34e380276dc7ea99c7f44e48690fab02418e2f81485f0cfb879f58",
+    "gazebo_world_sha256": "8a4b436cd4863a0801602d15bfafebecaadfbe104d4b7db93e4a5f33415bb4c4",
     "collision_proxy_filename": "so101_collision_proxies.json",
     "collision_proxy_sha256": "1f0cc4f69621040f871d3503dbec490be2e565b4ae92855fd562b395a736c98f",
     "target_id": "target_cube",

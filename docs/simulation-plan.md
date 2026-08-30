@@ -15,18 +15,18 @@ This project uses five non-interchangeable states:
 - **Hardware-only**: simulation cannot establish the claim.
 
 Snapshot on 2026-08-30. The core and simulator counts below remain from the
-2026-08-29 snapshot; the 2026-08-30 addition is limited to the in-process
-fail-closed artifact in the MoveIt matrix:
+2026-08-29 snapshot; the 2026-08-30 additions are the P12d in-process
+fail-closed artifact and its package-scoped verification:
 
 | Capability | Status | Defensible claim |
 | --- | --- | --- |
-| Target model, predictor, state machine, safety/controller contracts, mock backend | Verified locally | Pure Python plus project structure passed 332 current CPython 3.14.5 project tests; all three 100-run replay scenarios passed |
+| Target model, predictor, state machine, safety/controller contracts, mock backend | Verified locally | The current CPython 3.14.5 checkout collected 332 project tests: 330 passed and two optional pinned-local-checkout tests skipped because that checkout was absent; all three 100-run replay scenarios passed |
 | Core deterministic replay | Verified locally | 100 identical replays for each synthetic 0/20/40 mm/s scenario |
 | Four-stage grasp sequence | Runtime verified (scoped) | 60 dependency-free tests plus 45 Jazzy action/client tests pass; the fixed Candidate024 control produced 10 simulation-physics successes across 11 attempts, and three selected distinct target poses each completed one bounded typed run |
 | Standard Python install/import | Verified locally | The root package installs into a clean target and imports without source `PYTHONPATH` |
 | ROS packages and safety/trajectory gate | Runtime verified (scoped) | Jazzy colcon plus 49 ROS tests; typed target publication/correlation, selective PlanningScene/ACM confirmation, all-pad physics observation, and dependency-injected fake-clock/permission/watchdog/cancel paths observed |
 | Correlated target observation | Runtime verified (mock scope) | `TrackedTarget` and legacy `PointStamped` were emitted with matching stamp/point; target ID/domain/epoch were preserved |
-| MoveIt plan-only adapter | Runtime verified (scoped) | 23 Jazzy tests with fake IK/MoveGroup failure dependencies, plus separately classified real-process normal planning and historical-negative evidence |
+| MoveIt plan-only adapter | Runtime verified (scoped) | The P12d package artifact passed 34/34 `edgegrasp_moveit_adapter` tests within 129/129 selected tests across five packages; the focused in-process fake runner passed 12/12 tests, 12 JSONL records, and 15/15 required facets. Real-process evidence remains separately classified |
 | Gazebo SO-101 control | Runtime verified (scoped) | Three active controllers, six joint states, two FJT endpoints and gated results observed |
 | Pinned upstream MoveIt configuration | Static and runtime planning verified | The EdgeGrasp thin overlay uses pinned move_group, adds Pilz `ValidateSolution`, exposes two distal-pad links, disables direct MoveGroup execution, and completed candidate005 through the typed path |
 | Shared Gazebo/MoveIt table/cube scene | Runtime verified (scoped) | One contract generates the Gazebo SDF; MoveIt confirmed table+cube and a selective ACM that permits target contact only for two dedicated pad child links while keeping both parent links forbidden |
@@ -44,13 +44,43 @@ different questions:
 | Evidence class | Status | Defensible claim |
 | --- | --- | --- |
 | `REAL_MOVEGROUP_NORMAL` | `PASS_SCOPED` | The Candidate024 target matrix used the real MoveGroup process under the EdgeGrasp proxy overlay for normal `GetMotionPlan`; 20/20 outcomes matched, accepted trajectories were validated/discarded, and all execution counters were zero. This is normal planning only, not cancel health. |
-| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true` | The 2026-08-30 artifact `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525` ran two existing tests with an in-process fake MoveGroup ActionServer: 2 passed in 2.04 s. Explicit cancel and goal-response timeout stayed fail closed; the late accepted fake goal was canceled, and trajectory/fake-gate goals were zero. This is not real MoveGroup, controller, or hardware evidence. `accepted_goal_result_timeout_verified=false` remains unverified. |
+| `B · INJECTED_CANCEL_TIMEOUT` | `summary.status=PASS`, `overall_pass=true` | The current artifact `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d` passed 12 focused tests, 12 JSONL records, and 15/15 required facets with zero failures, errors, skips, and validator errors using in-process fake MoveGroup and typed-gate servers. It directly observes accepted result-future timeout, exact request/generation/UUID correlation, delayed MoveGroup and typed-gate goal-response cancellation, gate `get_result_async()->None` and result exception, terminal confirmation/non-confirmation, success-after-cancel fail-closed behavior, MoveGroup result-future-unavailable fail-closed behavior, old-generation late-CANCELED isolation, old-generation late-SUCCEEDED isolation, and explicit cancel. The MoveGroup unavailable-future case is injected at the adapter seam before a real ClientGoalHandle result future exists; it is not real MoveGroup evidence. These positives are injected-scoped only: `accepted_goal_result_timeout_verified_injected`, `accepted_goal_result_future_timeout_verified_injected`, `strong_move_group_request_id_correlation_verified_injected`, `gate_delayed_goal_response_cancel_verified_injected`, `gate_result_future_unavailable_verified_injected`, `gate_result_exception_verified_injected`, `move_group_result_future_unavailable_verified_injected`, and `old_generation_late_success_isolation_verified_injected`. Unqualified and real-process timeout/correlation fields remain false; this is not controller, simulation-physics, or hardware evidence. |
 | `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false` | The two frozen 2026-08-29 P2 runs kept `edgegrasp_fail_closed=true` and sent zero actual motion goals, but each real MoveGroup run recorded one SIGSEGV and exit `-11` in `PlanExecution::stop()`; `move_group_survived=false`. `accepted_goal_result_timeout_verified=false` and `strong_move_group_request_id_correlation=false` remain boundaries. Preserve only as historical negative evidence; do not reproduce OS-process interruption. |
 
 Exact P2 hashes and claim flags are in the
 [MoveIt evidence matrix](observations/2026-08-29-moveit-evidence-matrix.json).
-The 2026-08-30 safe artifact is a separate WSL result path in the table above;
-it must remain classified as in-process fake-dependency evidence.
+The current P12d safe artifact is a separate WSL result path in the table above;
+it must remain classified as in-process fake-dependency evidence. Its gate
+result-future coverage directly observes both `get_result_async()->None` and a
+result-request exception. Its MoveGroup unavailable-future regression is an
+adapter-seam injection, not a real MoveGroup ClientGoalHandle observation. The
+old-generation regressions directly cover both late CANCELED and late
+SUCCEEDED terminals without dispatching a stale result into the newer attempt.
+P12d retains P11's duplicate-emission, double-cancel, missing-UUID-future, and
+malformed-cancel fail-closed hardening; these are not separate direct-test
+claims. The package-scoped P12d verification completed 129/129 selected tests
+(`core=1`, `interfaces=0`, `ros=49`, `adapter=34`, `grasp_sequence=45`) at
+`/home/edgegrasp/ros2_ws/test_results/edgegrasp_all_packages_20260830T121257P12d`;
+the standalone adapter package result at
+`/home/edgegrasp/ros2_ws/test_results/edgegrasp_moveit_adapter_20260830T121050P12d`
+passed 34/34 after one stale reason assertion was corrected. The P11 artifact
+and its observation remain historical lineage.
+The earlier P8 hashes and scoped fields remain historical in the
+[P8 injected timeout/correlation observation](observations/2026-08-30-injected-moveit-result-timeout-correlation-runtime.json).
+The [P10 observation](observations/2026-08-30-injected-moveit-result-timeout-correlation-v2-runtime.json)
+also remains historical. The P11 hashes and observation remain historical. The
+current P12d source pins, artifact hashes, package-scoped verification, and
+claim fields are in the
+[P12d observation](observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json),
+validation report, and runbook.
+
+The current source-contract byte pins use the checked-in LF SDF bytes: Candidate012
+`table_cube.sdf` is
+`8a4b436cd4863a0801602d15bfafebecaadfbe104d4b7db93e4a5f33415bb4c4`, and
+Candidate024 `table_cube_candidate024_face_aligned.sdf` is
+`058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba`.
+Historical observations that captured CRLF working copies retain their original
+hashes and remain historical provenance, not current canonical-LF source pins.
 
 The dependency-free sequence core is now wrapped by `GraspSequence.action`.
 A task freezes one finite normalized approach orientation for collision routing

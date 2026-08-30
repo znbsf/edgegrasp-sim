@@ -1,0 +1,182 @@
+{
+  "schema_version": 2,
+  "observation_id": "injected_moveit_result_timeout_correlation_20260830T022939P10",
+  "recorded_date": "2026-08-30",
+  "timezone": "Asia/Shanghai",
+  "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+  "evidence_variant": "V2_ACCEPTED_RESULT_TIMEOUT_CORRELATION_AND_GATE_RESULT_FAILURES",
+  "status": "PASS",
+  "overall_pass": true,
+  "repository": {
+    "baseline_commit": "3e881e69210a5d87848028ac4780dbdbfa2ffc27",
+    "working_branch": "codex/injected-timeout-correlation",
+    "artifact_source_is_uncommitted_worktree": true
+  },
+  "environment": {
+    "host": "Ubuntu-24.04 WSL",
+    "ros_distribution": "Jazzy",
+    "runtime_mode": "in-process fake MoveGroup and typed-gate ActionServer dependency injection",
+    "physical_robot": false,
+    "remote_host_or_network_target": false
+  },
+  "scope": {
+    "in_process_fake": true,
+    "injected_runtime_only": true,
+    "real_move_group": false,
+    "controller": false,
+    "simulation_physics": false,
+    "hardware": false,
+    "os_process_signal_injection": false
+  },
+  "artifact": {
+    "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T022939P10",
+    "summary_json_sha256": "47a6d7194589b83c3efc67613b37aa8a4568a6a1075f711801f2965a57b823b1",
+    "junit_xml_sha256": "d6547c72a0eecab4e536d54d558f086fcf1398fdcdeec36d0e21e78561ba24f5",
+    "pytest_log_sha256": "ed49f7a1f5ef55b1d99a0398acdd028e1267f6eb1b98a497dd968163fa1413d8",
+    "scenarios_jsonl_sha256": "b1862752eafb44ef9cc42fb56e2c11d3ced9fadd302cd3e51ce13a8d962c5389",
+    "start_txt_sha256": "5cd1ad960b11da45a673a0874d212b9bf2942235e9f86680970720e28b03aae9",
+    "end_txt_sha256": "21b3027eb7cff5198e5c0adc3a8be81e89b7603c54f1bbc8a8aa3d1c51406170"
+  },
+  "source": {
+    "source_root": "/home/edgegrasp/ros2_ws/src/edgegrasp-sim",
+    "adapter": {
+      "relative_path": "ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+      "sha256": "477bb7b95b41f5019e60020d6d7e6830da2040104edc5de508d383f5a4124b4d",
+      "line_count": 3239
+    },
+    "integration_test": {
+      "relative_path": "ros_ws/src/edgegrasp_moveit_adapter/test/test_moveit_adapter_integration.py",
+      "sha256": "d1b21f86b2a7dd4c18feb7d4de172c05995a50a6b365d61efd5fa9d36003a6e5",
+      "line_count": 2293
+    },
+    "runner": {
+      "relative_path": "scripts/run_injected_moveit_fail_closed.sh",
+      "sha256": "4458fd4c384313d3990bf57d07da86eb1fa09589ca41cdb2169863dc7d62af3e",
+      "line_count": 1862
+    }
+  },
+  "capture": {
+    "started_at": "2026-08-30T02:29:45.815253993+08:00",
+    "ended_at": "2026-08-30T02:29:50.904413574+08:00",
+    "scenario_exit_code": 0,
+    "jsonl_record_count": 10,
+    "validator_error_count": 0
+  },
+  "pytest": {
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "test_cases": [
+      "test_injected_move_group_goal_response_timeout_cancels_late_accepted_goal",
+      "test_injected_move_group_accepted_result_timeout_is_correlated_and_fail_closed",
+      "test_move_group_result_future_request_exception_is_fail_closed",
+      "test_injected_gate_goal_response_timeout_cancels_late_accepted_gate_goal",
+      "test_gate_result_future_none_is_fail_closed_and_cancels_exact_goal",
+      "test_gate_result_exception_is_fail_closed_and_cancels_exact_goal",
+      "test_move_group_result_timeout_with_unconfirmed_terminal_stays_fail_closed",
+      "test_move_group_cancel_rejected_then_late_success_never_reaches_gate",
+      "test_move_group_late_result_from_old_generation_cannot_dispatch_same_id_retry",
+      "test_injected_explicit_cancel_cannot_publish_old_result"
+    ]
+  },
+  "required_scenarios": {
+    "count": 13,
+    "all_present": true,
+    "all_verified": true,
+    "names": [
+      "explicit_cancel",
+      "gate_goal_response_timeout",
+      "late_gate_response",
+      "late_move_group_send",
+      "move_group_accepted_result_timeout",
+      "move_group_goal_response_timeout",
+      "move_group_result_future_exception",
+      "move_group_terminal_confirmed",
+      "move_group_terminal_unconfirmed",
+      "old_generation_isolation",
+      "success_after_cancel_race",
+      "gate_result_future_unavailable",
+      "gate_result_exception"
+    ]
+  },
+  "verified": {
+    "accepted_goal_result_timeout_verified": false,
+    "accepted_goal_result_future_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false,
+    "accepted_goal_result_timeout_verified_injected": true,
+    "accepted_goal_result_future_timeout_verified_injected": true,
+    "strong_move_group_request_id_correlation_verified_injected": true,
+    "gate_delayed_goal_response_cancel_verified_injected": true,
+    "gate_result_future_unavailable_verified_injected": true,
+    "gate_result_exception_verified_injected": true,
+    "accepted_result_timeout_cancel_terminal_confirmed": true,
+    "accepted_result_timeout_terminal_unconfirmed_is_fail_closed": true,
+    "cancel_rejected_success_after_cancel_is_fail_closed": true,
+    "result_future_request_exception_is_fail_closed": true,
+    "gate_result_future_none_is_fail_closed": true,
+    "gate_result_exception_is_fail_closed": true,
+    "old_generation_late_canceled_terminal_isolated_from_new_attempt": true,
+    "explicit_plan_target_cancel_is_fail_closed": true,
+    "canonical_goal_uuid_format": "16-byte lowercase 32-character hex",
+    "move_group_join_fields": [
+      "request_id",
+      "attempt_generation",
+      "constraint_name",
+      "adapter move_group_goal_id",
+      "fake client_goal_id",
+      "fake server_goal_id"
+    ]
+  },
+  "claim_boundary": {
+    "in_process_fake": true,
+    "injected_runtime_only": true,
+    "real_move_group": false,
+    "controller": false,
+    "simulation_physics": false,
+    "hardware": false,
+    "accepted_goal_result_timeout_verified": false,
+    "accepted_goal_result_future_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false,
+    "accepted_goal_result_timeout_verified_injected": true,
+    "accepted_goal_result_future_timeout_verified_injected": true,
+    "strong_move_group_request_id_correlation_verified_injected": true,
+    "gate_delayed_goal_response_cancel_verified_injected": true,
+    "gate_result_future_unavailable_verified_injected": true,
+    "gate_result_exception_verified_injected": true,
+    "accepted_goal_result_timeout_verified_real": false,
+    "strong_move_group_request_id_correlation_verified_real": false,
+    "gate_delayed_goal_response_cancel_verified_real": false,
+    "gate_result_future_unavailable_verified_real": false,
+    "gate_result_exception_verified_real": false,
+    "gate_result_future_none_directly_tested": true,
+    "gate_result_exception_directly_tested": true,
+    "move_group_result_future_none_path_directly_tested": false,
+    "move_group_result_future_request_exception_directly_tested": true,
+    "old_generation_late_success_directly_tested": false,
+    "old_generation_late_canceled_terminal_isolated": true,
+    "real_move_group_runtime_health": false,
+    "controller_evidence": false,
+    "simulation_physics_evidence": false,
+    "hardware_evidence": false,
+    "interpretation": "Positive timeout, gate-failure, and identity claims are limited to this in-process fake dependency ledger. Gate result-future None and exception paths are directly exercised; the MoveGroup result-future None path is not directly exercised, while its request-exception path is. The old-generation regression observes only a late CANCELED terminal while a newer same-ID attempt succeeds; it does not directly observe an old-generation protocol SUCCEEDED terminal. Nothing here establishes real MoveGroup health, controller behavior, simulation physics, or hardware behavior."
+  },
+  "excluded_development_artifacts": [
+    {
+      "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T015121P4",
+      "status": "FAIL"
+    },
+    {
+      "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T015345P5",
+      "status": "INTERRUPTED_NO_PASS_SUMMARY"
+    },
+    {
+      "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T020757P6",
+      "status": "FAIL_VALIDATOR"
+    },
+    {
+      "directory": "/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T020930P7",
+      "status": "FAIL_VALIDATOR"
+    }
+  ]
+}

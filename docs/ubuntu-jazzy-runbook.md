@@ -24,7 +24,7 @@ claim:
 | Evidence class | Allowed procedure | Claim boundary |
 | --- | --- | --- |
 | `REAL_MOVEGROUP_NORMAL` | Real MoveGroup under the EdgeGrasp proxy overlay, normal `GetMotionPlan`, trajectory validation/discard, and explicit zero execution counters | Normal planning only; no cancel, timeout, late-result, or whole-process-health claim |
-| `B · INJECTED_CANCEL_TIMEOUT` | The existing ROS integration tests run through the in-process fake MoveGroup ActionServer or delayed future | The 2026-08-30 safe artifact has `summary.status=PASS`, `overall_pass=true`, and 2 passed in 2.04 s: explicit cancel and goal-response timeout, late accepted fake-goal cancellation, and zero trajectory/fake-gate goals. This is injected runtime only, never real MoveGroup, controller, or hardware evidence; accepted-goal result-future timeout remains unverified |
+| `B · INJECTED_CANCEL_TIMEOUT` | Twelve selected ROS integration tests run through in-process fake MoveGroup and typed-gate ActionServers | The current 2026-08-30 P12d artifact has `summary.status=PASS`, `overall_pass=true`, 12/12 tests, 12 JSONL records, and 15/15 validated facets, with zero failures/errors/skips and zero validator errors. It directly covers accepted result-future timeout, request/generation/UUID correlation, delayed MoveGroup and typed-gate goal-response cancellation, gate `get_result_async()->None` and result exception, terminal confirmation/non-confirmation, success-after-cancel fail-closed behavior, MoveGroup result-future unavailability, old-generation late-CANCELED and late-SUCCEEDED isolation, and explicit cancel. The MoveGroup unavailable-future case is an adapter-seam monkeypatch, not a real MoveGroup ClientGoalHandle observation. Positive fields remain injected-only; unqualified, real-process, controller, simulation-physics, and hardware flags remain false. This is never real MoveGroup, controller, simulation-physics, or hardware evidence |
 | `A · REAL_MOVEGROUP_CANCEL_RACE_NEGATIVE_EXISTING_ARTIFACT` | Read-only inspection of the two frozen 2026-08-29 P2 directories | Historical `summary.status=UPSTREAM_PROCESS_EXITED`, `overall_pass=false` evidence only: EdgeGrasp fail closed with zero actual motion goals, while each MoveGroup run recorded one SIGSEGV and exit `-11`; `move_group_survived=false`. Do not rerun OS-process interruption; request-ID correlation is not strong |
 
 The historical P2 hashes and outcome flags are in
@@ -1041,15 +1041,76 @@ bash scripts/run_injected_moveit_fail_closed.sh \
   /home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_UNIQUE
 ```
 
-This runs two existing integration tests without adding a test case. The
-validated 2026-08-30 artifact was
-`/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T001525`.
-Require `evidence_class=INJECTED_CANCEL_TIMEOUT`, `summary.status=PASS`, 2 passed in
-2.04 s, zero failures/errors/skips, explicit-cancel fail-closed, adapter reason
-`move_group_timeout` for the goal-response timeout, late accepted fake goal
-canceled, and zero trajectory-publication/fake-gate goals. It deliberately does
-not start a real MoveGroup process. Accepted-goal `result_future` timeout
-remains unverified.
+This runs twelve selected integration tests. The validated current artifact is
+`/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d`.
+Require `evidence_class=INJECTED_CANCEL_TIMEOUT`, `summary.status=PASS`,
+`overall_pass=true`, exactly 12 tests with zero failures/errors/skips, exactly
+12 JSONL records, all 15 required facets present and verified, and an empty
+`validation_errors` list.
+The accepted-result timeout chain must join one request ID, monotonically
+increasing attempt generation, `edgegrasp:<request_id>` constraint, and the
+same canonical lowercase 16-byte UUID at adapter/client/server endpoints.
+Cancel acknowledgement alone is insufficient: the exact result future must
+reach the expected terminal status, or the wrapper stays fail closed.
+
+The MoveGroup and gate goal-response timeout stages carry only their respective
+goal-response-pending field; no accepted-goal result future exists at those
+timeouts. A late accepted goal must be canceled and its exact CANCELED terminal
+must be observed. The gate-delay scenario may record one fake typed-gate goal
+and trajectory request, while the PlanTarget wrapper still reports
+`trajectory_dispatched=false`; this is not a controller dispatch. The gate
+result-future scenarios directly test both `get_result_async()->None` and a
+result-request exception. The MoveGroup result-future-unavailable regression
+injects a `None` return at the adapter seam before a real ClientGoalHandle result
+future exists; it is not real MoveGroup evidence. The old-generation regressions
+observe both late CANCELED and late SUCCEEDED terminals without allowing a stale
+result to dispatch in the newer attempt.
+
+Only the injected-scoped fields may be true:
+`accepted_goal_result_future_timeout_verified_injected`,
+`accepted_goal_result_timeout_verified_injected`,
+`strong_move_group_request_id_correlation_verified_injected`,
+`gate_delayed_goal_response_cancel_verified_injected`,
+`gate_result_future_unavailable_verified_injected`,
+`gate_result_exception_verified_injected`,
+`move_group_result_future_unavailable_verified_injected`, and
+`old_generation_late_success_isolation_verified_injected`. Preserve the
+unqualified `accepted_goal_result_timeout_verified=false`,
+`accepted_goal_result_future_timeout_verified=false`, and
+`strong_move_group_request_id_correlation=false`, plus every real/controller/
+simulation-physics/hardware field as false. The gate paths directly cover
+`get_result_async()->None` and a `result()` exception; the MoveGroup path covers
+both a result-future request exception and the adapter-seam unavailable-future
+regression, not a real MoveGroup `get_result_async()->None` observation. Its
+old-generation scenarios observe both late CANCELED and late SUCCEEDED
+terminals without allowing a stale result to dispatch in the newer attempt.
+The P8 artifact remains a historical 8-test/11-facet baseline, the P10 artifact
+remains a historical 10-test/13-facet result, and P11 remains a historical
+10-test/13-facet lineage artifact. The P12d source pins are adapter
+`065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672` (3,243
+lines), integration test
+`c6954f1fa18715f523833da30312790498c8c9c0f6fb73b462d0b71d5a20f54f` (2,604
+lines), and runner
+`6f4e613157cea3dd39d130de1b1a5540d79f6754b57bd1dcd28bb476bb660333` (2,297
+lines). The package-scoped P12d verification completed 129/129 selected tests
+(`core=1`, `interfaces=0`, `ros=49`, `adapter=34`, `grasp_sequence=45`) at
+`/home/edgegrasp/ros2_ws/test_results/edgegrasp_all_packages_20260830T121257P12d`;
+the standalone adapter result at
+`/home/edgegrasp/ros2_ws/test_results/edgegrasp_moveit_adapter_20260830T121050P12d`
+passed 34/34 after one stale reason assertion was corrected. Exact P12d
+artifact hashes and claim fields are recorded in the
+[P12d observation](observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json)
+and validation report; this
+runbook does not turn any injected artifact into real MoveGroup, controller,
+simulation-physics, or hardware evidence.
+
+The current source contracts pin the checked-in LF SDF bytes by raw SHA-256:
+Candidate012 `table_cube.sdf` is
+`8a4b436cd4863a0801602d15bfafebecaadfbe104d4b7db93e4a5f33415bb4c4`, and
+Candidate024 `table_cube_candidate024_face_aligned.sdf` is
+`058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba`.
+Historical observations may retain CRLF working-copy hashes; those remain
+historical provenance and are not current canonical-LF source pins.
 
 The two P2 directories remain read-only historical negative evidence:
 
