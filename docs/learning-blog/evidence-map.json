@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "snapshot": {
+    "date": "2026-08-30",
+    "timezone": "Asia/Shanghai",
+    "git_ref": "main",
+    "checkout_state": "detached_HEAD_at_main_commit",
+    "commit": "211bbced68c3b2f4819822388ec888fb20821f9d"
+  },
+  "policy": {
+    "source_priority": [
+      "machine_readable_observation_or_source_contract",
+      "current_validation_snapshot",
+      "current_readme_or_simulation_plan",
+      "historical_runbook_or_changelog",
+      "documentation_only_background"
+    ],
+    "never_promote_simulation_to_hardware": true,
+    "robot_ai_frontier_review_evidence_class": "documentation_only",
+    "historical_real_moveit_signal_harness_rerunnable": false
+  },
+  "evidence_classes": [
+    {
+      "id": "core_static",
+      "proves": "Dependency-free code, parsing, packaging, deterministic synthetic replay, or static contracts.",
+      "does_not_prove": "ROS runtime, planning, controller, physics, or hardware."
+    },
+    {
+      "id": "documentation_only",
+      "proves": "Background, terminology, or an upstream research and engineering context was documented.",
+      "does_not_prove": "Any EdgeGrasp runtime, controller, simulation-physics, or hardware behavior."
+    },
+    {
+      "id": "scoped_jazzy_package_validation",
+      "proves": "The named selected packages and their static, fake, and injected integration tests passed in the recorded Jazzy workspace.",
+      "does_not_prove": "Healthy real MoveGroup, controller motion or stop, simulation physics, or hardware."
+    },
+    {
+      "id": "real_movegroup_plan_only",
+      "proves": "Scoped normal planning responses with validated and discarded trajectories and explicit zero execution counters.",
+      "does_not_prove": "Cancel health, controller execution, contact, physics, or hardware."
+    },
+    {
+      "id": "real_movegroup_cancel_race_negative_existing_artifact",
+      "proves": "The frozen run observed EdgeGrasp fail closed with zero motion while the upstream real MoveGroup process exited.",
+      "does_not_prove": "Healthy cancellation, timeout handling, strong request-ID correlation, controller stop, physics, or hardware."
+    },
+    {
+      "id": "injected_fake",
+      "proves": "Named timeout, cancellation, correlation, and late-terminal contracts against in-process fake dependencies.",
+      "does_not_prove": "Healthy real MoveGroup, controller stop, simulation physics, or hardware."
+    },
+    {
+      "id": "controller",
+      "proves": "The named software or simulation FJT endpoint accepted a bounded command and returned the recorded terminal.",
+      "does_not_prove": "Physical motor motion or stop, collision safety, object retention, or hardware behavior."
+    },
+    {
+      "id": "simulation_physics",
+      "proves": "The named proxy Gazebo scene met the configured contact, lift, and retention contract.",
+      "does_not_prove": "Full collision fidelity, force closure, workspace generalization, repeatability beyond recorded runs, or hardware."
+    },
+    {
+      "id": "hardware",
+      "proves": "Nothing in the current repository snapshot; no hardware run exists.",
+      "does_not_prove": "Not applicable."
+    }
+  ],
+  "claims": [
+    {
+      "id": "core.current_windows",
+      "class": "core_static",
+      "value": {
+        "collected": 332,
+        "passed": 330,
+        "skipped": 2,
+        "replay_runs_per_scenario": 100
+      },
+      "sources": [
+        {
+          "path": "docs/validation-report.md",
+          "section": "0. Current final snapshot / Windows core, structure, replay, and syntax"
+        }
+      ],
+      "boundary": "The two skips are optional pinned-local-checkout tests; the earlier fully pinned snapshot was 332/332."
+    },
+    {
+      "id": "ros.p12d_packages",
+      "class": "scoped_jazzy_package_validation",
+      "value": {
+        "selected_tests_passed": 129,
+        "selected_tests_total": 129,
+        "edgegrasp_ros": 49,
+        "edgegrasp_moveit_adapter": 34,
+        "edgegrasp_grasp_sequence": 45
+      },
+      "sources": [
+        {
+          "path": "docs/validation-report.md",
+          "section": "0. Current final snapshot / Ubuntu 24.04 / ROS 2 Jazzy packages"
+        }
+      ],
+      "boundary": "Package tests do not expand real MoveGroup, controller, physics, or hardware claims."
+    },
+    {
+      "id": "moveit.normal_plan_only",
+      "class": "real_movegroup_plan_only",
+      "value": {
+        "matrix_outcomes_matched": 20,
+        "accepted_segments": 30,
+        "motion_side_effects": 0
+      },
+      "sources": [
+        {
+          "path": "docs/observations/2026-08-29-candidate024-target-matrix-plan-only.json"
+        }
+      ],
+      "boundary": "Normal GetMotionPlan only; no cancel or process-health claim."
+    },
+    {
+      "id": "moveit.p12d_injected",
+      "class": "injected_fake",
+      "value": {
+        "status": "PASS",
+        "overall_pass": true,
+        "tests": 12,
+        "jsonl_records": 12,
+        "required_facets_verified": 15,
+        "scope_boundaries": {
+          "accepted_goal_result_timeout_verified": false,
+          "accepted_goal_result_future_timeout_verified": false,
+          "strong_move_group_request_id_correlation": false,
+          "move_group_result_future_unavailable": "injected_only",
+          "old_generation_late_success_isolation": "injected_only"
+        }
+      },
+      "sources": [
+        {
+          "path": "docs/observations/2026-08-30-injected-moveit-result-timeout-correlation-v4-runtime.json"
+        }
+      ],
+      "boundary": "All positive timeout/correlation fields are injected-scoped; unqualified accepted_goal_result_timeout_verified and strong_move_group_request_id_correlation remain false."
+    },
+    {
+      "id": "moveit.p2_historical_negative",
+      "class": "real_movegroup_cancel_race_negative_existing_artifact",
+      "value": {
+        "status": "UPSTREAM_PROCESS_EXITED",
+        "overall_pass": false,
+        "edgegrasp_fail_closed": true,
+        "actual_motion_goals": 0,
+        "move_group_survived": false
+      },
+      "sources": [
+        {
+          "path": "docs/observations/2026-08-29-real-moveit-fail-closed-runtime.json"
+        },
+        {
+          "path": "docs/observations/2026-08-29-moveit-evidence-matrix.json"
+        }
+      ],
+      "boundary": "Historical negative evidence only; the absent OS-process interruption harness must not be recreated or rerun."
+    },
+    {
+      "id": "candidate024.fixed_control",
+      "class": "simulation_physics",
+      "value": {
+        "runtime_attempts": 11,
+        "physics_successes": 10,
+        "pre_motion_stale_safe_stop": 1,
+        "post_fix_successes": "9/9",
+        "retained_lift_mm_min": 28.858,
+        "retained_lift_mm_max": 29.128,
+        "retention_s": 0.5
+      },
+      "sources": [
+        {
+          "path": "docs/observations/2026-08-29-candidate024-face-aligned-runtime.json"
+        }
+      ],
+      "boundary": "One fixed proxy scene; not physics determinism, force closure, full collision fidelity, or hardware evidence."
+    },
+    {
+      "id": "candidate024.distinct_runtime",
+      "class": "simulation_physics",
+      "value": {
+        "selected_targets": 3,
+        "runs_per_target": 1,
+        "sequence_completions": 3,
+        "physics_observer_passes": 3,
+        "correlated_typed_terminals": 12
+      },
+      "sources": [
+        {
+          "path": "docs/observations/2026-08-29-candidate024-distinct-target-typed-runtime.json"
+        }
+      ],
+      "boundary": "Not per-target repeatability or a workspace-wide success rate."
+    },
+    {
+      "id": "sdf.current_lf_hashes",
+      "class": "core_static",
+      "value": {
+        "table_cube_sdf_sha256": "8a4b436cd4863a0801602d15bfafebecaadfbe104d4b7db93e4a5f33415bb4c4",
+        "candidate024_world_sha256": "058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba"
+      },
+      "sources": [
+        {
+          "path": ".gitattributes"
+        },
+        {
+          "path": "docs/validation-report.md",
+          "section": "0. Current final snapshot / MoveIt evidence classes and delivery addendum"
+        }
+      ],
+      "boundary": "Historical CRLF working-copy hashes remain provenance, not current canonical-LF source pins."
+    },
+    {
+      "id": "upstream.so101_source_audit",
+      "class": "documentation_only",
+      "value": {
+        "checked_at": "2026-08-31",
+        "timezone": "Asia/Shanghai",
+        "adoodevv_so101_ros2_ref": "0305e03ab54e64aae9263fcbf339622e654012f3",
+        "camera_disabled_urdf_srdf_mismatch": "source_confirmed",
+        "gripper_controller_readme_yaml_mismatch": "source_confirmed",
+        "runtime_fix_verified": false,
+        "public_issue_or_pr_created": false
+      },
+      "sources": [
+        {
+          "path": "docs/upstream-manifest.json"
+        },
+        {
+          "path": "docs/learning-blog/11-open-source-contribution.md"
+        }
+      ],
+      "boundary": "Dated source/static audit only. External primary links are recorded in chapter 11; no upstream runtime fix, maintainer confirmation, controller, simulation-physics, or hardware claim is made."
+    },
+    {
+      "id": "hardware.current",
+      "class": "hardware",
+      "value": {
+        "verified": false
+      },
+      "sources": [
+        {
+          "path": "README.md",
+          "section": "Current evidence"
+        }
+      ],
+      "boundary": "No real SO-101, calibration, EEPROM/udev, camera extrinsics, force calibration, thermal, stop, or pick/place evidence exists."
+    }
+  ]
+}

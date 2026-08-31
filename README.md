@@ -4,6 +4,11 @@ EdgeGrasp Sim is a safety-first SO-101 simulation portfolio project. It starts
 with a deterministic ROS-independent core, then adds a ROS 2 command gate and
 a MoveIt plan-only adapter without copying the upstream robot configuration.
 
+For a source-traceable, beginner-friendly Chinese walkthrough of the full learning
+path, see the [中文图文学习博客](docs/learning-blog/README.md). It keeps core/static,
+plan-only, injected fake, controller, simulation-physics, and hardware evidence
+in separate claim classes.
+
 ## Current evidence
 
 Snapshot date: 2026-08-30, Asia/Shanghai. Simulator runtime counts below remain
