@@ -45,15 +45,15 @@ def test_git_bash_or_host_bash_syntax_for_shell_scripts() -> None:
     bash = bash_executable()
     if bash is None:
         pytest.skip("bash is unavailable")
-    scripts = [str(path) for path in sorted(SCRIPTS.glob("*.sh"))]
-    result = subprocess.run(
-        [bash, "-n", *scripts],
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
+    for path in sorted(SCRIPTS.glob("*.sh")):
+        result = subprocess.run(
+            [bash, "-n", str(path)],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, f"{path.name}: {result.stdout}{result.stderr}"
 
     repeat_source = (SCRIPTS / "run_grasp_sequence_repetitions.sh").read_text(
         encoding="utf-8"

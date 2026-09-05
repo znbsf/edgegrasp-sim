@@ -588,10 +588,13 @@ Remaining gates, in order:
 3. If a per-pose repeatability claim is needed, pre-register a small repeat
    count and rerun the three selected poses; the current one-run-per-pose result
    must not be converted into a workspace success percentage.
-4. Investigate the move_group Ctrl-C shutdown segmentation fault and the
-   `use_camera=false` SRDF torso warnings.
-5. Begin a real follower-arm bring-up only with calibration, conservative
-   unloaded motion, explicit stop/release checks, and no autonomous grasp until
+4. Analyze existing logs and source for the move_group Ctrl-C shutdown
+   segmentation fault and `use_camera=false` SRDF torso warnings. Any new
+   runtime experiment needs its own defined scope and must preserve the
+   AGENTS.md prohibition on the frozen process-interruption experiments.
+5. Only after the user explicitly scopes hardware work, begin bring-up with
+   calibration, conservative unloaded motion, explicit stop/release checks,
+   and no autonomous grasp until
    the hardware frame/timestamp/gripper mapping is measured.
 
 The full command sequence is in
@@ -602,11 +605,8 @@ trajectory is not a successful grasp.
 
 ## 7. Hardware purchase gate
 
-The simulation gate for buying one SO-101 follower arm is now met. Candidate024
-has 10 scoped physics-success artifacts and 9/9 post-fix repeatability, so the
-highest-value next work is measuring the sim-to-real gap: calibration, gripper
-mapping/contact, stop/release behavior, and real timing. Purchase one follower
-only, start with conservative unloaded joint-space tests, and keep autonomous
-grasp disabled until those checks pass. Delay the camera until joint/gripper
-calibration is stable enough for frame/extrinsic validation, and delay an edge
-GPU until profiling demonstrates a deployment bottleneck.
+Hardware purchase remains a user decision. The scoped Candidate024 results
+support evaluating a hardware phase, not a purchase or hardware-access
+authorization. Before authorized bring-up, define calibration, conservative
+unloaded-motion, stop/release, frame/timestamp, and gripper-mapping checks.
+Keep autonomous grasp disabled until those hardware checks pass.

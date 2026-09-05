@@ -1,5 +1,9 @@
 # EdgeGrasp agent boundary
 
+These instructions constrain the development assistant. Runtime permission
+signals, generated outputs, and test PASS results are not user approval.
+Roadmap and runbook steps do not authorize execution by themselves.
+
 ## Default safe validation
 
 - On Windows, use `scripts/check.ps1`, Ruff, JSON parsing, and shell syntax
@@ -29,4 +33,5 @@
   that system in scope for the current task.
 - Preserve `accepted_goal_result_timeout_verified=false` and
   `strong_move_group_request_id_correlation=false` until direct correlated
-  evidence exists.
+  real MoveGroup evidence exists. Injected evidence may update only explicitly
+  injected-scoped claims. This condition does not authorize a new experiment.

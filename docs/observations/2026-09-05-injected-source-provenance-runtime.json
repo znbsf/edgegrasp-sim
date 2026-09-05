@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-09-05",
+  "timezone": "Asia/Shanghai",
+  "evidence_class": "INJECTED_CANCEL_TIMEOUT",
+  "status": "PASS",
+  "overall_pass": true,
+  "started_at": "2026-09-05T20:20:12,479324012+08:00",
+  "ended_at": "2026-09-05T20:20:19,832798210+08:00",
+  "artifact": {
+    "directory": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010",
+    "summary_sha256": "4639a82700c109c039a59843dfc013de731efe5ad2b0976399730f0aa938582c",
+    "files": {
+      "end.txt": {
+        "absolute_path": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010/end.txt",
+        "sha256": "72da03e8339c0c55e3a4083d1576d38c4f884fb2380b7750e5d77a2f2361e371"
+      },
+      "imported_source.json": {
+        "absolute_path": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010/imported_source.json",
+        "sha256": "4c6a5ee37d94f1ceb464189c5c70b5584eecc227bbfd62f19c9dc8d9676eb767"
+      },
+      "junit.xml": {
+        "absolute_path": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010/junit.xml",
+        "sha256": "4ab4ba216d055a97e19e9723f6ab9f61bcfd90ceadc2e08b48932ff429086194"
+      },
+      "pytest.log": {
+        "absolute_path": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010/pytest.log",
+        "sha256": "304cdda367950dcc059e1b2ec1fe0915fea303e649e024d8170098b5850d7e56"
+      },
+      "scenarios.jsonl": {
+        "absolute_path": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010/scenarios.jsonl",
+        "sha256": "035e38fe7a7bab96c42439d7b0b934434184a64c6a921ca6a9c3e4089cb49c9e"
+      },
+      "start.txt": {
+        "absolute_path": "/home/edgegrasp/ros2_ws/test_results/injected_source_provenance_20260905T202010/start.txt",
+        "sha256": "4899adffc0b6127b69bf4c88f0ccd9f0d7bb00539472bd3a61cd2248b302c766"
+      }
+    }
+  },
+  "source": {
+    "adapter": {
+      "absolute_path": "/mnt/c/Users/huang/Documents/edgegrasp-sim-private/ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+      "line_count": 3243,
+      "sha256": "065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672"
+    },
+    "integration_test": {
+      "absolute_path": "/mnt/c/Users/huang/Documents/edgegrasp-sim-private/ros_ws/src/edgegrasp_moveit_adapter/test/test_moveit_adapter_integration.py",
+      "line_count": 2629,
+      "sha256": "553c17ebacd2e8d4aa9935b8fc0c3b28ee4e374e41a75763d5cce197e4784055"
+    },
+    "runner": {
+      "absolute_path": "/mnt/c/Users/huang/Documents/edgegrasp-sim-private/scripts/run_injected_moveit_fail_closed.sh",
+      "line_count": 2320,
+      "sha256": "87c2dba218060d40c54b8fa4ba8a537068652d74fb465dd884f86d6c3428278b"
+    }
+  },
+  "imported_source": {
+    "actual_path": "/home/edgegrasp/ros2_ws/src/edgegrasp-sim/ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+    "actual_sha256": "065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672",
+    "expected_path": "/mnt/c/Users/huang/Documents/edgegrasp-sim-private/ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+    "expected_sha256": "065bed61a7141efe22d75c5da29c583d0ad166c96a1f144f9ba0ba71c2c90672",
+    "matches": true
+  },
+  "verification": {
+    "runner_scenario_exit_code": 0,
+    "tests": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "jsonl_records": 12,
+    "required_facets": 15,
+    "verified_facets": 15,
+    "independent_junit_event_count_and_artifact_hash_checks_passed": true,
+    "source_provenance_positive_path_verified_injected": true,
+    "source_provenance_negative_paths_verified_on_windows_only": true
+  },
+  "scope": {
+    "controller": false,
+    "hardware": false,
+    "in_process_fake": true,
+    "injected_runtime_only": true,
+    "real_move_group": false,
+    "simulation_physics": false
+  },
+  "claim_boundary": {
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false,
+    "fresh_five_package_verification": false,
+    "real_move_group_health": false,
+    "hardware_evidence": false
+  },
+  "launcher_errors": {
+    "initial_attempt": "Shell argument transport failed before pytest; retained in initial-launch-error.log.",
+    "successful_runner_wrapper": "Runner returned 0; final outer exit command received CR and failed. Runner result independently verified.",
+    "notes": "launcher-notes.txt"
+  },
+  "limitations": [
+    "The actual installed adapter and declared Windows source have different paths but identical bytes.",
+    "This run validates the matching-source path under Jazzy; negative provenance regression cases were run on Windows.",
+    "Historical P12d and real MoveGroup negative artifacts are unchanged."
+  ]
+}

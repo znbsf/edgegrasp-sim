@@ -1,14 +1,30 @@
 # EdgeGrasp validation report
 
-Current stable snapshot: 2026-08-30, Asia/Shanghai (`+08:00`). Simulator
-runtime counts remain from the 2026-08-29 snapshot; the current Windows,
-package-scoped, and in-process fail-closed results are recorded below.
+Baseline snapshot: 2026-08-30, Asia/Shanghai (`+08:00`). The 2026-09-05
+focused injected update is recorded separately below. Simulator runtime
+counts remain from 2026-08-29; baseline package results are historical.
 
 This report separates the ROS-independent core, EdgeGrasp ROS packages,
 pinned-upstream tests, scoped simulator observations, and unverified claims.
 An earlier success count is never reused as current evidence.
 
-## 0. Current final snapshot
+## 2026-09-05 focused injected source-provenance verification
+
+The [new observation](observations/2026-09-05-injected-source-provenance-runtime.json)
+records a fresh Ubuntu-24.04/Jazzy run of the prescribed in-process runner:
+12 tests passed in 6.00 s, 12 JSONL records, and all 15 required facets verified.
+The pytest process imported the installed adapter from the WSL workspace;
+its SHA-256 matched the declared Windows checkout source. JUnit, event count,
+and artifact hashes were independently checked. Missing/mismatched provenance
+regressions have Windows coverage; this Jazzy run exercised the matching path.
+
+The initial launcher failed before pytest; the successful runner returned 0,
+but its outer launcher exit command encountered a carriage return. Both launch
+errors are retained and described in the observation. This is injected evidence
+only, not a new five-package, real MoveGroup, controller, physics, or hardware
+verification. The historical snapshots below remain unchanged.
+
+## 0. Historical 2026-08-30 snapshot
 
 ### Windows core, structure, replay, and syntax
 

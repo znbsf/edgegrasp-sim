@@ -7,6 +7,7 @@ prove Gazebo physics, the upstream kinematics plugin, or physical stopping.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -38,7 +39,31 @@ from std_msgs.msg import Bool, String
 from std_srvs.srv import SetBool, Trigger
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
+from edgegrasp_moveit_adapter import adapter_node as adapter_module
 from edgegrasp_moveit_adapter.adapter_node import MoveItPlanOnlyAdapter
+
+
+@pytest.fixture(scope="session", autouse=True)
+def verify_injected_adapter_source():
+    """Bind formal evidence to the module imported by this pytest process."""
+    event_log = os.environ.get("EDGEGRASP_INJECTED_EVENT_LOG")
+    if not event_log:
+        return
+    expected = Path(os.environ["EDGEGRASP_INJECTED_ADAPTER_SOURCE"]).resolve()
+    actual = Path(adapter_module.__file__).resolve()
+    expected_hash = hashlib.sha256(expected.read_bytes()).hexdigest()
+    actual_hash = hashlib.sha256(actual.read_bytes()).hexdigest()
+    record = {
+        "expected_path": str(expected),
+        "actual_path": str(actual),
+        "expected_sha256": expected_hash,
+        "actual_sha256": actual_hash,
+        "matches": expected_hash == actual_hash,
+    }
+    Path(event_log).with_name("imported_source.json").write_text(
+        json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    assert record["matches"], f"Imported adapter differs from declared source: {record}"
 
 
 START = (0.0, 0.0, 0.0, 0.0, 0.0)

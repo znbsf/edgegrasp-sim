@@ -866,11 +866,11 @@ Candidate012 freezes that 0.40 rad geometry and changes only the generated
 finger-pad friction profile. Always run the no-execution matrix first:
 
 ```bash
-bash scripts/run_candidate012_plan_only.sh 70 /tmp/c012-implicit \
+bash scripts/run_candidate012_plan_only.sh 70 /home/edgegrasp/ros2_ws/test_results/c012-implicit-UNIQUE \
   candidate012-implicit-plan implicit_default
-bash scripts/run_candidate012_plan_only.sh 71 /tmp/c012-control-plan \
+bash scripts/run_candidate012_plan_only.sh 71 /home/edgegrasp/ros2_ws/test_results/c012-control-plan-UNIQUE \
   candidate012-control-plan candidate012_control_mu1p0
-bash scripts/run_candidate012_plan_only.sh 72 /tmp/c012-treatment-plan \
+bash scripts/run_candidate012_plan_only.sh 72 /home/edgegrasp/ros2_ws/test_results/c012-treatment-plan-UNIQUE \
   candidate012-treatment-plan candidate012_treatment_mu1p5
 ```
 
@@ -1041,8 +1041,14 @@ bash scripts/run_injected_moveit_fail_closed.sh \
   /home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_UNIQUE
 ```
 
-This runs twelve selected integration tests. The validated current artifact is
+This runs twelve selected integration tests. The historical P12d artifact is
 `/home/edgegrasp/ros2_ws/test_results/injected_moveit_fail_closed_20260830T121122P12d`.
+The runner now also requires `imported_source.json`, written in the pytest
+process, to match the imported adapter's hash to the declared source. Missing
+or mismatched provenance prevents PASS. The [2026-09-05 provenance run](observations/2026-09-05-injected-source-provenance-runtime.json)
+passed 12/12 tests and 15/15 facets under Jazzy with matching source hashes.
+Negative provenance cases have Windows regression coverage; P12d remains the
+historical five-package snapshot.
 Require `evidence_class=INJECTED_CANCEL_TIMEOUT`, `summary.status=PASS`,
 `overall_pass=true`, exactly 12 tests with zero failures/errors/skips, exactly
 12 JSONL records, all 15 required facets present and verified, and an empty

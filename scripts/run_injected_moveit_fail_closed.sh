@@ -46,6 +46,7 @@ mkdir -p -- "$artifact_dir"
 artifact_dir=$(CDPATH= cd -- "$artifact_dir" && pwd)
 event_log="$artifact_dir/scenarios.jsonl"
 export EDGEGRASP_INJECTED_EVENT_LOG="$event_log"
+export EDGEGRASP_INJECTED_ADAPTER_SOURCE="$adapter_file"
 
 set +u
 # shellcheck disable=SC1091
@@ -2150,7 +2151,28 @@ source_ok = all(item["sha256"] is not None for item in source.values())
 if not source_ok:
     errors.append("source hash collection is incomplete")
 
+# This record is written by pytest after importing the installed adapter.
+imported_source_path = artifact / "imported_source.json"
+imported_source = {}
+try:
+    imported_source = json.loads(imported_source_path.read_text(encoding="utf-8"))
+    if not isinstance(imported_source, dict):
+        raise ValueError("imported source record must be an object")
+    expected_hash = source["adapter"]["sha256"]
+    if not (
+        expected_hash
+        and imported_source.get("matches") is True
+        and imported_source.get("expected_sha256") == expected_hash
+        and imported_source.get("actual_sha256") == expected_hash
+        and imported_source.get("actual_path")
+    ):
+        raise ValueError("imported adapter does not match declared source")
+except (OSError, ValueError) as error:
+    source_ok = False
+    errors.append(f"imported source verification failed: {error}")
+
 artifact_paths = {
+    "imported_source.json": imported_source_path,
     "junit.xml": junit_path,
     "pytest.log": pytest_log,
     "scenarios.jsonl": event_log,
@@ -2206,6 +2228,7 @@ summary = {
         "hardware": False,
     },
     "source": source,
+    "imported_source": imported_source,
     "source_hashes": {name: value["sha256"] for name, value in source.items()},
     "artifact_hashes": artifact_hashes,
     "junit": {**junit_counts, "testcases": junit_names},
