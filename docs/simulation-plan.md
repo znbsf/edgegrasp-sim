@@ -1,5 +1,7 @@
 # EdgeGrasp / SO-101 simulation plan
 
+后续阶段与最新计划以 [项目路线图](roadmap.md) 为入口；本文件保留下面标注日期的历史仿真计划与证据。
+
 ## 1. Evidence vocabulary and current state
 
 This project uses five non-interchangeable states:
