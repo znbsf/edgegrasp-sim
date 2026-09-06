@@ -112,7 +112,38 @@ export ROS_DOMAIN_ID=$trial_domain_id
 export ROS_LOCALHOST_ONLY=1
 source /opt/ros/jazzy/setup.bash
 source /home/edgegrasp/ros2_ws/install/setup.bash
-cd /home/edgegrasp/ros2_ws/src/edgegrasp-sim
+trial_source_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+cd "$trial_source_root"
+export PYTHONPATH="$trial_source_root/src:$trial_source_root/ros_ws/src/edgegrasp_ros:$trial_source_root/ros_ws/src/edgegrasp_grasp_sequence:$trial_source_root/ros_ws/src/edgegrasp_moveit_adapter:${PYTHONPATH:-}"
+trial_velocity_scaling=${EDGEGRASP_RGBD_VELOCITY_SCALING:-0.1}
+case "$trial_velocity_scaling" in 0.1|0.15) ;; *) echo "unsupported velocity scaling" >&2; exit 2 ;; esac
+trial_rotation_bound=${EDGEGRASP_RGBD_ROTATION_BOUND_DEG:-0.0}
+case "$trial_rotation_bound" in 0.0|5.0|20.0|40.0) ;; *) echo "unsupported rotation bound" >&2; exit 2 ;; esac
+trial_camera=false
+trial_camera_view=${EDGEGRASP_RGBD_CAMERA_VIEW:-upstream}
+trial_camera_resolution=${EDGEGRASP_RGBD_CAMERA_RESOLUTION:-upstream}
+trial_camera_rate=${EDGEGRASP_RGBD_CAMERA_HZ:-50}
+case "$trial_camera_rate" in
+  20|30|50) ;;
+  *) echo "RGB-D camera Hz must be 20, 30 or 50" >&2; exit 2 ;;
+esac
+trial_gazebo_launch=(edgegrasp_ros edgegrasp_proxy_gazebo.launch.py)
+trial_camera_args=()
+trial_observer_wall_factor=2.0
+trial_motion_mode=static
+if [ "${EDGEGRASP_RGBD_TRIAL:-0}" = "1" ]; then
+  test -f "${EDGEGRASP_RGBD_PLAN_RESULT:-}" || { echo "RGB-D plan-only result required" >&2; exit 2; }
+  trial_camera=true
+  trial_observer_wall_factor=6.0
+  trial_motion_mode=${EDGEGRASP_RGBD_MOTION_MODE:-rigid_lift}
+  case "$trial_motion_mode" in
+    rigid_lift|planned_lift_region|measured_pad) ;;
+    *) echo "Unsupported RGB-D motion mode: $trial_motion_mode" >&2; exit 2 ;;
+  esac
+  trial_gazebo_launch=("$trial_source_root/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_gazebo.launch.py")
+  trial_camera_args=(camera_update_rate_hz:="$trial_camera_rate" camera_view:="$trial_camera_view" camera_resolution:="$trial_camera_resolution" launch_mock_target:=false)
+fi
+export GZ_PARTITION="edgegrasp_trial_${trial_domain_id}_${trial_task_id}"
 
 trial_installed_profile="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/${trial_grasp_geometry_filename}"
 trial_installed_candidate="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/${trial_candidate_filename}"
@@ -120,6 +151,22 @@ trial_installed_scene="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgeg
 trial_installed_world="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/worlds/${trial_world_filename}"
 trial_installed_material_contract="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/so101_pad_contact_materials.json"
 trial_installed_xacro="/home/edgegrasp/ros2_ws/install/so101_description/share/so101_description/urdf/robots/so101.urdf.xacro"
+if [ "$trial_camera" = "true" ]; then
+  python3 -c '
+import hashlib,json,sys,os
+from pathlib import Path
+r=json.loads(Path(sys.argv[1]).read_text())
+assert r["status"] == "PLAN_ONLY_PASS" and not r["execution_attempted"]
+assert r["config"]["recorded_rgbd_observation"] and len(r["segments"]) == 3
+assert all(r[key] == 0 for key in ("trajectory_publication_count", "execute_trajectory_goal_count", "fjt_goal_count"))
+assert all(row["validator_accepted"] for row in r["segments"])
+assert r["config"].get("velocity_scaling", 0.1) == float(os.environ.get("EDGEGRASP_RGBD_VELOCITY_SCALING", "0.1")), "velocity scaling mismatch"
+assert r["config"].get("acceleration_scaling", 0.1) == 0.1
+assert r["config"]["recorded_rgbd_observation"]["camera_view"] == os.environ.get("EDGEGRASP_RGBD_CAMERA_VIEW", "upstream"), "camera view mismatch"
+for key,path in zip(("candidate_sha256", "grasp_geometry_sha256", "scene_config_sha256"), sys.argv[2:]):
+    assert r["config"][key] == hashlib.sha256(Path(path).read_bytes()).hexdigest(), key
+' "$EDGEGRASP_RGBD_PLAN_RESULT" "$trial_installed_candidate" "$trial_installed_profile" "$trial_installed_scene"
+fi
 if [ ! -f "$trial_installed_profile" ]; then
   echo "installed grasp geometry profile is missing: $trial_installed_profile" >&2
   exit 2
@@ -185,8 +232,28 @@ if [ -e "$trial_artifact_dir" ]; then
 fi
 
 mkdir -p "$trial_artifact_dir"
+if [ "$trial_camera" = "true" ]; then
+  python3 -c '
+import hashlib,importlib,inspect,json,sys
+from pathlib import Path
+root=Path(sys.argv[1]).resolve()
+rows=[]
+for name in ("edgegrasp.action_readiness", "edgegrasp.camera", "edgegrasp.rgbd", "edgegrasp.target_motion", "edgegrasp.contact_material", "edgegrasp_ros.rgbd_target_publisher", "edgegrasp_grasp_sequence.node", "edgegrasp_grasp_sequence.trial_client"):
+    path=Path(inspect.getfile(importlib.import_module(name))).resolve()
+    assert path.is_relative_to(root), str(path)
+    rows.append(dict(module=name,path=str(path),sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
+print(json.dumps(rows,indent=2))
+' "$trial_source_root" > "$trial_artifact_dir/imported_rgbd_sources.json"
+fi
 printf '%s\n' "$(date --iso-8601=ns)" > "$trial_artifact_dir/start.txt"
 printf 'ROS_DOMAIN_ID=%s\n' "$ROS_DOMAIN_ID" >> "$trial_artifact_dir/start.txt"
+printf 'RGBD_CAMERA_RESOLUTION=%s\n' "$trial_camera_resolution" >> "$trial_artifact_dir/start.txt"
+printf 'VELOCITY_SCALING=%s\n' "$trial_velocity_scaling" >> "$trial_artifact_dir/start.txt"
+printf 'RGBD_ROTATION_BOUND_DEG=%s\n' "$trial_rotation_bound" >> "$trial_artifact_dir/start.txt"
+printf 'OBSERVED_TARGET_MOTION=%s\n' "$trial_motion_mode" >> "$trial_artifact_dir/start.txt"
+printf 'OBSERVER_WALL_FACTOR=%s\n' "$trial_observer_wall_factor" >> "$trial_artifact_dir/start.txt"
+printf 'RGBD_CAMERA_HZ=%s\n' "$trial_camera_rate" >> "$trial_artifact_dir/start.txt"
+printf 'RGBD_CAMERA_VIEW=%s\n' "$trial_camera_view" >> "$trial_artifact_dir/start.txt"
 printf 'GRASP_GEOMETRY_FILENAME=%s\n' "$trial_grasp_geometry_filename" >> "$trial_artifact_dir/start.txt"
 printf 'GRIPPER_CLOSED_RAD=%s\n' "$trial_gripper_closed_rad" >> "$trial_artifact_dir/start.txt"
 printf 'DERIVE_DESCEND_LIFT_FROM_PROFILE=%s\n' "$trial_derive_descend_lift" >> "$trial_artifact_dir/start.txt"
@@ -301,7 +368,7 @@ python3 scripts/generate_collision_proxy_urdf.py \
   --pad-contact-material-profile "$trial_pad_contact_material_profile" \
   --moving-pad-distal-extension-m "$trial_moving_pad_distal_extension_m" \
   --gripper-control-profile "$trial_gripper_control_profile" \
-  --use-camera false \
+  --use-camera "$trial_camera" --camera-view "$trial_camera_view" --camera-resolution "$trial_camera_resolution" --camera-update-rate-hz "$trial_camera_rate" \
   --output "$trial_artifact_dir/generated_proxy.urdf" \
   --report "$trial_artifact_dir/generated_proxy_report.json" \
   > "$trial_artifact_dir/generated_proxy_stdout.json"
@@ -316,8 +383,8 @@ python3 scripts/validate_pad_contact_material_sdf.py \
   > "$trial_artifact_dir/pad_contact_material_mapping_stdout.json"
 
 echo "STAGE launch_gazebo"
-launch_trial_group gazebo.log ros2 launch edgegrasp_ros \
-  edgegrasp_proxy_gazebo.launch.py use_camera:=false \
+launch_trial_group gazebo.log ros2 launch "${trial_gazebo_launch[@]}" observation_wall_factor:="$trial_observer_wall_factor" \
+  use_camera:="$trial_camera" "${trial_camera_args[@]}" \
   world_filename:="$trial_world_filename" \
   scene_config_filename:="$trial_scene_config_filename" \
   pad_contact_material_profile:="$trial_pad_contact_material_profile" \
@@ -328,6 +395,10 @@ launch_trial_group gazebo.log ros2 launch edgegrasp_ros \
   target_id:=target_cube \
   target_x_m:="$trial_target_x_m" \
   target_y_m:="$trial_target_y_m" target_z_m:="$trial_target_z_m"
+if [ "$trial_camera" = "true" ]; then
+  launch_trial_group perception.log python3 -m edgegrasp_ros.rgbd_target_publisher \
+    --ros-args -p use_sim_time:=true -p yaw_rad:=0.6500077341171558 -p max_rotation_deg:="$trial_rotation_bound"
+fi
 
 trial_ready=0
 for _ in $(seq 1 150); do
@@ -359,8 +430,7 @@ gazebo_server_log=$(find /home/edgegrasp/.gz/sim/log -mindepth 1 -maxdepth 1 \
 printf '%s\n' "$gazebo_server_log" > "$trial_artifact_dir/gazebo_server_log_path.txt"
 
 echo "STAGE launch_moveit_edgegrasp"
-launch_trial_group move_group.log ros2 launch edgegrasp_ros \
-  edgegrasp_proxy_move_group.launch.py robot_name:=so101 use_camera:=false \
+launch_trial_group move_group.log ros2 launch "$trial_source_root/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_move_group.launch.py" robot_name:=so101 use_camera:="$trial_camera" camera_view:="$trial_camera_view" camera_resolution:="$trial_camera_resolution" \
   use_gazebo:=true use_sim_time:=true use_rviz:=false \
   moving_pad_distal_extension_m:="$trial_moving_pad_distal_extension_m"
 launch_trial_group planning_scene.log ros2 launch edgegrasp_ros \
@@ -370,8 +440,10 @@ launch_trial_group planning_scene.log ros2 launch edgegrasp_ros \
 launch_trial_group adapter.log ros2 launch edgegrasp_moveit_adapter \
   moveit_adapter.launch.py use_sim_time:=true clock_domain:=ros_sim \
   planning_frame:=base_link future_skew_tolerance_ms:=1000.0
-launch_trial_group sequence.log ros2 launch edgegrasp_grasp_sequence \
-  grasp_sequence.launch.py use_sim_time:=true clock_domain:=ros_sim \
+launch_trial_group sequence.log ros2 launch \
+  "$trial_source_root/ros_ws/src/edgegrasp_grasp_sequence/launch/grasp_sequence.launch.py" \
+  use_sim_time:=true clock_domain:=ros_sim observed_target_motion:="$trial_motion_mode" \
+  observed_cube_geometry_profile:="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/$trial_grasp_geometry_filename" \
   clock_epoch:=0 target_frame:=base_link future_skew_tolerance_ms:=1000.0 \
   gripper_feedforward_effort_nm:="$trial_gripper_feedforward_effort_nm"
 
@@ -487,7 +559,7 @@ timeout 260s ros2 run edgegrasp_grasp_sequence grasp_trial_client --ros-args \
   -p planning_timeout_s:=2.0 -p sequence_timeout_s:=90.0 \
   -p physics_timeout_s:=100.0 \
   -p observation_timeout_s:="$trial_observation_timeout_s" \
-  -p velocity_scaling:=0.1 -p acceleration_scaling:=0.1 \
+  -p velocity_scaling:="$trial_velocity_scaling" -p acceleration_scaling:=0.1 \
   > "$trial_artifact_dir/trial.log" 2>&1
 trial_result_code=$?
 set -e

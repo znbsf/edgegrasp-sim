@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "status": "OPPOSITE_VIEW_APPROACH_DESCEND_PASS_CLIENT_WAIT_TIMEOUT",
+  "camera_view": "opposite_table_edge",
+  "capture": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_capture_20260906a",
+    "live_safety": {
+      "checks": {
+        "strictly_increasing_source": true,
+        "source_preserved_from_three_inputs": true,
+        "identity_preserved": true,
+        "receiver_observed_fresh_targets": true,
+        "permission_denied_after_source_expiry": true,
+        "cleaned_scoped_processes": true
+      },
+      "passed": true,
+      "pipeline_sha256": "48732d621b64145a8b657664546d189c7bbc23614602accf4ece24e7aa267d9b",
+      "observed_targets": 37,
+      "claim": "live_perception_and_permission_only",
+      "motion_requested": false,
+      "physics_grasp_verified": false
+    },
+    "spatial_passes": 9,
+    "samples": 10,
+    "selected_observation_sha256": "6a721e33684adbe1aedd17d14428824f1872c4e06793a2eb585aa77217a2bd52"
+  },
+  "plan": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_plan_20260906a",
+    "status": "PLAN_ONLY_PASS",
+    "result_sha256": "dd1847f6dfe43f211bd981122a2bde2d59cabbf694df677d50a8de12358c3bf4",
+    "motion_goal_count": 0,
+    "cleanup_zero": true
+  },
+  "runtime": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_trial_20260906a",
+    "trial_exit_code": 9,
+    "trial_log_sha256": "6bbaf80bfc01fb7e669f4814e49790c7e20d15199d08686219b09ed0027a0826",
+    "timeline_sha256": "2b36b116f342a1035a8cd421e5e778f1cce9f711113a252bdab5a7450117c002",
+    "mcap_sha256": "9ac3cd5e7e9ee92f3275d0394d6a758de183fca21a5bcc5bf88860b21921683c",
+    "offline_rgbd": {
+      "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+      "counts": {
+        "accepted": 885
+      },
+      "published_target_count": 883,
+      "last_published_source_ns": 28080000000,
+      "unmatched_final_triads": 2,
+      "motion_requested": false
+    },
+    "arm_terminals": [
+      {
+        "accepted": true,
+        "action_goal_status": 4,
+        "clock_domain": "ros_sim",
+        "clock_epoch": 0,
+        "command_id": "rgbd_opposite_a|approach|0",
+        "controller": "arm_controller",
+        "downstream_terminal_observed": true,
+        "event_stamp_ns": 21060000000,
+        "event_type": "arm_command_terminal",
+        "fjt_error_code": 0,
+        "fjt_error_string": "Goal successfully reached!",
+        "gate_accepted": true,
+        "gate_terminal": true,
+        "moveit_error_code": 1,
+        "phase": "APPROACH_EXEC",
+        "plan_action_goal_status": 4,
+        "reason": "trajectory_executed_through_gate",
+        "receive_ns": 21060000000,
+        "received_at_ns": 21060000000,
+        "schema_version": 1,
+        "sequence_no": 0,
+        "source_timestamp_ns": 13800000000,
+        "stage": "approach",
+        "stream": "sequence",
+        "success": true,
+        "target_id": "target_cube",
+        "task_id": "rgbd_opposite_a",
+        "time_ns": 21060000000,
+        "timeline_seq": 6,
+        "trajectory_digest": "1db8285442080045ed1ab98fed672b079e167a2bc5aec36d559e30d87487b20f"
+      },
+      {
+        "accepted": true,
+        "action_goal_status": 4,
+        "clock_domain": "ros_sim",
+        "clock_epoch": 0,
+        "command_id": "rgbd_opposite_a|descend|1",
+        "controller": "arm_controller",
+        "downstream_terminal_observed": true,
+        "event_stamp_ns": 24660000000,
+        "event_type": "arm_command_terminal",
+        "fjt_error_code": 0,
+        "fjt_error_string": "Goal successfully reached!",
+        "gate_accepted": true,
+        "gate_terminal": true,
+        "moveit_error_code": 1,
+        "phase": "DESCEND_EXEC",
+        "plan_action_goal_status": 4,
+        "reason": "trajectory_executed_through_gate",
+        "receive_ns": 24660000000,
+        "received_at_ns": 24660000000,
+        "schema_version": 1,
+        "sequence_no": 1,
+        "source_timestamp_ns": 21020000000,
+        "stage": "descend",
+        "stream": "sequence",
+        "success": true,
+        "target_id": "target_cube",
+        "task_id": "rgbd_opposite_a",
+        "time_ns": 24660000000,
+        "timeline_seq": 12,
+        "trajectory_digest": "ba54fd377615ea85f8eb56d7984d886cb902d176264f71f56fdc2dd531a3ba26"
+      }
+    ],
+    "sequence_terminal": [
+      {
+        "accepted": true,
+        "action_goal_status": 5,
+        "clock_domain": "ros_sim",
+        "clock_epoch": 0,
+        "command_id": "rgbd_opposite_a|descend|1",
+        "event_stamp_ns": 24731000000,
+        "event_type": "sequence_terminal",
+        "phase": "SAFE_STOP",
+        "physics_grasp_verified": false,
+        "reason": "stop_requested:client_cancel",
+        "receive_ns": 24732000000,
+        "received_at_ns": 24731000000,
+        "schema_version": 1,
+        "sequence_completed": false,
+        "source_timestamp_ns": 13800000000,
+        "stage": "terminal",
+        "stream": "sequence",
+        "target_id": "target_cube",
+        "task_id": "rgbd_opposite_a",
+        "time_ns": 24731000000,
+        "timeline_seq": 15,
+        "trajectory_digest": "ba54fd377615ea85f8eb56d7984d886cb902d176264f71f56fdc2dd531a3ba26"
+      }
+    ],
+    "contact": {
+      "first_contact_delta_ns": null,
+      "first_contact_order": "unilateral_or_none",
+      "first_fixed_source_timestamp_ns": null,
+      "first_moving_source_timestamp_ns": null,
+      "first_simultaneous_source_timestamp_ns": null,
+      "last_simultaneous_source_timestamp_ns": null,
+      "simultaneous_during_lift_start": false,
+      "simultaneous_span_ns": 0
+    },
+    "cube": {
+      "baseline_pose": {
+        "cube_x_m": 0.241084288413,
+        "cube_y_m": 0.129586660297,
+        "cube_z_m": 0.20499999990200096,
+        "receive_ns": 10411000000,
+        "stream": "cube_pose",
+        "time_ns": 10410000000
+      },
+      "final_pose": {
+        "cube_x_m": 0.241084288413,
+        "cube_y_m": 0.129586660297,
+        "cube_z_m": 0.20499999990200096,
+        "receive_ns": 28110000000,
+        "stream": "cube_pose",
+        "time_ns": 28110000000
+      },
+      "final_xy_drift_m": 0.0,
+      "peak_lift_m": 0.0,
+      "peak_pose": {
+        "cube_x_m": 0.241084288413,
+        "cube_y_m": 0.129586660297,
+        "cube_z_m": 0.20499999990200096,
+        "receive_ns": 10411000000,
+        "stream": "cube_pose",
+        "time_ns": 10410000000
+      }
+    },
+    "release_exit_code": 0,
+    "cleanup_zero": true
+  },
+  "claims": {
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  },
+  "next_step": "Investigate simulation throughput and client wall-time wait; do not change timeout or freshness thresholds based on this run alone."
+}

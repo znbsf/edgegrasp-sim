@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "status": "PLANNED_REGION_TRIAL_PERCEPTION_ROTATION_REFUSAL",
+  "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_region_trial_20260906a",
+  "trial_result": {
+    "all_gripper_tokens_observed": true,
+    "baseline_z_m": 0.20499999990200096,
+    "evidence_digest": "df83f9436cc4c58e14d4c9b2f5eb021cd08cc5236dbdbd7901dd8faf4a84a818",
+    "final_z_m": 0.20819107848283389,
+    "gripper_contact_count": 1733,
+    "gripper_contact_counts_by_token": {
+      "fixed_finger_pad": 413,
+      "moving_finger_pad": 1320
+    },
+    "gripper_contact_observed": true,
+    "gripper_contact_quality_by_token": {
+      "fixed_finger_pad": {
+        "max_abs_normal_force_n": 2.6089808986563834,
+        "max_force_magnitude_n": 2.728057564459562,
+        "max_penetration_depth_m": 7.731113138287164e-05
+      },
+      "moving_finger_pad": {
+        "max_abs_normal_force_n": 1.3226480789148423,
+        "max_force_magnitude_n": 1.6591468741617637,
+        "max_penetration_depth_m": 1.4973525277402894e-05
+      }
+    },
+    "gripper_contact_timing_by_token": {
+      "fixed_finger_pad": {
+        "first_source_timestamp_ns": 29809000000,
+        "last_source_timestamp_ns": 30383000000
+      },
+      "moving_finger_pad": {
+        "first_source_timestamp_ns": 28552000000,
+        "last_source_timestamp_ns": 30383000000
+      }
+    },
+    "gripper_effort": {
+      "at_sequence_completion": null,
+      "available": true,
+      "joint_name": "gripper",
+      "latest": -0.025,
+      "peak_abs": 0.025000000000000012,
+      "peak_abs_at_sequence_completion": null,
+      "sample_count": 1119
+    },
+    "last_terminal_command_id": "rgbd-region-control-a|close_gripper|2",
+    "last_trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4",
+    "lift_observed": false,
+    "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+    "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+    "peak_z_m": 0.20819107848283389,
+    "physics_grasp_verified": false,
+    "physics_phase": "FAULT",
+    "physics_reason": "observation_wall_timeout",
+    "physics_wrapper_status": 6,
+    "pose_sample_count": 1120,
+    "retention_observed": false,
+    "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+    "sequence_completed": false,
+    "sequence_completed_source_timestamp_ns": null,
+    "sequence_phase": "SAFE_STOP",
+    "sequence_reason": "target_source_stale",
+    "sequence_wrapper_status": 6,
+    "simultaneous_contact_quality": {
+      "max_min_abs_normal_force_n": 1.3226480789148423,
+      "max_min_force_magnitude_n": 1.6591468741617637,
+      "max_min_penetration_depth_m": 5.619169800470669e-07
+    },
+    "simultaneous_contact_timing": {
+      "first_source_timestamp_ns": 29809000000,
+      "last_source_timestamp_ns": 30383000000,
+      "last_source_timestamp_ns_at_sequence_completion": null,
+      "sample_count_at_sequence_completion": 0
+    },
+    "simultaneous_gripper_contact_sample_count": 413,
+    "table_contact_count": 8019,
+    "target_id": "target_cube",
+    "target_source_timestamp_ns": 19141000000,
+    "task_id": "rgbd-region-control-a",
+    "type": "grasp_trial_result"
+  },
+  "whole_bag_cube": {
+    "baseline_pose": {
+      "cube_x_m": 0.241084288413,
+      "cube_y_m": 0.129586660297,
+      "cube_z_m": 0.20499999990200096,
+      "receive_ns": 14490000000,
+      "stream": "cube_pose",
+      "time_ns": 14490000000
+    },
+    "final_pose": {
+      "cube_x_m": 0.23623721279190485,
+      "cube_y_m": 0.12837474950125083,
+      "cube_z_m": 0.21531907834000685,
+      "receive_ns": 39100000000,
+      "stream": "cube_pose",
+      "time_ns": 39100000000
+    },
+    "final_xy_drift_m": 0.004996285605674315,
+    "peak_lift_m": 0.010605717504454604,
+    "peak_pose": {
+      "cube_x_m": 0.2360863458239736,
+      "cube_y_m": 0.12841859140251569,
+      "cube_z_m": 0.21560571740645557,
+      "receive_ns": 30850000000,
+      "stream": "cube_pose",
+      "time_ns": 30850000000
+    }
+  },
+  "whole_bag_contact": {
+    "first_contact_delta_ns": 1257000000,
+    "first_contact_order": "moving_then_fixed",
+    "first_fixed_source_timestamp_ns": 29809000000,
+    "first_moving_source_timestamp_ns": 28552000000,
+    "first_simultaneous_source_timestamp_ns": 29809000000,
+    "last_simultaneous_source_timestamp_ns": 36932000000,
+    "simultaneous_during_lift_start": true,
+    "simultaneous_span_ns": 7123000000
+  },
+  "offline_summary": {
+    "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+    "counts": {
+      "accepted": 490,
+      "orientation_outside_declared_bound": 2,
+      "missing_orientation_face": 253
+    },
+    "published_target_count": 479,
+    "last_published_source_ns": 30625000000,
+    "unmatched_final_triads": 2,
+    "motion_requested": false
+  },
+  "offline_evaluation_summary": {
+    "claim": "offline_independent_spatial_evaluation_only",
+    "samples": 490,
+    "passed": 490,
+    "max_error_m": 0.00010560997172489163,
+    "interpolation_missing_count": 1,
+    "max_interpolated_error_m": 9.994000473289125e-06
+  },
+  "truth_near_first_refusal": [
+    {
+      "source_ns": 30620000000,
+      "rotation_from_initial_deg": 18.748683820142475,
+      "center_m": [
+        0.2391122048341632,
+        0.12968492797863762,
+        0.2117108520713142
+      ]
+    },
+    {
+      "source_ns": 30630000000,
+      "rotation_from_initial_deg": 19.226686937741817,
+      "center_m": [
+        0.23903401731859633,
+        0.1296460936044077,
+        0.21190323017647814
+      ]
+    },
+    {
+      "source_ns": 30640000000,
+      "rotation_from_initial_deg": 19.929820235534365,
+      "center_m": [
+        0.2389122098639921,
+        0.12958245531897084,
+        0.2120392176135666
+      ]
+    },
+    {
+      "source_ns": 30650000000,
+      "rotation_from_initial_deg": 20.37294310795941,
+      "center_m": [
+        0.23883698961846533,
+        0.1295476697777604,
+        0.21224410911852656
+      ]
+    },
+    {
+      "source_ns": 30660000000,
+      "rotation_from_initial_deg": 21.09213967060838,
+      "center_m": [
+        0.23870791878885422,
+        0.12948160645277762,
+        0.2123805104602555
+      ]
+    },
+    {
+      "source_ns": 30670000000,
+      "rotation_from_initial_deg": 21.52087375071406,
+      "center_m": [
+        0.2386326352485107,
+        0.1294471928763094,
+        0.21259575568169717
+      ]
+    },
+    {
+      "source_ns": 30680000000,
+      "rotation_from_initial_deg": 22.198691623825624,
+      "center_m": [
+        0.23850749220988124,
+        0.1293841148795434,
+        0.21275127374657588
+      ]
+    },
+    {
+      "source_ns": 30690000000,
+      "rotation_from_initial_deg": 22.832626185978185,
+      "center_m": [
+        0.23838976278628862,
+        0.12932522997554682,
+        0.2129022126195597
+      ]
+    },
+    {
+      "source_ns": 30700000000,
+      "rotation_from_initial_deg": 23.095410122088122,
+      "center_m": [
+        0.23834255750686498,
+        0.12929905774752024,
+        0.21317340720881728
+      ]
+    },
+    {
+      "source_ns": 30710000000,
+      "rotation_from_initial_deg": 23.568880108801412,
+      "center_m": [
+        0.23825260162448456,
+        0.12925310595600586,
+        0.21339183219724386
+      ]
+    },
+    {
+      "source_ns": 30720000000,
+      "rotation_from_initial_deg": 24.232741839034077,
+      "center_m": [
+        0.23812247286133278,
+        0.1291884264890285,
+        0.2135575039154144
+      ]
+    },
+    {
+      "source_ns": 30730000000,
+      "rotation_from_initial_deg": 25.073682325431704,
+      "center_m": [
+        0.23795416836818611,
+        0.1291073316996807,
+        0.21367834488365436
+      ]
+    }
+  ],
+  "last_status_transitions": [
+    {
+      "bag_receive_ns": 30674000000,
+      "status": "accepted:30625000000"
+    },
+    {
+      "bag_receive_ns": 30701000000,
+      "status": "rejected:orientation_outside_declared_bound"
+    },
+    {
+      "bag_receive_ns": 30773000000,
+      "status": "rejected:missing_orientation_face"
+    }
+  ],
+  "source_artifact_sha256": {
+    "mcap/mcap_0.mcap": "b3bbd6297e55f31adfc85ebde3401dfa92428b721278e71dd312e15cb354f99e",
+    "trial.log": "f02a6cc6f906dc9fa6a2214fdb762e45b11f347194da382ba36b834003164660",
+    "imported_rgbd_sources.json": "757dcde83fd4dd8ad459bacdf4c39bff1e446fde45b596a8005bb9c88f5cda21",
+    "offline_rgbd_rotation20/spatial_evaluation.json": "49c83ce5d18f019da70acb321bcde86e879a08d2a292f7d83e144c14ade9911f",
+    "perception_refusal_diagnostic_c.json": "06e0b5c25214161235f43fe82696457160e67823b5cbedde30a4b4efb7727614"
+  },
+  "release": {
+    "typed_exit_code": 1,
+    "fallback_exit_code": 0,
+    "fallback_status": "CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED"
+  },
+  "cleanup_zero": true,
+  "verification": {
+    "windows_passed": 341,
+    "windows_skipped": 3,
+    "ros_rgbd_checks_passed": 19,
+    "ruff": "PASS",
+    "shell_syntax": "PASS"
+  },
+  "claims": {
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  }
+}

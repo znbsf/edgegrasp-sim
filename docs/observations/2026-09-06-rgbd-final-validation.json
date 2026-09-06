@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "status": "THREE_DECLARED_POSITIONS_END_TO_END_SIMULATION_VERIFIED",
+  "scope": "one initially stationary 50 mm cube, fixed local Gazebo table, control and declared X +/-1 mm only; no hardware or workspace-wide claim",
+  "positions": [
+    {
+      "position": "control",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_measured_pad_trial_20260906b",
+      "retained_lift_mm": 28.846815861376886,
+      "result": {
+        "all_gripper_tokens_observed": true,
+        "baseline_z_m": 0.20499999990200096,
+        "evidence_digest": "b20bbe15418f666fb7e9a573af6343504ef4edb5413d3247c397634e428a85b8",
+        "final_z_m": 0.23384681576337785,
+        "gripper_contact_count": 4114,
+        "gripper_contact_counts_by_token": {
+          "fixed_finger_pad": 1612,
+          "moving_finger_pad": 2502
+        },
+        "gripper_contact_observed": true,
+        "gripper_contact_quality_by_token": {
+          "fixed_finger_pad": {
+            "max_abs_normal_force_n": 3.8106707572539404,
+            "max_force_magnitude_n": 4.268352489487249,
+            "max_penetration_depth_m": 7.453650630051024e-05
+          },
+          "moving_finger_pad": {
+            "max_abs_normal_force_n": 1.8446892441835536,
+            "max_force_magnitude_n": 2.4166856786257855,
+            "max_penetration_depth_m": 1.4568140746417518e-05
+          }
+        },
+        "gripper_contact_timing_by_token": {
+          "fixed_finger_pad": {
+            "first_source_timestamp_ns": 34593000000,
+            "last_source_timestamp_ns": 36896000000
+          },
+          "moving_finger_pad": {
+            "first_source_timestamp_ns": 33337000000,
+            "last_source_timestamp_ns": 36896000000
+          }
+        },
+        "gripper_effort": {
+          "at_sequence_completion": -0.025,
+          "available": true,
+          "joint_name": "gripper",
+          "latest": -0.025,
+          "peak_abs": 0.025000000000000015,
+          "peak_abs_at_sequence_completion": 0.025000000000000015,
+          "sample_count": 1282
+        },
+        "last_terminal_command_id": "rgbd-measured-pad-control-b|lift|3",
+        "last_trajectory_digest": "cba8a577a4a01aa4b0b3b270ab351bd62b35eb9e89745153f25c473ae54c8248",
+        "lift_observed": true,
+        "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+        "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+        "peak_z_m": 0.2338472850330586,
+        "physics_grasp_verified": true,
+        "physics_phase": "VERIFIED",
+        "physics_reason": "contact_lift_retention_verified",
+        "physics_wrapper_status": 4,
+        "pose_sample_count": 1283,
+        "retention_observed": true,
+        "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+        "sequence_completed": true,
+        "sequence_completed_source_timestamp_ns": 36400000000,
+        "sequence_phase": "COMPLETE",
+        "sequence_reason": "correlated_sequence_completed;physics_unverified",
+        "sequence_wrapper_status": 4,
+        "simultaneous_contact_quality": {
+          "max_min_abs_normal_force_n": 1.8446892441835536,
+          "max_min_force_magnitude_n": 2.4166856786257855,
+          "max_min_penetration_depth_m": 5.495396526063179e-07
+        },
+        "simultaneous_contact_timing": {
+          "first_source_timestamp_ns": 34593000000,
+          "last_source_timestamp_ns": 36896000000,
+          "last_source_timestamp_ns_at_sequence_completion": 36400000000,
+          "sample_count_at_sequence_completion": 1271
+        },
+        "simultaneous_gripper_contact_sample_count": 1612,
+        "table_contact_count": 8032,
+        "target_id": "target_cube",
+        "target_source_timestamp_ns": 24025000000,
+        "task_id": "rgbd-measured-pad-control-b",
+        "type": "grasp_trial_result"
+      },
+      "provenance": {
+        "claim": "recorded_atomic_source_provenance_only",
+        "total": 641,
+        "active": 387,
+        "active_three_inputs": true,
+        "active_tracked_centers_match": true,
+        "sources_strictly_increasing": true,
+        "active_interval_ns": [
+          24025000000,
+          36896000000
+        ]
+      },
+      "spatial": {
+        "claim": "offline_independent_spatial_evaluation_only",
+        "samples": 641,
+        "passed": 639,
+        "max_error_m": 0.0006537288411739509,
+        "interpolation_missing_count": 0,
+        "max_interpolated_error_m": 5.537128159564131e-05
+      },
+      "nearest_truth_failures": [
+        {
+          "source_ns": 34585000000,
+          "truth_source_ns": 34580000000,
+          "error_m": 0.0003078584458658217,
+          "passed": false,
+          "interpolated_error_m": 5.537128159564131e-05,
+          "bracketing_truth_ns": [
+            34580000000,
+            34590000000
+          ]
+        },
+        {
+          "source_ns": 39634000000,
+          "truth_source_ns": 39630000000,
+          "error_m": 0.0006537288411739509,
+          "passed": false,
+          "interpolated_error_m": 3.1259009369100934e-05,
+          "bracketing_truth_ns": [
+            39630000000,
+            39640000000
+          ]
+        }
+      ],
+      "cleanup_zero": true,
+      "typed_release_exit": 2,
+      "release_fallback": "CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED",
+      "readiness_wait_events": [],
+      "hashes": {
+        "trial.log": "e76cf2a6584c9ff00b3fb4c03387b4a28f2645b08ee1c6c76807f400650f2d94",
+        "live_rgbd_evaluation/provenance.json": "1b0cfe887a0a3d406e4c27ec937607691314cb14d3fdbd2e8ef0352e3f40f7b6",
+        "live_rgbd_evaluation/spatial_evaluation.json": "77be9576f00cdd6dc7834387d9c144f7e6743a4658c6d8562b6ad14e120d1e22",
+        "imported_rgbd_sources.json": "42834397b64d34dd367330de90d5e5ce1c91ed912e6b285873bad0808df8b0fc"
+      }
+    },
+    {
+      "position": "x_minus_1mm",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_minus_trial_20260906b",
+      "retained_lift_mm": 28.912698281664596,
+      "result": {
+        "all_gripper_tokens_observed": true,
+        "baseline_z_m": 0.20499999990200096,
+        "evidence_digest": "e921f3596c6a32a59181cb438e5fbb216ca4e4518535e68f38c0e643d34c637e",
+        "final_z_m": 0.23391269818366556,
+        "gripper_contact_count": 4156,
+        "gripper_contact_counts_by_token": {
+          "fixed_finger_pad": 1642,
+          "moving_finger_pad": 2514
+        },
+        "gripper_contact_observed": true,
+        "gripper_contact_quality_by_token": {
+          "fixed_finger_pad": {
+            "max_abs_normal_force_n": 3.674435009181409,
+            "max_force_magnitude_n": 4.111728362247355,
+            "max_penetration_depth_m": 4.301349115609296e-05
+          },
+          "moving_finger_pad": {
+            "max_abs_normal_force_n": 1.7950529684436523,
+            "max_force_magnitude_n": 2.353326104476133,
+            "max_penetration_depth_m": 1.833802999329573e-05
+          }
+        },
+        "gripper_contact_timing_by_token": {
+          "fixed_finger_pad": {
+            "first_source_timestamp_ns": 29602000000,
+            "last_source_timestamp_ns": 31915000000
+          },
+          "moving_finger_pad": {
+            "first_source_timestamp_ns": 28350000000,
+            "last_source_timestamp_ns": 31915000000
+          }
+        },
+        "gripper_effort": {
+          "at_sequence_completion": -0.025000000000000005,
+          "available": true,
+          "joint_name": "gripper",
+          "latest": -0.025,
+          "peak_abs": 0.025000000000000012,
+          "peak_abs_at_sequence_completion": 0.025000000000000012,
+          "sample_count": 1292
+        },
+        "last_terminal_command_id": "rgbd-x-minus-b|lift|3",
+        "last_trajectory_digest": "c22f2a9da8b97ede829d3bac4e9eb29d7aec82049fd7ae2823567ab0c269554a",
+        "lift_observed": true,
+        "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+        "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+        "peak_z_m": 0.23391269818366556,
+        "physics_grasp_verified": true,
+        "physics_phase": "VERIFIED",
+        "physics_reason": "contact_lift_retention_verified",
+        "physics_wrapper_status": 4,
+        "pose_sample_count": 1292,
+        "retention_observed": true,
+        "scene_digest": "d704c547e14c87a5f588c91a2669a0c9d6a93dc143f45e26ae56b5e1159cca48",
+        "sequence_completed": true,
+        "sequence_completed_source_timestamp_ns": 31417000000,
+        "sequence_phase": "COMPLETE",
+        "sequence_reason": "correlated_sequence_completed;physics_unverified",
+        "sequence_wrapper_status": 4,
+        "simultaneous_contact_quality": {
+          "max_min_abs_normal_force_n": 1.7950529684436523,
+          "max_min_force_magnitude_n": 2.353326104476133,
+          "max_min_penetration_depth_m": 5.047747776397438e-07
+        },
+        "simultaneous_contact_timing": {
+          "first_source_timestamp_ns": 29602000000,
+          "last_source_timestamp_ns": 31915000000,
+          "last_source_timestamp_ns_at_sequence_completion": 31417000000,
+          "sample_count_at_sequence_completion": 1297
+        },
+        "simultaneous_gripper_contact_sample_count": 1642,
+        "table_contact_count": 7992,
+        "target_id": "target_cube",
+        "target_source_timestamp_ns": 18943000000,
+        "task_id": "rgbd-x-minus-b",
+        "type": "grasp_trial_result"
+      },
+      "provenance": {
+        "claim": "recorded_atomic_source_provenance_only",
+        "total": 613,
+        "active": 386,
+        "active_three_inputs": true,
+        "active_tracked_centers_match": true,
+        "sources_strictly_increasing": true,
+        "active_interval_ns": [
+          18943000000,
+          31915000000
+        ]
+      },
+      "spatial": {
+        "claim": "offline_independent_spatial_evaluation_only",
+        "samples": 613,
+        "passed": 611,
+        "max_error_m": 0.0006366690123114465,
+        "interpolation_missing_count": 0,
+        "max_interpolated_error_m": 0.0001044775994493453
+      },
+      "nearest_truth_failures": [
+        {
+          "source_ns": 34783000000,
+          "truth_source_ns": 34780000000,
+          "error_m": 0.00028357908225832326,
+          "passed": false,
+          "interpolated_error_m": 1.5006253058822891e-05,
+          "bracketing_truth_ns": [
+            34780000000,
+            34790000000
+          ]
+        },
+        {
+          "source_ns": 34816000000,
+          "truth_source_ns": 34820000000,
+          "error_m": 0.0006366690123114465,
+          "passed": false,
+          "interpolated_error_m": 2.7480664014575747e-05,
+          "bracketing_truth_ns": [
+            34810000000,
+            34820000000
+          ]
+        }
+      ],
+      "cleanup_zero": true,
+      "typed_release_exit": 2,
+      "release_fallback": "CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED",
+      "readiness_wait_events": [],
+      "hashes": {
+        "trial.log": "2a54f1c825116ae0d4c5dfbd1061f750ab7864e8ca976fb0c306e650a25f4a66",
+        "live_rgbd_evaluation/provenance.json": "4ce4e2759c56cba1862b9e1fa1c7a64ac81187b8562f9841ee8e55164798df63",
+        "live_rgbd_evaluation/spatial_evaluation.json": "d43f496d60a7a4f4e8b5905eed04b305c3c8b2d928d42094a8f85ebedbea74d4",
+        "imported_rgbd_sources.json": "8770a290f8977b9105a4ca075a3abcb82f13482d1837b04f99874733b5a9a736"
+      }
+    },
+    {
+      "position": "x_plus_1mm",
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_plus_trial_20260906a",
+      "retained_lift_mm": 28.678231772200053,
+      "result": {
+        "all_gripper_tokens_observed": true,
+        "baseline_z_m": 0.20499999990200096,
+        "evidence_digest": "6fb6feba87adda8301e6c1c2eb5c7b718e6aa77ffdc74b7f1b7d32feb10767a0",
+        "final_z_m": 0.23367823167420101,
+        "gripper_contact_count": 4327,
+        "gripper_contact_counts_by_token": {
+          "fixed_finger_pad": 1715,
+          "moving_finger_pad": 2612
+        },
+        "gripper_contact_observed": true,
+        "gripper_contact_quality_by_token": {
+          "fixed_finger_pad": {
+            "max_abs_normal_force_n": 2.8054254056157575,
+            "max_force_magnitude_n": 3.2427987529872366,
+            "max_penetration_depth_m": 6.596033393891504e-05
+          },
+          "moving_finger_pad": {
+            "max_abs_normal_force_n": 1.3564821367706736,
+            "max_force_magnitude_n": 1.7425996159288013,
+            "max_penetration_depth_m": 1.1582180650435148e-05
+          }
+        },
+        "gripper_contact_timing_by_token": {
+          "fixed_finger_pad": {
+            "first_source_timestamp_ns": 39300000000,
+            "last_source_timestamp_ns": 41617000000
+          },
+          "moving_finger_pad": {
+            "first_source_timestamp_ns": 38040000000,
+            "last_source_timestamp_ns": 41617000000
+          }
+        },
+        "gripper_effort": {
+          "at_sequence_completion": -0.025,
+          "available": true,
+          "joint_name": "gripper",
+          "latest": -0.025000000000000005,
+          "peak_abs": 0.025000000000000012,
+          "peak_abs_at_sequence_completion": 0.025000000000000012,
+          "sample_count": 1286
+        },
+        "last_terminal_command_id": "rgbd-x-plus-a|lift|3",
+        "last_trajectory_digest": "b989aeb22792c721deeece96d598d6fb624520a0839769a454dc9efac90e7fd1",
+        "lift_observed": true,
+        "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+        "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+        "peak_z_m": 0.23367957133429557,
+        "physics_grasp_verified": true,
+        "physics_phase": "VERIFIED",
+        "physics_reason": "contact_lift_retention_verified",
+        "physics_wrapper_status": 4,
+        "pose_sample_count": 1286,
+        "retention_observed": true,
+        "scene_digest": "9b41c0a7e07d02a60e503d4956d8bbbe129aa2dd348892e92f8feae61d43fb60",
+        "sequence_completed": true,
+        "sequence_completed_source_timestamp_ns": 41119000000,
+        "sequence_phase": "COMPLETE",
+        "sequence_reason": "correlated_sequence_completed;physics_unverified",
+        "sequence_wrapper_status": 4,
+        "simultaneous_contact_quality": {
+          "max_min_abs_normal_force_n": 1.3564821367706736,
+          "max_min_force_magnitude_n": 1.7425996159288013,
+          "max_min_penetration_depth_m": 6.397279444514403e-07
+        },
+        "simultaneous_contact_timing": {
+          "first_source_timestamp_ns": 39300000000,
+          "last_source_timestamp_ns": 41617000000,
+          "last_source_timestamp_ns_at_sequence_completion": 41119000000,
+          "sample_count_at_sequence_completion": 1362
+        },
+        "simultaneous_gripper_contact_sample_count": 1715,
+        "table_contact_count": 8012,
+        "target_id": "target_cube",
+        "target_source_timestamp_ns": 28711000000,
+        "task_id": "rgbd-x-plus-a",
+        "type": "grasp_trial_result"
+      },
+      "provenance": {
+        "claim": "recorded_atomic_source_provenance_only",
+        "total": 567,
+        "active": 387,
+        "active_three_inputs": true,
+        "active_tracked_centers_match": true,
+        "sources_strictly_increasing": true,
+        "active_interval_ns": [
+          28711000000,
+          41617000000
+        ]
+      },
+      "spatial": {
+        "claim": "offline_independent_spatial_evaluation_only",
+        "samples": 567,
+        "passed": 567,
+        "max_error_m": 0.00017328242584037785,
+        "interpolation_missing_count": 0,
+        "max_interpolated_error_m": 2.8018738656536075e-05
+      },
+      "nearest_truth_failures": [],
+      "cleanup_zero": true,
+      "typed_release_exit": 2,
+      "release_fallback": "CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED",
+      "readiness_wait_events": [],
+      "hashes": {
+        "trial.log": "4e9a1bcba60b1f7cffa0c3aeae41f81730f8f412aedd8ddd9aebc3df24fd755c",
+        "live_rgbd_evaluation/provenance.json": "249adb17b4df7d2f7bf950a896b84da24c62ae971b2fb0feba576a611fed1f46",
+        "live_rgbd_evaluation/spatial_evaluation.json": "0806c2e8ff155b3974bd437f2fd1e08297e277a426d713620f0e8523342cee84",
+        "imported_rgbd_sources.json": "ffd1fe9cd4de3b4c86e00226986dfeea3ac4ac0096083dcfeba3c8009682ff33"
+      }
+    }
+  ],
+  "scoped_processes_remaining": [],
+  "limitations": [
+    "All four nearest-truth spatial failures are retained; one control sample is during close and three are after release. Interpolation is supplementary, not exact-time direct ground truth.",
+    "Typed release required the existing controller-deactivation fallback in successful runs.",
+    "Original fixed-orientation translated plans failed IK; their derived yaw candidates and original failures are both retained.",
+    "One translated trial refused unavailable execution service. Its underlying discovery cause is unproven; the successful retry did not exercise the new bounded wait."
+  ],
+  "verification": {
+    "windows_passed": 343,
+    "windows_skipped": 3,
+    "ros_rgbd_passed": 26,
+    "observer_regressions_passed": 3,
+    "safety_monitor_regressions_passed": 8,
+    "deterministic_replay_scenarios": 3,
+    "runs_per_scenario": 100
+  },
+  "claims": {
+    "simulation_physics_grasp_verified": true,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  }
+}

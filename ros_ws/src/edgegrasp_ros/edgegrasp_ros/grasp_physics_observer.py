@@ -93,6 +93,10 @@ class GraspPhysicsObserver(Node):
         self.declare_parameter("maximum_xy_drift_m", 0.01)
         self.declare_parameter("maximum_freshness_ms", 200.0)
         self.declare_parameter("maximum_observation_s", 30.0)
+        self.declare_parameter("observation_wall_factor", 2.0)
+        self._observation_wall_factor = float(self.get_parameter("observation_wall_factor").value)
+        if self._observation_wall_factor not in (2.0, 6.0):
+            raise ValueError("observation_wall_factor must be 2 or 6")
         self.declare_parameter("maximum_pending_observations", 512)
         self.declare_parameter("loop_rate_hz", 100.0)
 
@@ -417,7 +421,7 @@ class GraspPhysicsObserver(Node):
             observation_ns = self._duration_ns(request.observation_timeout)
             sim_deadline_ns = now_ns + observation_ns
             wall_deadline = time.monotonic() + max(
-                5.0, observation_ns / 1_000_000_000.0 * 2.0
+                5.0, observation_ns / 1_000_000_000.0 * self._observation_wall_factor
             )
             while True:
                 with self._lock:

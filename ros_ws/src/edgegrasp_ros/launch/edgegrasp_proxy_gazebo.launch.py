@@ -13,7 +13,7 @@ from launch.actions import (
 )
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -36,6 +36,9 @@ def _proxy_publishers(context):
         robot_name=robot_name,
         prefix=prefix,
         use_camera=use_camera,
+        camera_update_rate_hz=float(LaunchConfiguration("camera_update_rate_hz").perform(context)),
+        camera_view=LaunchConfiguration("camera_view").perform(context),
+        camera_resolution=LaunchConfiguration("camera_resolution").perform(context),
         pad_contact_material_profile=pad_contact_material_profile,
         moving_pad_distal_extension_m=moving_pad_distal_extension_m,
         gripper_control_profile=gripper_control_profile,
@@ -196,6 +199,9 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument("robot_name", default_value="so101"),
             DeclareLaunchArgument("prefix", default_value=""),
             DeclareLaunchArgument("use_camera", default_value="false"),
+            DeclareLaunchArgument("camera_update_rate_hz", default_value="5.0"),
+            DeclareLaunchArgument("camera_view", default_value="upstream"),
+            DeclareLaunchArgument("camera_resolution", default_value="upstream"),
             DeclareLaunchArgument(
                 "pad_contact_material_profile", default_value="implicit_default"
             ),
@@ -206,7 +212,9 @@ def generate_launch_description() -> LaunchDescription:
                 "gripper_control_profile", default_value="position_only"
             ),
             DeclareLaunchArgument("launch_edgegrasp_nodes", default_value="true"),
+            DeclareLaunchArgument("launch_mock_target", default_value="true"),
             DeclareLaunchArgument("launch_physics_observer", default_value="true"),
+            DeclareLaunchArgument("observation_wall_factor", default_value="2.0"),
             DeclareLaunchArgument("world_filename", default_value="table_cube.sdf"),
             DeclareLaunchArgument("scene_config_filename", default_value="scene.json"),
             DeclareLaunchArgument("target_frame", default_value=DEFAULT_TARGET_FRAME),
@@ -270,7 +278,10 @@ def generate_launch_description() -> LaunchDescription:
                                 "use_sim_time": True,
                             }
                         ],
-                        condition=IfCondition(launch_edgegrasp_nodes),
+                        condition=IfCondition(PythonExpression([
+                            "'", launch_edgegrasp_nodes, "' == 'true' and '",
+                            LaunchConfiguration("launch_mock_target"), "' == 'true'",
+                        ])),
                         output="screen",
                     )
                 ],
@@ -331,6 +342,7 @@ def generate_launch_description() -> LaunchDescription:
                 executable="grasp_physics_observer",
                 parameters=[
                     {
+                        "observation_wall_factor": ParameterValue(LaunchConfiguration("observation_wall_factor"), value_type=float),
                         "clock_domain": clock_domain,
                         "clock_epoch": clock_epoch,
                         "scene_config": scene_config,

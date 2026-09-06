@@ -29,6 +29,8 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument("clock_domain", default_value=ROS_SIM_CLOCK_DOMAIN),
             DeclareLaunchArgument("clock_epoch", default_value="0"),
             DeclareLaunchArgument("use_sim_time", default_value="true"),
+            DeclareLaunchArgument("observed_target_motion", default_value="static"),
+            DeclareLaunchArgument("observed_cube_geometry_profile", default_value=""),
             DeclareLaunchArgument(
                 "future_skew_tolerance_ms",
                 default_value=str(DEFAULT_ROS_FUTURE_SKEW_TOLERANCE_MS),
@@ -45,6 +47,8 @@ def generate_launch_description() -> LaunchDescription:
                         "clock_domain": clock_domain,
                         "clock_epoch": clock_epoch,
                         "use_sim_time": use_sim_time,
+                        "observed_target_motion": LaunchConfiguration("observed_target_motion"),
+                        "observed_cube_geometry_profile": ParameterValue(LaunchConfiguration("observed_cube_geometry_profile"), value_type=str),
                         "future_skew_tolerance_ms": future_skew_tolerance_ms,
                         "gripper_feedforward_effort_nm": (
                             gripper_feedforward_effort_nm

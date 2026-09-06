@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "LOCALIZATION_AND_RECORDED_PLAN_ONLY_CHECKPOINT",
+  "baseline_commit": "842c42ca5ee8fd849e1d6116b4983d44afcb15c3",
+  "branch": "codex/rgbd-static-grasp",
+  "raw_artifact_parent": "/home/edgegrasp/ros2_ws/test_results",
+  "runs": [
+    {"directory": "rgbd_initial_20260906T0040", "camera_hz": 5, "samples": 10, "live_accepted": 5, "pixel_center_offset": 0, "boundary": "uncorrected projection; spatial accuracy not qualified; all rejects retained"},
+    {"directory": "rgbd_truth_20260906T0045", "camera_hz": 5, "samples": 10, "boundary": "separate evaluation truth recording; all rejects retained"},
+    {"directory": "rgbd_projection_20260906T0050", "camera_hz": 5, "samples": 10, "offline_corrected_spatial_passes": 9, "offline_no_target_rejections": 1, "error_norm_m": 0.0000017088241885367929, "spatial_budget_m": 0.00025, "spatial_evaluation_sha256": "67c43e148e182f6c73bee4985f756bb9d103bd4984c77008d7487a652088e3ec", "boundary": "offline corrected localization; stale recorded samples do not qualify for execution"},
+    {"directory": "rgbd_20hz_20260906T0110", "camera_hz": 20, "samples": 10, "live_accepted": 9, "no_target_rejections": 1, "accepted_source_age_ms": 50, "selected_plan_input": "first_accepted_estimate.json", "selection_policy": "first live accepted sample, index 2, without truth selection"},
+    {"directory": "rgbd_recorded_plan_20260906T0115", "ros_domain_id": 168, "status": "PLAN_ONLY_PASS", "attempts": 1, "valid_segments": 3, "trajectory_publication_count": 0, "execute_trajectory_goal_count": 0, "fjt_goal_count": 0, "result_sha256": "223bcbc0bb66acd699b4bcf6878d3b0d934eadb0019b217c93e4d1469808b7b4", "remaining_domain_processes": 0, "boundary": "recorded visual center with camera-enabled scene; normal GetMotionPlan only"}
+  ],
+  "validation": {
+    "windows_existing_suite": {"passed": 334, "skipped": 3, "skip_reasons": ["optional NumPy unavailable in default Windows interpreter", "two pinned-upstream-checkout tests"]},
+    "windows_replay": {"scenarios": 3, "runs_each": 100, "deterministic": true},
+    "wsl_rgbd_geometry_and_ros_message_tests": {"passed": 10},
+    "plan_runner_regression_tests": {"passed": 11}
+  },
+  "execution_attempted": false,
+  "physics_grasp_verified": false,
+  "hardware_verified": false,
+  "accepted_goal_result_timeout_verified": false,
+  "strong_move_group_request_id_correlation": false,
+  "remaining": ["live publisher safety integration", "phase-specific observed target motion semantics", "predeclared additional positions", "bounded independent physical grasp evaluation"]
+}

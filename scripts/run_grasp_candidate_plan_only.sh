@@ -77,7 +77,21 @@ export ROS_DOMAIN_ID=$probe_domain_id
 export ROS_LOCALHOST_ONLY=1
 source /opt/ros/jazzy/setup.bash
 source /home/edgegrasp/ros2_ws/install/setup.bash
-cd /home/edgegrasp/ros2_ws/src/edgegrasp-sim
+probe_source_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+cd "$probe_source_root"
+export PYTHONPATH="$probe_source_root/src:$probe_source_root/ros_ws/src/edgegrasp_ros:${PYTHONPATH:-}"
+probe_velocity_scaling=${EDGEGRASP_RGBD_VELOCITY_SCALING:-0.1}
+case "$probe_velocity_scaling" in 0.1|0.15) ;; *) echo "unsupported velocity scaling" >&2; exit 2 ;; esac
+probe_camera=false
+probe_camera_resolution=${EDGEGRASP_RGBD_CAMERA_RESOLUTION:-upstream}
+probe_camera_view=${EDGEGRASP_RGBD_CAMERA_VIEW:-upstream}
+probe_gazebo_launch=(edgegrasp_ros edgegrasp_proxy_gazebo.launch.py)
+if [ -n "${EDGEGRASP_RGBD_OBSERVATION:-}" ]; then
+  test -f "$EDGEGRASP_RGBD_OBSERVATION" || { echo "RGB-D observation missing" >&2; exit 2; }
+  probe_camera=true
+  probe_gazebo_launch=("$probe_source_root/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_gazebo.launch.py")
+fi
+export GZ_PARTITION="edgegrasp_plan_${probe_domain_id}_${probe_label}"
 
 installed_profile="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/${probe_geometry_filename}"
 installed_candidate="/home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/${probe_candidate_filename}"
@@ -208,8 +222,8 @@ if timeout 8s ros2 topic info /clock > "$probe_artifact_dir/clock_preflight.log"
 fi
 
 echo "STAGE launch_gazebo_plan_only"
-launch_probe_group gazebo.log ros2 launch edgegrasp_ros \
-  edgegrasp_proxy_gazebo.launch.py use_camera:=false \
+launch_probe_group gazebo.log ros2 launch "${probe_gazebo_launch[@]}" \
+  use_camera:="$probe_camera" camera_view:="$probe_camera_view" camera_resolution:="$probe_camera_resolution" \
   world_filename:="$probe_world_filename" \
   scene_config_filename:="$probe_scene_config_filename" \
   pad_contact_material_profile:="$probe_pad_contact_material_profile" \
@@ -243,8 +257,7 @@ gazebo_server_log=$(find /home/edgegrasp/.gz/sim/log -mindepth 1 -maxdepth 1 \
 printf '%s\n' "$gazebo_server_log" > "$probe_artifact_dir/gazebo_server_log_path.txt"
 
 echo "STAGE launch_moveit_and_scene_only"
-launch_probe_group move_group.log ros2 launch edgegrasp_ros \
-  edgegrasp_proxy_move_group.launch.py robot_name:=so101 use_camera:=false \
+launch_probe_group move_group.log ros2 launch "$probe_source_root/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_move_group.launch.py" robot_name:=so101 use_camera:="$probe_camera" camera_view:="$probe_camera_view" camera_resolution:="$probe_camera_resolution" \
   use_gazebo:=true use_sim_time:=true use_rviz:=false \
   moving_pad_distal_extension_m:="$probe_moving_pad_distal_extension_m"
 launch_probe_group planning_scene.log ros2 launch edgegrasp_ros \
@@ -312,7 +325,7 @@ timeout 180s python3 scripts/probe_grasp_candidate_plan_only.py \
   --target-center-x-offset-m "$probe_target_center_x_offset_m" \
   --attempts "$probe_attempts" \
   --pipeline-id pilz_industrial_motion_planner --planner-id PTP \
-  --velocity-scaling 0.1 --acceleration-scaling 0.1 \
+  --velocity-scaling "$probe_velocity_scaling" --acceleration-scaling 0.1 \
   --allowed-planning-time-s 2.0 \
   --ros-args -p use_sim_time:=true \
   > "$probe_artifact_dir/plan_only_result.json" \

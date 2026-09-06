@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "BOUNDED_ROTATION_OFFLINE_EVALUATED_WITH_ALIGNMENT_LIMIT_LIVE_PERMISSION_TIMING_UNRESOLVED",
+  "mode": {
+    "max_rotation_deg": 5.0,
+    "surface_residual_limit_m": 0.0005,
+    "source_age_limit_ms": 100,
+    "runtime_default_rotation_deg": 0.0
+  },
+  "offline": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_v015_trial_20260906a/offline_rgbd_rotation5",
+    "replay": {
+      "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+      "counts": {
+        "accepted": 726
+      },
+      "published_target_count": 553,
+      "last_published_source_ns": 38215000000,
+      "unmatched_final_triads": 2,
+      "motion_requested": false
+    },
+    "evaluation": {
+      "claim": "offline_independent_spatial_evaluation_only",
+      "samples": 726,
+      "passed": 725,
+      "max_error_m": 0.0004617232349170556,
+      "interpolation_missing_count": 1,
+      "max_interpolated_error_m": 5.3248398193819134e-05
+    },
+    "evaluation_sha256": "4fc74d74872bf7f1d9e9c1edbc635cdef805c47ecf9ba08c4d63dad018e4415a",
+    "nearest_sample_outlier_source_ns": 35047000000,
+    "nearest_truth_source_ns": 35050000000,
+    "qualification_limit": "Nearest truth comparison retains one failure; linear interpolation is supporting evidence only and one boundary sample lacks interpolation."
+  },
+  "live": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_rotation5_capture_20260906a",
+    "validation": {
+      "checks": {
+        "strictly_increasing_source": true,
+        "source_preserved_from_three_inputs": true,
+        "identity_preserved": true,
+        "receiver_observed_fresh_targets": true,
+        "permission_denied_after_source_expiry": false,
+        "cleaned_scoped_processes": true
+      },
+      "passed": false,
+      "pipeline_sha256": "231870222c2fbaa06dd7c35365fb40d4016e4e70b7330db15a0380c197ef17e4",
+      "observed_targets": 36,
+      "claim": "live_perception_and_permission_only",
+      "motion_requested": false,
+      "physics_grasp_verified": false
+    },
+    "observed_permission_tail": "Last true received 206 ms after last target source, false at 207 ms. Bool lacks issuance stamp; emission versus reception delay remains unresolved."
+  },
+  "verification": {
+    "ros_and_geometry_tests_passed": 15,
+    "new_motion_trial": false
+  },
+  "claims": {
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "status": "CLOSE_COMPLETE_LIFT_TF_ALIGNMENT_REFUSAL",
+  "qualification_runs": [
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_30hz_capture_20260906a",
+      "validation": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": false,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": false,
+        "pipeline_sha256": "ea2ee83cf5ee58a77297b484087d067cad6df51e353612d1be6a33b0eee9b1d5",
+        "observed_targets": 36,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "validation_sha256": "e99ae9e652bd9d8f0077a452b84066d9c9a6e80f048180789d3785154bec6aa4",
+      "observed_simulated_wall_ratio": 0.20788242698451778,
+      "scope": {
+        "launch_pid": 9279,
+        "ros_domain_id": 166,
+        "gz_partition": "edgegrasp_rgbd_rgbd_opposite_30hz_capture_20260906a",
+        "command": [
+          "ros2",
+          "launch",
+          "/mnt/c/Users/huang/.codex/worktrees/c313/edgegrasp-sim-private/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_gazebo.launch.py",
+          "use_camera:=true",
+          "launch_edgegrasp_nodes:=false",
+          "camera_update_rate_hz:=30.0",
+          "camera_view:=opposite_table_edge",
+          "launch_physics_observer:=false",
+          "scene_config_filename:=scene_candidate024_face_aligned.json",
+          "world_filename:=table_cube_candidate024_face_aligned.sdf"
+        ],
+        "claim": "read_only_rgbd_observation_no_motion_requests"
+      }
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_30hz_capture_20260906b",
+      "validation": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": true,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": true,
+        "pipeline_sha256": "f2378f55c19e3c737b303b797626fd6ac4de1a495e767f673cd146c9a816e515",
+        "observed_targets": 56,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "validation_sha256": "0b6edf519d007b4548e8abbb5a949b4b3711114b68178fe83071a199c5a44696",
+      "observed_simulated_wall_ratio": 0.20890492910176042,
+      "scope": {
+        "launch_pid": 9676,
+        "ros_domain_id": 166,
+        "gz_partition": "edgegrasp_rgbd_rgbd_opposite_30hz_capture_20260906b",
+        "command": [
+          "ros2",
+          "launch",
+          "/mnt/c/Users/huang/.codex/worktrees/c313/edgegrasp-sim-private/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_gazebo.launch.py",
+          "use_camera:=true",
+          "launch_edgegrasp_nodes:=false",
+          "camera_update_rate_hz:=30.0",
+          "camera_view:=opposite_table_edge",
+          "launch_physics_observer:=false",
+          "scene_config_filename:=scene_candidate024_face_aligned.json",
+          "world_filename:=table_cube_candidate024_face_aligned.sdf"
+        ],
+        "claim": "read_only_rgbd_observation_no_motion_requests"
+      }
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_30hz_lp2_capture_20260906a",
+      "validation": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": true,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": true,
+        "pipeline_sha256": "08635bfa230b0642e3e7a34a32c44b4ea57fe5c6cd6051afec575b5a201495c2",
+        "observed_targets": 35,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "validation_sha256": "7c41d817f19b1e9718ee8da3b3d38524541c95822c61f2ab13addb9f2e6eacf5",
+      "observed_simulated_wall_ratio": 0.21136123186466843,
+      "scope": {
+        "launch_pid": 11369,
+        "ros_domain_id": 166,
+        "gz_partition": "edgegrasp_rgbd_rgbd_opposite_30hz_lp2_capture_20260906a",
+        "command": [
+          "ros2",
+          "launch",
+          "/mnt/c/Users/huang/.codex/worktrees/c313/edgegrasp-sim-private/ros_ws/src/edgegrasp_ros/launch/edgegrasp_proxy_gazebo.launch.py",
+          "use_camera:=true",
+          "launch_edgegrasp_nodes:=false",
+          "camera_update_rate_hz:=30.0",
+          "camera_view:=opposite_table_edge",
+          "launch_physics_observer:=false",
+          "scene_config_filename:=scene_candidate024_face_aligned.json",
+          "world_filename:=table_cube_candidate024_face_aligned.sdf"
+        ],
+        "render_process_environment": {
+          "LP_NUM_THREADS": "2"
+        },
+        "claim": "read_only_rgbd_observation_no_motion_requests"
+      }
+    }
+  ],
+  "runtime": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_opposite_30hz_trial_20260906a",
+    "exit_code": 12,
+    "result": {
+      "all_gripper_tokens_observed": false,
+      "baseline_z_m": 0.20499999990200096,
+      "evidence_digest": "8d08034dcc8d6a979328f998d834273b4efde28fb894af8b76f08ef3853f3bc5",
+      "final_z_m": 0.20499999990200096,
+      "gripper_contact_count": 0,
+      "gripper_contact_counts_by_token": {
+        "fixed_finger_pad": 0,
+        "moving_finger_pad": 0
+      },
+      "gripper_contact_observed": false,
+      "gripper_contact_quality_by_token": {
+        "fixed_finger_pad": {
+          "max_abs_normal_force_n": null,
+          "max_force_magnitude_n": null,
+          "max_penetration_depth_m": null
+        },
+        "moving_finger_pad": {
+          "max_abs_normal_force_n": null,
+          "max_force_magnitude_n": null,
+          "max_penetration_depth_m": null
+        }
+      },
+      "gripper_contact_timing_by_token": {
+        "fixed_finger_pad": {
+          "first_source_timestamp_ns": null,
+          "last_source_timestamp_ns": null
+        },
+        "moving_finger_pad": {
+          "first_source_timestamp_ns": null,
+          "last_source_timestamp_ns": null
+        }
+      },
+      "gripper_effort": {
+        "at_sequence_completion": null,
+        "available": true,
+        "joint_name": "gripper",
+        "latest": 1.3956116523500858e-07,
+        "peak_abs": 0.0016723759121459994,
+        "peak_abs_at_sequence_completion": null,
+        "sample_count": 1150
+      },
+      "last_terminal_command_id": "rgbd_opposite30_a|close_gripper|2",
+      "last_trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4",
+      "lift_observed": false,
+      "matched_gripper_collision1": "",
+      "matched_gripper_collision2": "",
+      "peak_z_m": 0.20499999990200096,
+      "physics_grasp_verified": false,
+      "physics_phase": "FAULT",
+      "physics_reason": "observation_wall_timeout",
+      "physics_wrapper_status": 6,
+      "pose_sample_count": 1151,
+      "retention_observed": false,
+      "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+      "sequence_completed": false,
+      "sequence_completed_source_timestamp_ns": null,
+      "sequence_phase": "SAFE_STOP",
+      "sequence_reason": "target_not_ready:lift_observation_unavailable:Lookup would require extrapolation into the future.  Requested time 30.823000 but the latest data is at time 30.821000, when looking up transform from frame [gripper_frame_link] to frame [base_link]",
+      "sequence_wrapper_status": 6,
+      "simultaneous_contact_quality": {
+        "max_min_abs_normal_force_n": null,
+        "max_min_force_magnitude_n": null,
+        "max_min_penetration_depth_m": null
+      },
+      "simultaneous_contact_timing": {
+        "first_source_timestamp_ns": null,
+        "last_source_timestamp_ns": null,
+        "last_source_timestamp_ns_at_sequence_completion": null,
+        "sample_count_at_sequence_completion": 0
+      },
+      "simultaneous_gripper_contact_sample_count": 0,
+      "table_contact_count": 8162,
+      "target_id": "target_cube",
+      "target_source_timestamp_ns": 17260000000,
+      "task_id": "rgbd_opposite30_a",
+      "type": "grasp_trial_result"
+    },
+    "trial_log_sha256": "dc90804668f43f1846cd2274b53f071146678715141733a8bbd02f5985a2fc93",
+    "mcap_sha256": "86218362f219f03cc1cebea7a5db6747568353b5e62d358db2bf820438b50b3e",
+    "timeline_sha256": "0891c6aad709d5dea8f6569db75399b542c38859e8da8844aea31d19efc35325",
+    "cube": {
+      "baseline_pose": {
+        "cube_x_m": 0.241084288413,
+        "cube_y_m": 0.129586660297,
+        "cube_z_m": 0.20499999990200096,
+        "receive_ns": 11850000000,
+        "stream": "cube_pose",
+        "time_ns": 11850000000
+      },
+      "final_pose": {
+        "cube_x_m": 0.2410356358731293,
+        "cube_y_m": 0.1307769288836806,
+        "cube_z_m": 0.20500774386031836,
+        "receive_ns": 34910000000,
+        "stream": "cube_pose",
+        "time_ns": 34910000000
+      },
+      "final_xy_drift_m": 0.0011912625143411816,
+      "peak_lift_m": 1.4035318590149837e-05,
+      "peak_pose": {
+        "cube_x_m": 0.24104514143232167,
+        "cube_y_m": 0.13025436356755743,
+        "cube_z_m": 0.2050140352205911,
+        "receive_ns": 30819000000,
+        "stream": "cube_pose",
+        "time_ns": 30820000000
+      }
+    },
+    "contact": {
+      "first_contact_delta_ns": 1256000000,
+      "first_contact_order": "moving_then_fixed",
+      "first_fixed_source_timestamp_ns": 30827000000,
+      "first_moving_source_timestamp_ns": 29571000000,
+      "first_simultaneous_source_timestamp_ns": 30827000000,
+      "last_simultaneous_source_timestamp_ns": 33423000000,
+      "simultaneous_during_lift_start": true,
+      "simultaneous_span_ns": 2596000000
+    },
+    "release_exit_code": 0,
+    "cleanup_zero": true
+  },
+  "claims": {
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  },
+  "followup": "Newest complete image/TF pair selection has zero-command ROS regression coverage; not yet motion-qualified. Two-thread rendering capture provided no meaningful throughput improvement and is not adopted."
+}

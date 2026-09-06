@@ -42,6 +42,11 @@ record_topics=(
   /gripper_controller/controller_state
   /edgegrasp/target_3d
   /edgegrasp/tracked_target
+  /edgegrasp/permission_evidence
+  /edgegrasp/measured_cube
+  /edgegrasp/perception_status
+  /tf
+  /tf_static
   /edgegrasp/motion_allowed
   /edgegrasp/safety_status
   /edgegrasp/arm_joint_trajectory_request

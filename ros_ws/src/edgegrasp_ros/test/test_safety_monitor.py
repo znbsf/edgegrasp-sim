@@ -122,7 +122,7 @@ def test_bounded_future_sample_keeps_a_still_fresh_prior_target_allowed(
     monkeypatch.setattr(
         monitor,
         "_publish",
-        lambda allowed, reason: published.append((allowed, reason)),
+        lambda allowed, reason, **diagnostic: published.append((allowed, reason)),
     )
 
     first = target(monitor)
@@ -154,7 +154,7 @@ def test_future_sample_beyond_clock_skew_tolerance_latches_false(
     monkeypatch.setattr(
         monitor,
         "_publish",
-        lambda allowed, reason: published.append((allowed, reason)),
+        lambda allowed, reason, **diagnostic: published.append((allowed, reason)),
     )
 
     first = target(monitor)
@@ -172,3 +172,19 @@ def test_future_sample_beyond_clock_skew_tolerance_latches_false(
     )
     assert monitor._latest is None
     assert published[-1][0] is False
+
+
+def test_permission_diagnostic_preserves_source_and_issuance_interval(monitor):
+    import json
+    from types import SimpleNamespace
+
+    records = []
+    monitor._permission_evidence = SimpleNamespace(
+        publish=lambda message: records.append(json.loads(message.data)))
+    monitor._on_target(target(monitor))
+    monitor._evaluate()
+    row = records[-1]
+    assert row["allowed"]
+    assert row["target_source_ns"] == monitor._latest.timestamp_ns
+    assert row["target_source_ns"] <= row["decision_ns"] <= row["publish_before_ns"] <= row["publish_after_ns"]
+    assert row["publish_after_ns"] - row["target_source_ns"] <= 200_000_000

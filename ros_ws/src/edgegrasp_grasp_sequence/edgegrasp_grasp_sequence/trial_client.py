@@ -232,7 +232,7 @@ class GraspTrialClient(Node):
         return values
 
     def _resolved_stage_positions(
-        self,
+        self, target: TrackedTarget,
     ) -> tuple[
         tuple[float, float, float],
         tuple[float, float, float],
@@ -253,7 +253,7 @@ class GraspTrialClient(Node):
                 self._position("lift_position_m"),
             )
         derived = derive_grasp_stage_geometry(
-            self._cube.pose_world.position_m,
+            (target.observation.point.x, target.observation.point.y, target.observation.point.z),
             self._orientation("grasp_orientation_xyzw"),
             self._grasp_profile,
         )
@@ -310,7 +310,7 @@ class GraspTrialClient(Node):
         goal = GraspSequence.Goal()
         goal.task_id = str(self.get_parameter("task_id").value)
         goal.target = target
-        stage_positions = self._resolved_stage_positions()
+        stage_positions = self._resolved_stage_positions(target)
         for field, position in zip(
             (
                 goal.approach_position,
@@ -353,7 +353,7 @@ class GraspTrialClient(Node):
         ):
             raise ValueError("tracked target and scene cube pose disagree")
         approach_position, descend_position, lift_position = (
-            self._resolved_stage_positions()
+            self._resolved_stage_positions(target)
         )
         geometry = validate_routed_grasp_stage_geometry(
             cube_center_m=self._cube.pose_world.position_m,

@@ -15,6 +15,7 @@ from datetime import datetime
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import sys
 import time
@@ -72,6 +73,9 @@ def _arguments(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument("--scene-config-filename", default="scene.json")
     parser.add_argument("--grasp-geometry-filename", required=True)
+    parser.add_argument("--observed-target-json", type=Path,
+                        default=os.environ.get("EDGEGRASP_RGBD_OBSERVATION"),
+                        help="recorded RGB-D estimate for spatial plan-only; never live admission")
     parser.add_argument(
         "--target-center-x-offset-m",
         type=float,
@@ -197,8 +201,25 @@ def _load_stages(
         length=4,
         field="orientations_xyzw.grasp",
     )
+    observed_evidence = None
+    planning_center = cube.pose_world.position_m
+    observed_path = getattr(args, "observed_target_json", None)
+    if observed_path is not None:
+        observed_path = Path(observed_path)
+        observed = json.loads(observed_path.read_text())
+        if (observed.get("frame_id") != PLANNING_FRAME
+                or observed.get("clock_domain") != "ros_sim"
+                or observed.get("source_timestamp_ns", 0) <= 0
+                or observed.get("clock_epoch", -1) < 0):
+            raise ValueError("invalid recorded RGB-D observation provenance")
+        if observed.get("camera_view", "upstream") != os.environ.get("EDGEGRASP_RGBD_CAMERA_VIEW", "upstream"):
+            raise ValueError("observation and planning camera view differ")
+        planning_center = _vector(observed.get("center_m"), length=3, field="observed center")
+        observed_evidence = {"path": str(observed_path), "sha256": _sha256(observed_path),
+                             "observation": observed, "mode": "recorded_spatial_plan_only",
+                             "camera_view": os.environ.get("EDGEGRASP_RGBD_CAMERA_VIEW", "upstream")}
     derived = derive_grasp_stage_geometry(
-        cube.pose_world.position_m,
+        planning_center,
         grasp_orientation,
         profile,
     )
@@ -245,6 +266,9 @@ def _load_stages(
         "scene_config_sha256": _sha256(scene_path),
         "scene_contract_sha256": scene.digest,
         "source_target_center_in_frame_m": list(source_center),
+        "recorded_rgbd_observation": observed_evidence,
+        "velocity_scaling": args.velocity_scaling,
+        "acceleration_scaling": args.acceleration_scaling,
         "diagnostic_target_center_x_offset_m": offset_x,
         "effective_target_center_in_frame_m": list(effective_center),
         "scene_path": str(scene_path),

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import subprocess
+from edgegrasp.camera import configure_sim_camera
 
 from ament_index_python.packages import get_package_share_directory
 from edgegrasp.collision_proxy import (
@@ -35,6 +36,9 @@ def build_proxy_robot_description(
     pad_contact_material_profile: str | None = None,
     moving_pad_distal_extension_m: float = 0.0,
     gripper_control_profile: str = POSITION_ONLY_PROFILE,
+    camera_update_rate_hz: float = 5.0,
+    camera_view: str = "upstream",
+    camera_resolution: str = "upstream",
 ) -> tuple[str, CollisionProxyReport]:
     if robot_name != "so101":
         raise RuntimeError("collision proxy supports robot_name=so101 only")
@@ -42,6 +46,8 @@ def build_proxy_robot_description(
         raise RuntimeError("collision proxy supports prefix='' only")
     if use_camera not in ("true", "false"):
         raise RuntimeError("use_camera must be true or false")
+    if use_camera == "false" and camera_view != "upstream":
+        raise ValueError("camera view requires use_camera=true")
 
     description_share = Path(get_package_share_directory("so101_description"))
     edgegrasp_share = Path(get_package_share_directory("edgegrasp_ros"))
@@ -63,6 +69,8 @@ def build_proxy_robot_description(
         capture_output=True,
         text=True,
     ).stdout
+    if use_camera == "true":
+        expanded = configure_sim_camera(expanded, rate_hz=camera_update_rate_hz, view=camera_view, resolution=camera_resolution)
     contract = load_collision_proxy_contract(contract_path)
     contract = with_moving_pad_distal_extension(
         contract, moving_pad_distal_extension_m

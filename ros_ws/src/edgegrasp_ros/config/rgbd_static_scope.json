@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "task": "fixed_scene_rgbd_grasp",
+  "declaration": "Control plus two one-millimetre translations, declared before observing their per-position results. No replacement of failed cases with easier cases.",
+  "cube_size_m": 0.05,
+  "declared_yaw_rad": 0.6500077341171558,
+  "scene_baseline": "scene_candidate024_face_aligned.json",
+  "candidate_baseline": "so101_side_grasp_candidate024_face_aligned.json",
+  "geometry_profile": "so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+  "positions": [
+    {
+      "id": "control",
+      "center_m": [
+        0.24108428841333182,
+        0.12958666029737353,
+        0.205
+      ]
+    },
+    {
+      "id": "x_minus_1mm",
+      "center_m": [
+        0.24008428841333182,
+        0.12958666029737353,
+        0.205
+      ]
+    },
+    {
+      "id": "x_plus_1mm",
+      "center_m": [
+        0.24208428841333182,
+        0.12958666029737353,
+        0.205
+      ]
+    }
+  ],
+  "per_position_gates": [
+    "RGB-D spatial and provenance checks",
+    "isolated chained plan-only with no execution",
+    "one bounded simulation trial"
+  ],
+  "spatial_evaluation_budget_m": 0.00025,
+  "physics_criteria": {
+    "same_sample_both_distal_pads": true,
+    "minimum_lift_m": 0.02,
+    "minimum_retention_s": 0.5
+  },
+  "scope_boundary": "Small local translations only. No workspace-wide, arbitrary-yaw, moving-target, or hardware claim. Scene truth is excluded from the localization algorithm. Every prerequisite rejection and execution failure is retained.",
+  "motion_qualification": {
+    "default_velocity_scaling": 0.1,
+    "additional_velocity_scaling": 0.15,
+    "acceleration_scaling": 0.1,
+    "declaration": "The 0.15 velocity trial is declared before execution, after software-rendering capture showed insufficient throughput for the unchanged 60 s observer wall bound. It requires a matching isolated plan and existing trajectory safety validation. Positions, collision rules, gripper profile and physics criteria remain unchanged."
+  },
+  "planned_lift_region_qualification": {
+    "declaration": "Declared before execution: opt-in ros_sim-only workspace consistency during LIFT_EXEC. Initial observed center to initial center plus requested vertical lift (at most 40 mm), with unchanged 5 mm Euclidean segment-distance limit. Pre-lift static guard is unchanged. Axial lag, stationary objects and in-region drops are not grasp success; independent contact/lift/retention criteria remain mandatory.",
+    "default_mode": "static",
+    "trial_mode": "planned_lift_region",
+    "requires_matching_plan": true
+  },
+  "measured_pad_qualification": {
+    "declaration": "Before execution: opt-in measured cube pose against fixed pad OBB with exact-source gripper TF, maximum 5 mm normalized SAT separation. Atomic target identity, center, orientation and source timestamp; pre-lift static guard unchanged. Geometric proximity is not physical contact or grasp success. 40-degree RGB-D mode passed offline and live tests.",
+    "observer_wall_factor": 6,
+    "observer_sim_timeout_s": 30,
+    "motion_wait_wall_s": 90,
+    "independent_physics_criteria_unchanged": true
+  },
+  "yaw_adaptation_qualification": {
+    "declaration": "Preserve the declared X +/-1 mm cube positions and retain both original NO_IK_SOLUTION outcomes. Derive a small gripper yaw adjustment from the pinned shoulder pivot, pitch-axis normal, qualified baseline IK and measured RGB-D center, preserving the lateral planar-arm coordinate. No random search or replacement position. Each new candidate requires full static collision and chained plan-only validation before execution.",
+    "maximum_abs_yaw_adjustment_deg": 0.5,
+    "approach_pose_unchanged": true,
+    "grasp_geometry_profile_unchanged": true,
+    "cube_yaw_unchanged": true
+  }
+}

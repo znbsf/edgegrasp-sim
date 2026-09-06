@@ -166,8 +166,9 @@ def validate_converted_pad_contact_material(
 
     Fixed-joint lumping decorates collision names, so target matching permits
     a converter prefix/suffix while still requiring each contracted collision
-    name exactly once.  Any friction surface outside the two targets is a
-    fail-closed scope leak for this controlled experiment.
+    name exactly once. Any friction setting outside the two targets is a
+    fail-closed scope leak. The converter's empty ``friction/ode`` placeholder
+    has no assigned settings and preserves the implicit default.
     """
 
     try:
@@ -204,6 +205,12 @@ def validate_converted_pad_contact_material(
         mu2_element = collision.find("surface/friction/ode/mu2")
         if friction is not None:
             if collision not in target_elements:
+                ode = friction.find("ode")
+                if (not friction.attrib and not (friction.text or "").strip()
+                        and [child.tag for child in friction] == ["ode"]
+                        and ode is not None and not ode.attrib and len(ode) == 0
+                        and not (ode.text or "").strip() and not (ode.tail or "").strip()):
+                    continue
                 raise ContactMaterialError(
                     "contact-material friction leaked to an unintended collision: "
                     + collision.get("name", "")

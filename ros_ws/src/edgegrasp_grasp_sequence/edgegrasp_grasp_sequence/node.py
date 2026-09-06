@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from functools import partial
 import json
 import math
+from pathlib import Path
 from threading import Event, RLock
 import time
 from typing import Any
@@ -47,6 +48,11 @@ from edgegrasp.grasp_sequence import (
     _arm_terminal_reason,
 )
 from edgegrasp.models import Vector3
+from edgegrasp.action_readiness import wait_for_readiness
+from edgegrasp.target_motion import (
+    LiftObservationBinding, PlannedLiftRegion, MeasuredCubeObservation, MeasuredPadBinding,
+)
+from edgegrasp.grasp_geometry import load_grasp_geometry_profile
 from edgegrasp.so101_contract import (
     SO101_ARM_JOINTS,
     SO101_CONTRACT,
@@ -70,11 +76,13 @@ from rclpy.action import (
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from rclpy.node import Node
+from rclpy.time import Time
 from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Bool, String
 from std_srvs.srv import SetBool, Trigger
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from tf2_ros import Buffer, TransformListener, TransformException
 
 
 _UNKNOWN_STATUS = GoalStatus.STATUS_UNKNOWN
@@ -214,6 +222,8 @@ class GraspSequenceNode(Node):
         )
         self.declare_parameter("command_timeout_ms", 15_000.0)
         self.declare_parameter("target_drift_tolerance_m", 0.005)
+        self.declare_parameter("observed_target_motion", "static")
+        self.declare_parameter("observed_cube_geometry_profile", "")
         self.declare_parameter("max_planning_timeout_s", 2.0)
         self.declare_parameter("max_request_scaling", 0.2)
         self.declare_parameter("gripper_duration_s", 2.0)
@@ -254,6 +264,21 @@ class GraspSequenceNode(Node):
         self._command_timeout_ms = self._positive_parameter("command_timeout_ms")
         self._target_drift_tolerance_m = self._positive_parameter(
             "target_drift_tolerance_m"
+        )
+        self._observed_target_motion = str(self.get_parameter("observed_target_motion").value)
+        if self._observed_target_motion not in ("static", "rigid_lift", "planned_lift_region", "measured_pad"):
+            raise ValueError("observed_target_motion must be static, rigid_lift, planned_lift_region or measured_pad")
+        if self._observed_target_motion != "static" and self._clock_domain != "ros_sim":
+            raise ValueError("rigid lift observation is scoped to simulation")
+        self._lift_observation_binding = None
+        self._measured_cube_cache = OrderedDict()
+        self._observed_cube_profile = None
+        if self._observed_target_motion == "measured_pad":
+            self._observed_cube_profile = load_grasp_geometry_profile(
+                Path(str(self.get_parameter("observed_cube_geometry_profile").value)))
+        self._observation_tf = Buffer() if self._observed_target_motion in ("rigid_lift", "measured_pad") else None
+        self._observation_tf_listener = (
+            TransformListener(self._observation_tf, self) if self._observation_tf else None
         )
         self._max_planning_timeout_s = self._positive_parameter(
             "max_planning_timeout_s"
@@ -364,9 +389,10 @@ class GraspSequenceNode(Node):
             callback_group=self._planning_scene_callback_group,
         )
         self.create_subscription(
-            TrackedTarget,
-            str(self.get_parameter("tracked_target_topic").value),
-            self._on_target,
+            String if self._observed_target_motion == "measured_pad" else TrackedTarget,
+            "/edgegrasp/measured_cube" if self._observed_target_motion == "measured_pad"
+                else str(self.get_parameter("tracked_target_topic").value),
+            self._on_measured_cube if self._observed_target_motion == "measured_pad" else self._on_target,
             10,
             callback_group=self._target_callback_group,
         )
@@ -736,6 +762,32 @@ class GraspSequenceNode(Node):
                 )
         self._wake.set()
 
+    def _on_measured_cube(self, message: String) -> None:
+        try:
+            observation = MeasuredCubeObservation.parse(json.loads(message.data))
+            target = TrackedTarget()
+            target.target_id = observation.target_id
+            target.clock_domain, target.clock_epoch = observation.clock_domain, observation.clock_epoch
+            target.observation.header.frame_id = observation.frame_id
+            self._assign_stamp(target.observation.header.stamp, observation.source_ns)
+            point = target.observation.point
+            point.x, point.y, point.z = observation.center_m
+            # Match the existing event -> state lock order. Holding state
+            # while entering _on_target can deadlock a concurrent core event.
+            with self._core_event_lock:
+                with self._state_lock:
+                    previous = self._measured_cube_cache.get(observation.key)
+                    if previous is not None and previous != observation:
+                        raise ValueError("measured cube source conflict")
+                    self._measured_cube_cache[observation.key] = observation
+                    self._measured_cube_cache.move_to_end(observation.key)
+                    while len(self._measured_cube_cache) > _MAX_TARGET_CACHE:
+                        self._measured_cube_cache.popitem(last=False)
+                self._on_target(target)
+        except (ValueError, TypeError, KeyError, OverflowError) as exc:
+            with self._state_lock:
+                self._input_fault = f"invalid_measured_cube:{exc}"
+
     def _on_target(self, message: TrackedTarget) -> None:
         with self._core_event_lock:
             now_ns = self._now_ns()
@@ -998,6 +1050,36 @@ class GraspSequenceNode(Node):
             return SignalSnapshot(False, 0, missing_reason)
         return SignalSnapshot(sample.ready, sample.observed_at_ns, sample.reason)
 
+    def _coherent_lift_target(self, latest, now_ns):
+        """Choose the newest fresh image with TF at that exact image time.
+
+        Image and joint-state callbacks arrive independently. A newer image
+        awaiting TF does not invalidate an already complete, still-fresh pair.
+        Never extrapolate TF, restamp a sample, or select by residual quality.
+        """
+        with self._state_lock:
+            candidates = list(self._target_cache.values())
+        candidates = [latest, *(item for item in candidates
+            if item.key != latest.key
+            and item.target_id == latest.target_id
+            and item.frame_id == latest.frame_id
+            and item.clock_domain == latest.clock_domain
+            and item.clock_epoch == latest.clock_epoch
+            and item.source_timestamp_ns < latest.source_timestamp_ns)]
+        candidates.sort(key=lambda item: item.source_timestamp_ns, reverse=True)
+        for sample in candidates:
+            if not 0 <= now_ns - sample.source_timestamp_ns <= self._source_timeout_ms * 1_000_000:
+                continue
+            if (self._lift_observation_binding is None
+                    or sample.source_timestamp_ns < self._lift_observation_binding.bound_source_ns):
+                continue
+            try:
+                self._observed_gripper_pose(sample.source_timestamp_ns)
+                return sample
+            except TransformException:
+                continue
+        return latest  # Existing health checks refuse missing TF or stale input.
+
     def _health(
         self, now_ns: int, *, initial_request: GraspSequence.Goal | None = None
     ) -> SequenceHealth:
@@ -1023,6 +1105,14 @@ class GraspSequenceNode(Node):
             )
             anchor = self._active_anchor
         expected_target_id = request.target.target_id
+        if (initial_request is None and input_fault is None and target is not None
+                and target.target_id == expected_target_id
+                and target.frame_id == self._target_frame
+                and target.clock_domain == self._clock_domain
+                and target.clock_epoch == self._clock_epoch
+                and self._observed_target_motion in ("rigid_lift", "measured_pad")
+                and self._core.phase is GraspPhase.LIFT_EXEC):
+            target = self._coherent_lift_target(target, now_ns)
         target_ready = input_fault is None and target is not None
         target_reason = input_fault or "target_unknown"
         target_id = expected_target_id
@@ -1054,9 +1144,52 @@ class GraspSequenceNode(Node):
                         )
                     )
                 )
+                if (self._observed_target_motion == "rigid_lift"
+                        and self._core.phase is GraspPhase.LIFT_EXEC):
+                    try:
+                        if self._lift_observation_binding is None:
+                            raise ValueError("lift_binding_missing")
+                        position, orientation = self._observed_gripper_pose(target.source_timestamp_ns)
+                        drift = self._lift_observation_binding.residual_m(
+                            task_id=request.task_id, target_id=target.target_id,
+                            clock_domain=target.clock_domain, clock_epoch=target.clock_epoch,
+                            source_ns=target.source_timestamp_ns, observed_center_m=target.position,
+                            gripper_position_m=position, gripper_orientation_xyzw=orientation)
+                    except (TransformException, ValueError) as exc:
+                        drift = math.inf
+                        target_reason = f"lift_observation_unavailable:{exc}"
+                if (self._observed_target_motion == "planned_lift_region"
+                        and self._core.phase is GraspPhase.LIFT_EXEC):
+                    try:
+                        if self._lift_observation_binding is None:
+                            raise ValueError("lift_binding_missing")
+                        drift = self._lift_observation_binding.residual_m(
+                            task_id=request.task_id, target_id=target.target_id,
+                            clock_domain=target.clock_domain, clock_epoch=target.clock_epoch,
+                            source_ns=target.source_timestamp_ns, observed_center_m=target.position)
+                    except ValueError as exc:
+                        drift = math.inf
+                        target_reason = f"lift_observation_unavailable:{exc}"
+                if (self._observed_target_motion == "measured_pad"
+                        and self._core.phase is GraspPhase.LIFT_EXEC):
+                    try:
+                        with self._state_lock:
+                            observation = self._measured_cube_cache.get(target.key)
+                        if self._lift_observation_binding is None or observation is None:
+                            raise ValueError("measured_cube_binding_missing")
+                        if observation.center_m != target.position:
+                            raise ValueError("measured_cube_center_mismatch")
+                        position, orientation = self._observed_gripper_pose(target.source_timestamp_ns)
+                        drift = self._lift_observation_binding.residual_m(
+                            task_id=request.task_id, observation=observation,
+                            gripper_position_m=position, gripper_orientation_xyzw=orientation)
+                    except (TransformException, ValueError) as exc:
+                        drift = math.inf
+                        target_reason = f"lift_observation_unavailable:{exc}"
                 if drift > self._target_drift_tolerance_m:
                     target_ready = False
-                    target_reason = f"target_geometry_drift:{drift}"
+                    if math.isfinite(drift):
+                        target_reason = f"target_geometry_drift:{drift}"
                 else:
                     target_reason = "target_fresh"
             else:
@@ -1432,6 +1565,15 @@ class GraspSequenceNode(Node):
             self._generation += 1
             return self._generation
 
+    def _observed_gripper_pose(self, source_ns):
+        transform = self._observation_tf.lookup_transform(
+            self._target_frame, "gripper_frame_link",
+            Time(nanoseconds=source_ns, clock_type=self.get_clock().clock_type))
+        if self._stamp_ns(transform.header.stamp) != source_ns:
+            raise ValueError("gripper_tf_not_at_observation_source_time")
+        p, q = transform.transform.translation, transform.transform.rotation
+        return (p.x, p.y, p.z), (q.x, q.y, q.z, q.w)
+
     def _submit_arm(self, command: ArmPlanCommand) -> DispatchOutcome:
         with self._state_lock:
             request = self._active_request
@@ -1443,6 +1585,47 @@ class GraspSequenceNode(Node):
             return DispatchOutcome(False, "sequence_request_unavailable")
         if not self._arm_client.server_is_ready():
             return DispatchOutcome(False, "plan_target_unavailable")
+        if self._observed_target_motion == "rigid_lift" and command.stage == "lift":
+            try:
+                with self._state_lock:
+                    target = self._target_cache.get((command.target_id, command.source_timestamp_ns,
+                                                     command.clock_domain, command.clock_epoch))
+                if target is None:
+                    raise ValueError("bound lift target missing")
+                position, orientation = self._observed_gripper_pose(target.source_timestamp_ns)
+                self._lift_observation_binding = LiftObservationBinding.bind(
+                    task_id=command.task_id, target_id=target.target_id,
+                    clock_domain=target.clock_domain, clock_epoch=target.clock_epoch,
+                    source_ns=target.source_timestamp_ns, observed_center_m=target.position,
+                    gripper_position_m=position, gripper_orientation_xyzw=orientation)
+            except (TransformException, ValueError) as exc:
+                return DispatchOutcome(False, f"lift_binding_rejected:{exc}")
+        if self._observed_target_motion == "planned_lift_region" and command.stage == "lift":
+            try:
+                if self._active_anchor is None:
+                    raise ValueError("initial target anchor missing")
+                self._lift_observation_binding = PlannedLiftRegion.bind(
+                    task_id=command.task_id, target_id=command.target_id,
+                    clock_domain=command.clock_domain, clock_epoch=command.clock_epoch,
+                    source_ns=command.source_timestamp_ns, initial_center_m=self._active_anchor,
+                    descend_position_m=(request.descend_position.x, request.descend_position.y,
+                                        request.descend_position.z),
+                    lift_position_m=(request.lift_position.x, request.lift_position.y,
+                                     request.lift_position.z))
+            except ValueError as exc:
+                return DispatchOutcome(False, f"lift_binding_rejected:{exc}")
+        if self._observed_target_motion == "measured_pad" and command.stage == "lift":
+            try:
+                with self._state_lock:
+                    observation = self._measured_cube_cache.get((command.target_id,
+                        command.source_timestamp_ns, command.clock_domain, command.clock_epoch))
+                if observation is None:
+                    raise ValueError("measured cube missing at lift binding")
+                self._observed_gripper_pose(observation.source_ns)
+                self._lift_observation_binding = MeasuredPadBinding.bind(
+                    task_id=command.task_id, observation=observation, profile=self._observed_cube_profile)
+            except (TransformException, ValueError) as exc:
+                return DispatchOutcome(False, f"lift_binding_rejected:{exc}")
         goal = PlanTarget.Goal()
         goal.task_id = command.task_id
         goal.stage = command.stage
@@ -1520,7 +1703,16 @@ class GraspSequenceNode(Node):
         if joint_state is None or "gripper" not in joint_state.positions:
             return DispatchOutcome(False, "gripper_joint_state_unavailable")
         if not self._gripper_client.server_is_ready():
-            return DispatchOutcome(False, "execute_trajectory_unavailable")
+            started = time.monotonic()
+            ready = wait_for_readiness(self._gripper_client.server_is_ready)
+            self.get_logger().info(json.dumps(dict(type="gripper_readiness_wait", ready=ready,
+                elapsed_wall_ms=(time.monotonic() - started) * 1000)))
+            if not ready:
+                return DispatchOutcome(False, "execute_trajectory_unavailable")
+            age_ns = self._now_ns() - command.source_timestamp_ns
+            if (command.clock_epoch != self._clock_epoch or command.clock_domain != self._clock_domain
+                    or not 0 <= age_ns <= self._source_timeout_ms * 1_000_000):
+                return DispatchOutcome(False, "target_expired_during_readiness_wait")
         trajectory = JointTrajectory()
         trajectory.header.frame_id = self._target_frame
         trajectory.joint_names = list(SO101_GRIPPER_JOINTS)
@@ -2379,10 +2571,12 @@ class GraspSequenceNode(Node):
                 self._joint_state = None
                 self._latest_target = None
                 self._target_cache.clear()
+                self._measured_cube_cache.clear()
                 self._planning_scene_status = None
                 self._planning_scene_status_generation = 0
                 self._planning_scene_status_event.clear()
                 self._active_anchor = None
+                self._lift_observation_binding = None
                 self._active_request = None
                 self._last_feedback = None
                 self._last_terminal_command_id = ""

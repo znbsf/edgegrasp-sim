@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "status": "BILATERAL_CONTACT_SMALL_LIFT_FIXED_ORIENTATION_MODEL_REFUSAL",
+  "capture_320": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_320_capture_20260906a",
+    "live_validation": {
+      "checks": {
+        "strictly_increasing_source": true,
+        "source_preserved_from_three_inputs": true,
+        "identity_preserved": true,
+        "receiver_observed_fresh_targets": true,
+        "permission_denied_after_source_expiry": true,
+        "cleaned_scoped_processes": true
+      },
+      "passed": true,
+      "pipeline_sha256": "96f8cada9dff17b85c964434f1d89e537afd770832aed09b191ab5ff0357e0dc",
+      "observed_targets": 37,
+      "claim": "live_perception_and_permission_only",
+      "motion_requested": false,
+      "physics_grasp_verified": false
+    },
+    "spatial_evaluation_sha256": "cafe863292f3cbc6ca5d98fee9692b990a3b1ec08ab15459995ecc3e5d06c663",
+    "observed_sim_wall_ratio": 0.22135087068336054,
+    "adopted_for_runtime": false
+  },
+  "plan": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_v015_plan_20260906a",
+    "sha256": "08f058d68541b2eacc6067464de6bd5fcfb1defcbae75148b3020fcec8ae23c3",
+    "velocity_scaling": 0.15,
+    "acceleration_scaling": 0.1,
+    "status": "PLAN_ONLY_PASS",
+    "execution_count": 0
+  },
+  "runtime": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_v015_trial_20260906a",
+    "result": {
+      "all_gripper_tokens_observed": true,
+      "baseline_z_m": 0.20499999990200096,
+      "evidence_digest": "96ec94e93021216cb174a26f6be1334b0dca3e7246bf27e2f3c6c632e918900c",
+      "final_z_m": 0.20696548221536676,
+      "gripper_contact_count": 1637,
+      "gripper_contact_counts_by_token": {
+        "fixed_finger_pad": 386,
+        "moving_finger_pad": 1251
+      },
+      "gripper_contact_observed": true,
+      "gripper_contact_quality_by_token": {
+        "fixed_finger_pad": {
+          "max_abs_normal_force_n": 1.5693510237921733,
+          "max_force_magnitude_n": 1.7191359452766481,
+          "max_penetration_depth_m": 7.438974188713962e-05
+        },
+        "moving_finger_pad": {
+          "max_abs_normal_force_n": 1.0122742208660338,
+          "max_force_magnitude_n": 1.3403434994605274,
+          "max_penetration_depth_m": 1.711729751681726e-05
+        }
+      },
+      "gripper_contact_timing_by_token": {
+        "fixed_finger_pad": {
+          "first_source_timestamp_ns": 29394000000,
+          "last_source_timestamp_ns": 29905000000
+        },
+        "moving_finger_pad": {
+          "first_source_timestamp_ns": 28137000000,
+          "last_source_timestamp_ns": 29905000000
+        }
+      },
+      "gripper_effort": {
+        "at_sequence_completion": null,
+        "available": true,
+        "joint_name": "gripper",
+        "latest": -0.024999999999999994,
+        "peak_abs": 0.02500000000000001,
+        "peak_abs_at_sequence_completion": null,
+        "sample_count": 1112
+      },
+      "last_terminal_command_id": "rgbd_v015_a|close_gripper|2",
+      "last_trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4",
+      "lift_observed": false,
+      "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+      "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+      "peak_z_m": 0.20696548221536676,
+      "physics_grasp_verified": false,
+      "physics_phase": "FAULT",
+      "physics_reason": "sequence_not_completed",
+      "physics_wrapper_status": 6,
+      "pose_sample_count": 1111,
+      "retention_observed": false,
+      "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+      "sequence_completed": false,
+      "sequence_completed_source_timestamp_ns": null,
+      "sequence_phase": "SAFE_STOP",
+      "sequence_reason": "target_source_stale",
+      "sequence_wrapper_status": 6,
+      "simultaneous_contact_quality": {
+        "max_min_abs_normal_force_n": 1.0122742208660338,
+        "max_min_force_magnitude_n": 1.3403434994605274,
+        "max_min_penetration_depth_m": 5.643901249997862e-07
+      },
+      "simultaneous_contact_timing": {
+        "first_source_timestamp_ns": 29394000000,
+        "last_source_timestamp_ns": 29905000000,
+        "last_source_timestamp_ns_at_sequence_completion": null,
+        "sample_count_at_sequence_completion": 0
+      },
+      "simultaneous_gripper_contact_sample_count": 386,
+      "table_contact_count": 7825,
+      "target_id": "target_cube",
+      "target_source_timestamp_ns": 18745000000,
+      "task_id": "rgbd_v015_a",
+      "type": "grasp_trial_result"
+    },
+    "offline_replay": {
+      "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+      "counts": {
+        "accepted": 564,
+        "inconsistent_cube_surfaces": 162
+      },
+      "published_target_count": 553,
+      "last_published_source_ns": 38215000000,
+      "unmatched_final_triads": 2,
+      "motion_requested": false
+    },
+    "independent_pose_evaluation": {
+      "claim": "evaluation_only_truth_not_perception_input",
+      "poses": [
+        {
+          "source_ns": 29720000000,
+          "center_m": [
+            0.24096873661317564,
+            0.1307710945739415,
+            0.20552740504650863
+          ],
+          "quaternion": [
+            -0.0036168836053190544,
+            0.009677789932238948,
+            0.3197421643560596,
+            0.9474482607867912
+          ],
+          "tilt_deg": 1.1839324771167647
+        },
+        {
+          "source_ns": 29730000000,
+          "center_m": [
+            0.24096540410116235,
+            0.13076744271491855,
+            0.20558261311357956
+          ],
+          "quaternion": [
+            -0.004018335905361353,
+            0.010663768010348159,
+            0.3197919097406978,
+            0.9474192691162506
+          ],
+          "tilt_deg": 1.3058842878956927
+        },
+        {
+          "source_ns": 29740000000,
+          "center_m": [
+            0.24096176405969122,
+            0.13076357477391568,
+            0.20564039934714645
+          ],
+          "quaternion": [
+            -0.004439001971348897,
+            0.01169918476736805,
+            0.3198433920261348,
+            0.9473877922553644
+          ],
+          "tilt_deg": 1.4339238600560236
+        },
+        {
+          "source_ns": 29750000000,
+          "center_m": [
+            0.24095772529035983,
+            0.13075941140935132,
+            0.20570174790817278
+          ],
+          "quaternion": [
+            -0.004886126054602174,
+            0.012802261090314224,
+            0.3198974444147739,
+            0.9473530772315307
+          ],
+          "tilt_deg": 1.5702968936261559
+        }
+      ]
+    },
+    "contact": {
+      "first_contact_delta_ns": 1256000000,
+      "first_contact_order": "moving_then_fixed",
+      "first_fixed_source_timestamp_ns": 29392000000,
+      "first_moving_source_timestamp_ns": 28136000000,
+      "first_simultaneous_source_timestamp_ns": 29392000000,
+      "last_simultaneous_source_timestamp_ns": 35018000000,
+      "simultaneous_during_lift_start": true,
+      "simultaneous_span_ns": 5626000000
+    },
+    "cube": {
+      "baseline_pose": {
+        "cube_x_m": 0.241084288413,
+        "cube_y_m": 0.129586660297,
+        "cube_z_m": 0.20499999990200096,
+        "receive_ns": 14300000000,
+        "stream": "cube_pose",
+        "time_ns": 14300000000
+      },
+      "final_pose": {
+        "cube_x_m": 0.2392806931061969,
+        "cube_y_m": 0.1293677720216483,
+        "cube_z_m": 0.20499992915231266,
+        "receive_ns": 38280000000,
+        "stream": "cube_pose",
+        "time_ns": 38280000000
+      },
+      "final_xy_drift_m": 0.0018168291355569524,
+      "peak_lift_m": 0.0021475783873142473,
+      "peak_pose": {
+        "cube_x_m": 0.2408017060508239,
+        "cube_y_m": 0.130633047804993,
+        "cube_z_m": 0.2071475782893152,
+        "receive_ns": 29916000000,
+        "stream": "cube_pose",
+        "time_ns": 29920000000
+      }
+    },
+    "trial_log_sha256": "aeb969335c23223a8ebf50c1106484416ed911f2e8b12223d9158c922fb67075",
+    "mcap_sha256": "91dc2c9d77745bd24f743b2cd6399df195613946539e97bf2d75ffa7cb4f3b25",
+    "timeline_sha256": "56eb54193ca7ae9cd77b1a91716fa38a03e3e17b11dbdf47b68d0c3f19e9f3f8",
+    "cleanup_zero": true,
+    "release_fallback": "CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED"
+  },
+  "claims": {
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  },
+  "next_step": "Fit small object orientation changes from RGB-D data, retain existing residual/freshness gates, and independently evaluate on synthetic and recorded geometry before another trial."
+}

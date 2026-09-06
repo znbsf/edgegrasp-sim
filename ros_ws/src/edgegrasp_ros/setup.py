@@ -28,6 +28,7 @@ setup(
     entry_points={
         "console_scripts": [
             "mock_target_publisher = edgegrasp_ros.mock_target_publisher:main",
+            "rgbd_target_publisher = edgegrasp_ros.rgbd_target_publisher:main",
             "safety_monitor = edgegrasp_ros.safety_monitor:main",
             "interface_probe = edgegrasp_ros.interface_probe:main",
             "planning_scene_loader = edgegrasp_ros.planning_scene_loader:main",

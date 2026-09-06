@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "ROTATION40_OFFLINE_AND_LIVE_QUALIFIED_NO_NEW_MOTION",
+  "historical_physics_audit": {
+    "claim": "historical_independent_physics_only_not_RGBD_validation",
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/candidate024_face_aligned_runtime_20260829T0227",
+    "first_crossings": {
+      "0.005": {
+        "source_ns": 40800000000,
+        "rotation_deg": 12.90481812756747,
+        "lift_m": 0.005054931523111428,
+        "xy_drift_m": 0.0012281413439224256
+      },
+      "0.01": {
+        "source_ns": 41250000000,
+        "rotation_deg": 32.50031811049022,
+        "lift_m": 0.010068094149067425,
+        "xy_drift_m": 0.0048473164233527564
+      },
+      "0.02": {
+        "source_ns": 41720000000,
+        "rotation_deg": 35.79754218662057,
+        "lift_m": 0.020202504328921844,
+        "xy_drift_m": 0.00595897795341539
+      },
+      "0.028": {
+        "source_ns": 42150000000,
+        "rotation_deg": 35.828981516408334,
+        "lift_m": 0.028009416467055764,
+        "xy_drift_m": 0.006579681817785182
+      }
+    }
+  },
+  "offline": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_region_trial_20260906a/offline_rgbd_rotation40",
+    "summary": {
+      "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+      "counts": {
+        "accepted": 745
+      },
+      "published_target_count": 479,
+      "last_published_source_ns": 30625000000,
+      "unmatched_final_triads": 2,
+      "motion_requested": false
+    },
+    "evaluation_summary": {
+      "claim": "offline_independent_spatial_evaluation_only",
+      "samples": 745,
+      "passed": 745,
+      "max_error_m": 0.00010560997172489163,
+      "interpolation_missing_count": 1,
+      "max_interpolated_error_m": 1.0430459516567884e-05
+    }
+  },
+  "live": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_rotation40_capture_20260906a",
+    "safety": {
+      "checks": {
+        "strictly_increasing_source": true,
+        "source_preserved_from_three_inputs": true,
+        "identity_preserved": true,
+        "receiver_observed_fresh_targets": true,
+        "permission_denied_after_source_expiry": true,
+        "cleaned_scoped_processes": true
+      },
+      "passed": true,
+      "pipeline_sha256": "e16b63c31347b253f6c021e603969cab484f1a1034d3307876c8f3ee94eeec99",
+      "observed_targets": 34,
+      "claim": "live_perception_and_permission_only",
+      "motion_requested": false,
+      "physics_grasp_verified": false
+    },
+    "permission_timing": {
+      "claim": "publisher_timing_diagnostic_only",
+      "checks": {
+        "permission_issuance_observed": true,
+        "diagnostic_sequence_contiguous": true,
+        "allowed_decisions_within_source_budget": true,
+        "allowed_publications_within_source_budget": true
+      },
+      "passed": true,
+      "permission_rows": 276,
+      "allowed_rows": 62,
+      "receiver_minus_publisher_clock_ns": {
+        "min": -54000000,
+        "max": 152000000
+      },
+      "does_not_reconstruct_prior_unstamped_runs": true
+    }
+  },
+  "fixed_pad_geometry_diagnostic": {
+    "artifact_path": "/home/edgegrasp/ros2_ws/test_results/rgbd_region_trial_20260906a/visual_fixed_pad_consistency.json",
+    "samples": 30,
+    "missing_TF": [],
+    "minimum_fixed_pad_sat_overlap_m": -7.609429409153363e-06,
+    "boundary": "SAT geometry only; no physical contact or force proof; fixed pad only, not a moving-pad model."
+  },
+  "verification": {
+    "ros_rgbd_checks_passed": 21,
+    "ruff": "PASS",
+    "note": "Added measured orientation matrix output. Synthetic proper-rotation and angular-error checks use 0.001 rad, not exact elementwise equality."
+  },
+  "artifact_sha256": {
+    "rgbd_region_trial_20260906a\\visual_fixed_pad_consistency.json": "30faac53637fe89652d105cad68a649e47de968470edb16a33075a245c7750fc",
+    "rgbd_region_trial_20260906a\\historical_physics_motion_audit.json": "a2184d2b6692dfc3300de6059fab2c07b983672c06f813a66b45dd7788b9a17b",
+    "rgbd_region_trial_20260906a\\offline_rgbd_rotation40\\spatial_evaluation.json": "0ff1ae009ff8426fc7822c273e0447a9469f0c5230294191c227cb84de2662e8",
+    "rgbd_rotation40_capture_20260906a\\scope.json": "72b44348b183d40c2035ad4730ba935f23464db607a76aa7a12851214722184c"
+  },
+  "claims": {
+    "new_motion_executed": false,
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  }
+}

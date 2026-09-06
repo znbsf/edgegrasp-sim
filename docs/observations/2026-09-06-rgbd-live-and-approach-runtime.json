@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "status": "LIVE_INPUT_PASS_APPROACH_OCCLUSION_SAFE_STOP",
+  "runs": [
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_live_safety_20260906a",
+      "validation": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": true,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": true,
+        "pipeline_sha256": "77342fed598aac2f512668f5067c80ea9281dc2babb5db961925c467482bb7b9",
+        "observed_targets": 39,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "validation_sha256": "0a8731549a29ddba7dba47a4baa29cc3497084c29b1591057e5f0e7f2cdf740a"
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_live_safety_50hz_20260906a",
+      "validation": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": false,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": false,
+        "pipeline_sha256": "f027200b83ed6905b707805f3a7b183046c2513169c903940ba68cc53c62388e",
+        "observed_targets": 44,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "validation_sha256": "fe8097ce4e70d3854ed53a0efee8e07ee6dec462a58867f07bc93d9c6353a630"
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_live_safety_50hz_20260906b",
+      "validation": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": true,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": true,
+        "pipeline_sha256": "194ff5cc8648f8498cb6fa418d7d3e78af3da811a1e0c4d997edd9207d10f032",
+        "observed_targets": 47,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "validation_sha256": "a531559471cf37891bfdf9ebd4302a7ef8e87080b7448f92af92ae711a6b83d1"
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_control_trial_20260906a",
+      "outcome": "preflight_material_placeholder_rejection",
+      "cleanup_log_sha256": "a4e7d8e78c75539fd62b9b63cb02c247ef302da7c4bb4a998bf9b95b88c569c5",
+      "cleanup_reports_zero_domain_processes": true
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_control_trial_20260906b",
+      "outcome": "observer_baseline_source_stale_retries_exhausted",
+      "trial_result": null,
+      "baseline_restart_ages_ns": [
+        112000000,
+        112000000,
+        114000000
+      ],
+      "trial_log_sha256": "a3d938640938919bfd6bc55a9518837d308a1300d142b9414c5c7f68dc7b787c",
+      "cleanup_log_sha256": "56c92ae0142ede13d1943efa71e52f5001853364a4733a12f641c34885d99f86",
+      "cleanup_reports_zero_domain_processes": true
+    },
+    {
+      "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_control_trial_20260906c",
+      "outcome": "approach_safe_stop_target_source_stale",
+      "trial_result": {
+        "all_gripper_tokens_observed": false,
+        "baseline_z_m": 0.20499999990200096,
+        "evidence_digest": "c8d64ab4bd0c049c5f91e45a42b70b5d5b2c1ccfaa67457e9c40de661a63d330",
+        "final_z_m": 0.20499999990200096,
+        "gripper_contact_count": 0,
+        "gripper_contact_counts_by_token": {
+          "fixed_finger_pad": 0,
+          "moving_finger_pad": 0
+        },
+        "gripper_contact_observed": false,
+        "gripper_contact_quality_by_token": {
+          "fixed_finger_pad": {
+            "max_abs_normal_force_n": null,
+            "max_force_magnitude_n": null,
+            "max_penetration_depth_m": null
+          },
+          "moving_finger_pad": {
+            "max_abs_normal_force_n": null,
+            "max_force_magnitude_n": null,
+            "max_penetration_depth_m": null
+          }
+        },
+        "gripper_contact_timing_by_token": {
+          "fixed_finger_pad": {
+            "first_source_timestamp_ns": null,
+            "last_source_timestamp_ns": null
+          },
+          "moving_finger_pad": {
+            "first_source_timestamp_ns": null,
+            "last_source_timestamp_ns": null
+          }
+        },
+        "gripper_effort": {
+          "at_sequence_completion": null,
+          "available": true,
+          "joint_name": "gripper",
+          "latest": 0.0003800413169460576,
+          "peak_abs": 0.0005517431090459441,
+          "peak_abs_at_sequence_completion": null,
+          "sample_count": 143
+        },
+        "last_terminal_command_id": "",
+        "last_trajectory_digest": "",
+        "lift_observed": false,
+        "matched_gripper_collision1": "",
+        "matched_gripper_collision2": "",
+        "peak_z_m": 0.20499999990200096,
+        "physics_grasp_verified": false,
+        "physics_phase": "FAULT",
+        "physics_reason": "sequence_not_completed",
+        "physics_wrapper_status": 6,
+        "pose_sample_count": 142,
+        "retention_observed": false,
+        "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+        "sequence_completed": false,
+        "sequence_completed_source_timestamp_ns": null,
+        "sequence_phase": "SAFE_STOP",
+        "sequence_reason": "target_source_stale",
+        "sequence_wrapper_status": 6,
+        "simultaneous_contact_quality": {
+          "max_min_abs_normal_force_n": null,
+          "max_min_force_magnitude_n": null,
+          "max_min_penetration_depth_m": null
+        },
+        "simultaneous_contact_timing": {
+          "first_source_timestamp_ns": null,
+          "last_source_timestamp_ns": null,
+          "last_source_timestamp_ns_at_sequence_completion": null,
+          "sample_count_at_sequence_completion": 0
+        },
+        "simultaneous_gripper_contact_sample_count": 0,
+        "table_contact_count": 1277,
+        "target_id": "target_cube",
+        "target_source_timestamp_ns": 18360000000,
+        "task_id": "rgbd-control-20260906c",
+        "type": "grasp_trial_result"
+      },
+      "baseline_restart_ages_ns": [],
+      "trial_log_sha256": "840bcf252b78d64719edb09b383be3f8e4cf04c1b08552f04c0cb18a29e3f364",
+      "cleanup_log_sha256": "1010fc448060ee025d12d4d2a6f07e3d08e38645e16904fc32f17526b7a878c0",
+      "cleanup_reports_zero_domain_processes": true
+    }
+  ],
+  "offline_replay": {
+    "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+    "counts": {
+      "accepted": 241,
+      "incomplete_cube_extent": 3,
+      "missing_visible_face": 361
+    },
+    "published_target_count": 227,
+    "last_published_source_ns": 19620000000,
+    "unmatched_final_triads": 16,
+    "motion_requested": false
+  },
+  "offline_replay_sha256": "165f442827830bda28d92acdc2691775aecf28c6eafa4063fb48082540731693",
+  "validation": {
+    "windows_passed": 338,
+    "windows_skipped": 3,
+    "ros_rgbd_checks_passed": 13,
+    "ruff": "PASS"
+  },
+  "physics_grasp_verified": false,
+  "accepted_goal_result_timeout_verified": false,
+  "strong_move_group_request_id_correlation": false,
+  "next_action": "Move fixed simulated camera outside the arm occlusion path; qualify observations and isolated plan-only before another execution.",
+  "boundary": "One declared control position only so far. No close/lift physical evidence; next two positions are declared but untested. No real MoveGroup process-interruption experiments were performed."
+}

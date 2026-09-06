@@ -1,4 +1,5 @@
 from __future__ import annotations
+from edgegrasp_interfaces.msg import TrackedTarget
 
 import json
 from pathlib import Path
@@ -168,7 +169,11 @@ def test_trial_client_derives_candidate009_descend_and_lift_from_profile() -> No
         )
     }[name]
 
-    approach, descend, lift = node._resolved_stage_positions()
+    target = TrackedTarget()
+    target.observation.point.x = 0.24695465627174787
+    target.observation.point.y = 0.1218646928533295
+    target.observation.point.z = 0.205
+    approach, descend, lift = node._resolved_stage_positions(target)
 
     assert approach == (
         0.18606933614192925,
@@ -183,6 +188,12 @@ def test_trial_client_derives_candidate009_descend_and_lift_from_profile() -> No
         (0.24572885309767808, 0.1519924630851577, 0.2567578445611808),
         abs=1e-12,
     )
+    target.observation.point.x += 0.0002
+    # Poison scene truth: stage generation must depend only on the observation.
+    node._cube.pose_world.position_m = (9., 9., 9.)
+    _, shifted_descend, shifted_lift = node._resolved_stage_positions(target)
+    assert shifted_descend[0] == pytest.approx(descend[0] + 0.0002)
+    assert shifted_lift[0] == pytest.approx(lift[0] + 0.0002)
 
 
 def test_client_waits_for_action_server_then_snapshots_fresh_target(

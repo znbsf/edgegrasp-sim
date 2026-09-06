@@ -198,7 +198,7 @@ def test_candidate009_runtime_path_uses_profile_derived_positions() -> None:
 
     assert 'declare_parameter("derive_descend_and_lift_from_profile", False)' in client
     assert "derive_grasp_stage_geometry" in client
-    assert "self._resolved_stage_positions()" in client
+    assert "self._resolved_stage_positions(target)" in client
     assert "trial_derive_descend_lift=${6:-false}" in harness
     assert '-p derive_descend_and_lift_from_profile:="$trial_derive_descend_lift"' in harness
     assert json.loads(OBSERVATION.read_text(encoding="utf-8"))["candidate009"][

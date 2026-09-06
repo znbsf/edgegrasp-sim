@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import subprocess
 
+from edgegrasp.camera import configure_sim_camera
 from edgegrasp.collision_proxy import (
     apply_collision_proxies,
     load_collision_proxy_contract,
@@ -74,6 +75,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--robot-name", default="so101")
     parser.add_argument("--use-camera", choices=("true", "false"), default="true")
+    parser.add_argument("--camera-view", choices=("upstream", "opposite_table_edge"), default="upstream")
+    parser.add_argument("--camera-resolution", choices=("upstream", "320x180"), default="upstream")
+    parser.add_argument("--camera-update-rate-hz", type=float, default=5.0)
     parser.add_argument("--xacro-command", default="xacro")
     parser.add_argument("--moving-pad-distal-extension-m", type=float, default=0.0)
     parser.add_argument(
@@ -122,8 +126,13 @@ def main() -> int:
     material_profile = select_pad_contact_material_profile(
         material_contract, args.pad_contact_material_profile
     )
+    expanded = completed.stdout
+    if args.use_camera == "true":
+        expanded = configure_sim_camera(expanded, rate_hz=args.camera_update_rate_hz, view=args.camera_view, resolution=args.camera_resolution)
+    elif args.camera_view != "upstream":
+        raise ValueError("camera view requires camera")
     transformed, report = apply_collision_proxies(
-        completed.stdout, contract, pad_contact_material=material_profile
+        expanded, contract, pad_contact_material=material_profile
     )
     control_report = None
     if args.gripper_control_profile == POSITION_EFFORT_PRELOAD_PROFILE:

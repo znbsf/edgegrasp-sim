@@ -8,6 +8,8 @@ domain and epoch and latches on ROS clock rollback.
 
 from __future__ import annotations
 
+import json
+
 import rclpy
 from edgegrasp.config import (
     DEFAULT_ROS_FUTURE_SKEW_TOLERANCE_MS,
@@ -70,6 +72,8 @@ class SafetyMonitor(Node):
         # subscription on the second executor thread.
         self._application_group = MutuallyExclusiveCallbackGroup()
         self._allowed = self.create_publisher(Bool, "/edgegrasp/motion_allowed", 10)
+        self._permission_evidence = self.create_publisher(String, "/edgegrasp/permission_evidence", 100)
+        self._permission_sequence = 0
         self._status = self.create_publisher(String, "/edgegrasp/safety_status", 10)
         self.create_subscription(
             PointStamped,
@@ -199,7 +203,7 @@ class SafetyMonitor(Node):
         if receive_age_ns > self._watchdog_timeout_ns:
             self._publish(False, "target_stream_timeout")
             return
-        self._publish(True, "allowed")
+        self._publish(True, "allowed", decision_ns=now_ns)
 
     def _publish_pending_decision(self, now_ns: int, future_ns: int) -> None:
         """Keep only a still-fresh prior target live while ROS clock catches up.
@@ -224,20 +228,32 @@ class SafetyMonitor(Node):
                 and 0 <= receive_age_ns <= self._watchdog_timeout_ns
             ):
                 self._publish(
-                    True, f"allowed_previous_target_pending:{future_ns}ns"
+                    True, f"allowed_previous_target_pending:{future_ns}ns", decision_ns=now_ns
                 )
                 return
         self._publish(False, f"future_target_pending:{future_ns}ns")
 
-    def _publish(self, allowed: bool, reason: str) -> None:
+    def _publish(self, allowed: bool, reason: str, *, decision_ns: int | None = None) -> None:
         allowed_message = Bool()
         allowed_message.data = allowed
         status_message = String()
         status_message.data = (
             f"{reason};clock_domain={self._clock_domain};clock_epoch={self._clock_epoch}"
         )
+        before_ns = self.get_clock().now().nanoseconds
         self._allowed.publish(allowed_message)
+        after_ns = self.get_clock().now().nanoseconds
         self._status.publish(status_message)
+        self._permission_sequence += 1
+        evidence = String()
+        evidence.data = json.dumps({
+            "sequence": self._permission_sequence, "allowed": allowed,
+            "reason": reason, "decision_ns": decision_ns,
+            "publish_before_ns": before_ns, "publish_after_ns": after_ns,
+            "target_source_ns": None if self._latest is None else self._latest.timestamp_ns,
+            "clock_domain": self._clock_domain, "clock_epoch": self._clock_epoch,
+        })
+        self._permission_evidence.publish(evidence)
 
     def _latch(self, reason: str) -> None:
         self._latched_reason = reason

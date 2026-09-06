@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "status": "ROTATION20_LIVE_PASS_RIGID_CONSISTENCY_REFUSAL",
+  "offline": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_rotation5_trial_20260906a/offline_rgbd_rotation20b",
+    "summary": {
+      "claim": "offline_spatial_replay_with_fixed_camera_calibration",
+      "counts": {
+        "accepted": 796
+      },
+      "published_target_count": 595,
+      "last_published_source_ns": 43858000000,
+      "unmatched_final_triads": 7,
+      "motion_requested": false
+    },
+    "evaluation_summary": {
+      "claim": "offline_independent_spatial_evaluation_only",
+      "samples": 796,
+      "passed": 791,
+      "max_error_m": 0.0007366593952977088,
+      "interpolation_missing_count": 7,
+      "max_interpolated_error_m": 8.685082569761127e-05
+    },
+    "sha256": "7c81093ace3907f4440012db4c75b13f1fc42696e235968c92cd12a087830fae"
+  },
+  "live": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_rotation20_capture_20260906a",
+    "validation": {
+      "checks": {
+        "strictly_increasing_source": true,
+        "source_preserved_from_three_inputs": true,
+        "identity_preserved": true,
+        "receiver_observed_fresh_targets": true,
+        "permission_denied_after_source_expiry": true,
+        "cleaned_scoped_processes": true
+      },
+      "passed": true,
+      "pipeline_sha256": "01c130c440d4e7b3bae2491b92dbab8af860d248b5848551cc052e5dcb91714a",
+      "observed_targets": 36,
+      "claim": "live_perception_and_permission_only",
+      "motion_requested": false,
+      "physics_grasp_verified": false
+    },
+    "issuance_validation": {
+      "claim": "publisher_timing_diagnostic_only",
+      "checks": {
+        "permission_issuance_observed": true,
+        "diagnostic_sequence_contiguous": true,
+        "allowed_decisions_within_source_budget": true,
+        "allowed_publications_within_source_budget": true
+      },
+      "passed": true,
+      "permission_rows": 257,
+      "allowed_rows": 64,
+      "receiver_minus_publisher_clock_ns": {
+        "min": 0,
+        "max": 48000000
+      },
+      "does_not_reconstruct_prior_unstamped_runs": true
+    }
+  },
+  "runtime": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_rotation20_trial_20260906a",
+    "result": {
+      "all_gripper_tokens_observed": true,
+      "baseline_z_m": 0.20499999990200096,
+      "evidence_digest": "f06a29e89636eb90e6656371feaad7f4a2d8cf8a02b2cafa1965d076e73c1b65",
+      "final_z_m": 0.21098511428029415,
+      "gripper_contact_count": 2022,
+      "gripper_contact_counts_by_token": {
+        "fixed_finger_pad": 561,
+        "moving_finger_pad": 1461
+      },
+      "gripper_contact_observed": true,
+      "gripper_contact_quality_by_token": {
+        "fixed_finger_pad": {
+          "max_abs_normal_force_n": 3.8084259400867215,
+          "max_force_magnitude_n": 4.265244294657155,
+          "max_penetration_depth_m": 6.869100405702822e-05
+        },
+        "moving_finger_pad": {
+          "max_abs_normal_force_n": 1.8458412896840612,
+          "max_force_magnitude_n": 2.4181420270106035,
+          "max_penetration_depth_m": 1.2200977806721414e-05
+        }
+      },
+      "gripper_contact_timing_by_token": {
+        "fixed_finger_pad": {
+          "first_source_timestamp_ns": 34026000000,
+          "last_source_timestamp_ns": 34798000000
+        },
+        "moving_finger_pad": {
+          "first_source_timestamp_ns": 32770000000,
+          "last_source_timestamp_ns": 34798000000
+        }
+      },
+      "gripper_effort": {
+        "at_sequence_completion": null,
+        "available": true,
+        "joint_name": "gripper",
+        "latest": -0.025000000000000005,
+        "peak_abs": 0.025000000000000012,
+        "peak_abs_at_sequence_completion": null,
+        "sample_count": 1136
+      },
+      "last_terminal_command_id": "rgbd_rot20_a|close_gripper|2",
+      "last_trajectory_digest": "b5014067fb7f9074c89c6f9ce6bd2378d4f625688fa4afb3070ee7ddfff227d4",
+      "lift_observed": false,
+      "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+      "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+      "peak_z_m": 0.21098511428029415,
+      "physics_grasp_verified": false,
+      "physics_phase": "FAULT",
+      "physics_reason": "sequence_not_completed",
+      "physics_wrapper_status": 6,
+      "pose_sample_count": 1136,
+      "retention_observed": false,
+      "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+      "sequence_completed": false,
+      "sequence_completed_source_timestamp_ns": null,
+      "sequence_phase": "SAFE_STOP",
+      "sequence_reason": "target_not_ready:target_geometry_drift:0.0052997063615872145",
+      "sequence_wrapper_status": 6,
+      "simultaneous_contact_quality": {
+        "max_min_abs_normal_force_n": 1.8458412896840612,
+        "max_min_force_magnitude_n": 2.4181420270106035,
+        "max_min_penetration_depth_m": 5.626366707152386e-07
+      },
+      "simultaneous_contact_timing": {
+        "first_source_timestamp_ns": 34026000000,
+        "last_source_timestamp_ns": 34798000000,
+        "last_source_timestamp_ns_at_sequence_completion": null,
+        "sample_count_at_sequence_completion": 0
+      },
+      "simultaneous_gripper_contact_sample_count": 561,
+      "table_contact_count": 8023,
+      "target_id": "target_cube",
+      "target_source_timestamp_ns": 23398000000,
+      "task_id": "rgbd_rot20_a",
+      "type": "grasp_trial_result"
+    },
+    "cube": {
+      "baseline_pose": {
+        "cube_x_m": 0.241084288413,
+        "cube_y_m": 0.129586660297,
+        "cube_z_m": 0.20499999990200096,
+        "receive_ns": 17930000000,
+        "stream": "cube_pose",
+        "time_ns": 17930000000
+      },
+      "final_pose": {
+        "cube_x_m": 0.23328331558530807,
+        "cube_y_m": 0.1250528871351668,
+        "cube_z_m": 0.20499982568994332,
+        "receive_ns": 38681000000,
+        "stream": "cube_pose",
+        "time_ns": 38680000000
+      },
+      "final_xy_drift_m": 0.009022764329258906,
+      "peak_lift_m": 0.006140138556242125,
+      "peak_pose": {
+        "cube_x_m": 0.23948913930178073,
+        "cube_y_m": 0.1298991656748934,
+        "cube_z_m": 0.2111401384582431,
+        "receive_ns": 34820000000,
+        "stream": "cube_pose",
+        "time_ns": 34820000000
+      }
+    },
+    "contact": {
+      "first_contact_delta_ns": 1256000000,
+      "first_contact_order": "moving_then_fixed",
+      "first_fixed_source_timestamp_ns": 34026000000,
+      "first_moving_source_timestamp_ns": 32770000000,
+      "first_simultaneous_source_timestamp_ns": 34026000000,
+      "last_simultaneous_source_timestamp_ns": 36981000000,
+      "simultaneous_during_lift_start": true,
+      "simultaneous_span_ns": 2955000000
+    },
+    "rigid_consistency_replay": {
+      "claim": "recorded_image_and_TF_consistency_replay_only",
+      "bound_source_ns": 33991000000,
+      "rows": [
+        {
+          "source_ns": 34717000000,
+          "rigid_residual_m": 0.004715726416524995,
+          "observed_center_m": [
+            0.2401725652388434,
+            0.13024082409828097,
+            0.20968028505432404
+          ],
+          "xy_drift_from_bound_m": 0.0011231428808121339,
+          "observed_lift_from_bound_m": 0.004680417958919297
+        },
+        {
+          "source_ns": 34750000000,
+          "rigid_residual_m": 0.0052997063615872145,
+          "observed_center_m": [
+            0.23996628321989286,
+            0.13012310458810744,
+            0.21020113576998473
+          ],
+          "xy_drift_from_bound_m": 0.001240991408070779,
+          "observed_lift_from_bound_m": 0.005201268674579984
+        },
+        {
+          "source_ns": 34783000000,
+          "rigid_residual_m": 0.005756910064438786,
+          "observed_center_m": [
+            0.23974022175501541,
+            0.130002389878588,
+            0.21073988693552098
+          ],
+          "xy_drift_from_bound_m": 0.0014077604991860205,
+          "observed_lift_from_bound_m": 0.0057400198401162394
+        }
+      ]
+    },
+    "mcap_sha256": "bf5cb38b0214346be4d6cd5ba826d61c419a72857553c42df7d7a285ed5cfdc8",
+    "trial_sha256": "a4224580e8b29ab9609f7f88b8715f701a1e69623fee17932aa3b1bdb3845fa9",
+    "cleanup_zero": true,
+    "release_exit_code": 0
+  },
+  "verification": {
+    "ros_geometry_checks_passed": 17
+  },
+  "claims": {
+    "physics_grasp_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  }
+}

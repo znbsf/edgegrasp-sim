@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "status": "BOTH_ORIGINAL_IK_FAILURES_RETAINED_BOTH_DERIVED_PLANS_PASS",
+  "rows": [
+    {
+      "position": "x_minus_1mm",
+      "capture_artifact": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_minus_capture_20260906a",
+      "live_safety": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": true,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": true,
+        "pipeline_sha256": "b07ecaeb843027e622b1f22996dd2345367854c0e80ce5e9eeb0b1f7cef173ac",
+        "observed_targets": 46,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "issuance": {
+        "claim": "publisher_timing_diagnostic_only",
+        "checks": {
+          "permission_issuance_observed": true,
+          "diagnostic_sequence_contiguous": true,
+          "allowed_decisions_within_source_budget": true,
+          "allowed_publications_within_source_budget": true
+        },
+        "passed": true,
+        "permission_rows": 230,
+        "allowed_rows": 81,
+        "receiver_minus_publisher_clock_ns": {
+          "min": 0,
+          "max": 20000000
+        },
+        "does_not_reconstruct_prior_unstamped_runs": true
+      },
+      "spatial_samples": 10,
+      "spatial_passes": 9,
+      "original_fixed_pose_plan": {
+        "artifact": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_minus_plan_20260906a",
+        "status": "PLAN_ONLY_REJECTED",
+        "NO_IK_SOLUTION_in_log": true,
+        "execution_attempted": false,
+        "cleanup_zero": true
+      },
+      "derived_yaw_candidate": {
+        "name": "derived_base_yaw_for_same_declared_position",
+        "delta_rad": 0.0025363563491742624,
+        "delta_deg": 0.145322514148895,
+        "maximum_abs_deg": 0.5,
+        "shoulder_pivot_m": [
+          0.0388353,
+          -8.97657e-09,
+          0.0624
+        ],
+        "plane_normal": [
+          -0.6051916311206255,
+          0.7960798261588432,
+          2.1124600704084248e-06
+        ],
+        "recorded_rgbd_observation": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_minus_capture_20260906a/first_accepted_estimate.json",
+        "baseline_plan": "/home/edgegrasp/ros2_ws/test_results/rgbd_v015_plan_20260906a/plan_only_result.json",
+        "claim": "kinematic candidate only; collision validation and isolated plan required"
+      },
+      "derived_plan": {
+        "artifact": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_minus_yaw_plan_20260906a",
+        "status": "PLAN_ONLY_PASS",
+        "all_segments_accepted": true,
+        "execution_attempted": false,
+        "trajectory_publication_count": 0,
+        "cleanup_zero": true
+      },
+      "hashes": {
+        "rgbd_x_minus_plan_20260906a/plan_only_result.json": "48ac322f0ac9ac8534028fa24405bdfd9c71b1856f7ec2812a08a5cb90463e9c",
+        "rgbd_x_minus_yaw_plan_20260906a/plan_only_result.json": "9bb559ed41955bebe8b406d61b0ee31adb82eca326ef84066da41625ebfaac04",
+        "rgbd_declared_positions_20260906a/so101_rgbd_x_minus_1mm_yaw.json": "deccd4b1a19d6229431ca6cbe40fec28e3f638f0f9bed57f2e85a670cd91b3a3",
+        "rgbd_x_minus_capture_20260906a/first_accepted_estimate.json": "ed9b3a0586528a3ddc213dee8093a15ea35a4161d2b83ab048b62faf6ff50df1"
+      }
+    },
+    {
+      "position": "x_plus_1mm",
+      "capture_artifact": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_plus_capture_20260906a",
+      "live_safety": {
+        "checks": {
+          "strictly_increasing_source": true,
+          "source_preserved_from_three_inputs": true,
+          "identity_preserved": true,
+          "receiver_observed_fresh_targets": true,
+          "permission_denied_after_source_expiry": true,
+          "cleaned_scoped_processes": true
+        },
+        "passed": true,
+        "pipeline_sha256": "02019daf7cb01d15d91a0e3d623f36511a91eac81a17e4bedfafefc4281873da",
+        "observed_targets": 57,
+        "claim": "live_perception_and_permission_only",
+        "motion_requested": false,
+        "physics_grasp_verified": false
+      },
+      "issuance": {
+        "claim": "publisher_timing_diagnostic_only",
+        "checks": {
+          "permission_issuance_observed": true,
+          "diagnostic_sequence_contiguous": true,
+          "allowed_decisions_within_source_budget": true,
+          "allowed_publications_within_source_budget": true
+        },
+        "passed": true,
+        "permission_rows": 240,
+        "allowed_rows": 99,
+        "receiver_minus_publisher_clock_ns": {
+          "min": -482000000,
+          "max": 30000000
+        },
+        "does_not_reconstruct_prior_unstamped_runs": true
+      },
+      "spatial_samples": 10,
+      "spatial_passes": 9,
+      "original_fixed_pose_plan": {
+        "artifact": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_plus_plan_20260906a",
+        "status": "PLAN_ONLY_REJECTED",
+        "NO_IK_SOLUTION_in_log": true,
+        "execution_attempted": false,
+        "cleanup_zero": true
+      },
+      "derived_yaw_candidate": {
+        "name": "derived_base_yaw_for_same_declared_position",
+        "delta_rad": -0.0025190237362489043,
+        "delta_deg": -0.14432942858033806,
+        "maximum_abs_deg": 0.5,
+        "shoulder_pivot_m": [
+          0.0388353,
+          -8.97657e-09,
+          0.0624
+        ],
+        "plane_normal": [
+          -0.6051916311206255,
+          0.7960798261588432,
+          2.1124600704084248e-06
+        ],
+        "recorded_rgbd_observation": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_plus_capture_20260906a/first_accepted_estimate.json",
+        "baseline_plan": "/home/edgegrasp/ros2_ws/test_results/rgbd_v015_plan_20260906a/plan_only_result.json",
+        "claim": "kinematic candidate only; collision validation and isolated plan required"
+      },
+      "derived_plan": {
+        "artifact": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_plus_yaw_plan_20260906a",
+        "status": "PLAN_ONLY_PASS",
+        "all_segments_accepted": true,
+        "execution_attempted": false,
+        "trajectory_publication_count": 0,
+        "cleanup_zero": true
+      },
+      "hashes": {
+        "rgbd_x_plus_plan_20260906a/plan_only_result.json": "06194410a83fc80090f3ab26def2544162e9909287f0359a4653c2f96c09238c",
+        "rgbd_x_plus_yaw_plan_20260906a/plan_only_result.json": "16f3178f7b7ea5a359f5a7361f131dd5b7d584de7d47d34280bd1545e89b2ad7",
+        "rgbd_declared_positions_20260906a/so101_rgbd_x_plus_1mm_yaw.json": "0bcfac5682d08ed905de40a4d253ead4d911bbea8dd1cdbeaa04a60e0ad68885",
+        "rgbd_x_plus_capture_20260906a/first_accepted_estimate.json": "90855a5fad5e63fe0f0a4228ce4c8b04063ba5fe1e5725e82651edc795d3665d"
+      }
+    }
+  ],
+  "physics_grasp_verified": false,
+  "hardware_verified": false
+}

@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "status": "CONTROL_RGBD_TO_INDEPENDENT_PHYSICS_VERIFIED_TRANSLATIONS_PENDING",
+  "runtime_artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_measured_pad_trial_20260906b",
+  "result": {
+    "all_gripper_tokens_observed": true,
+    "baseline_z_m": 0.20499999990200096,
+    "evidence_digest": "b20bbe15418f666fb7e9a573af6343504ef4edb5413d3247c397634e428a85b8",
+    "final_z_m": 0.23384681576337785,
+    "gripper_contact_count": 4114,
+    "gripper_contact_counts_by_token": {
+      "fixed_finger_pad": 1612,
+      "moving_finger_pad": 2502
+    },
+    "gripper_contact_observed": true,
+    "gripper_contact_quality_by_token": {
+      "fixed_finger_pad": {
+        "max_abs_normal_force_n": 3.8106707572539404,
+        "max_force_magnitude_n": 4.268352489487249,
+        "max_penetration_depth_m": 7.453650630051024e-05
+      },
+      "moving_finger_pad": {
+        "max_abs_normal_force_n": 1.8446892441835536,
+        "max_force_magnitude_n": 2.4166856786257855,
+        "max_penetration_depth_m": 1.4568140746417518e-05
+      }
+    },
+    "gripper_contact_timing_by_token": {
+      "fixed_finger_pad": {
+        "first_source_timestamp_ns": 34593000000,
+        "last_source_timestamp_ns": 36896000000
+      },
+      "moving_finger_pad": {
+        "first_source_timestamp_ns": 33337000000,
+        "last_source_timestamp_ns": 36896000000
+      }
+    },
+    "gripper_effort": {
+      "at_sequence_completion": -0.025,
+      "available": true,
+      "joint_name": "gripper",
+      "latest": -0.025,
+      "peak_abs": 0.025000000000000015,
+      "peak_abs_at_sequence_completion": 0.025000000000000015,
+      "sample_count": 1282
+    },
+    "last_terminal_command_id": "rgbd-measured-pad-control-b|lift|3",
+    "last_trajectory_digest": "cba8a577a4a01aa4b0b3b270ab351bd62b35eb9e89745153f25c473ae54c8248",
+    "lift_observed": true,
+    "matched_gripper_collision1": "target_cube::target_cube_link::collision",
+    "matched_gripper_collision2": "so101::moving_jaw_so101_v1_link::moving_jaw_so101_v1_link_fixed_joint_lump__edgegrasp_moving_finger_pad_link_collision_1",
+    "peak_z_m": 0.2338472850330586,
+    "physics_grasp_verified": true,
+    "physics_phase": "VERIFIED",
+    "physics_reason": "contact_lift_retention_verified",
+    "physics_wrapper_status": 4,
+    "pose_sample_count": 1283,
+    "retention_observed": true,
+    "scene_digest": "811188d6d060c62d15188027f6e2455905ff2bd906de05859359c713f1664579",
+    "sequence_completed": true,
+    "sequence_completed_source_timestamp_ns": 36400000000,
+    "sequence_phase": "COMPLETE",
+    "sequence_reason": "correlated_sequence_completed;physics_unverified",
+    "sequence_wrapper_status": 4,
+    "simultaneous_contact_quality": {
+      "max_min_abs_normal_force_n": 1.8446892441835536,
+      "max_min_force_magnitude_n": 2.4166856786257855,
+      "max_min_penetration_depth_m": 5.495396526063179e-07
+    },
+    "simultaneous_contact_timing": {
+      "first_source_timestamp_ns": 34593000000,
+      "last_source_timestamp_ns": 36896000000,
+      "last_source_timestamp_ns_at_sequence_completion": 36400000000,
+      "sample_count_at_sequence_completion": 1271
+    },
+    "simultaneous_gripper_contact_sample_count": 1612,
+    "table_contact_count": 8032,
+    "target_id": "target_cube",
+    "target_source_timestamp_ns": 24025000000,
+    "task_id": "rgbd-measured-pad-control-b",
+    "type": "grasp_trial_result"
+  },
+  "whole_bag_cube": {
+    "baseline_pose": {
+      "cube_x_m": 0.241084288413,
+      "cube_y_m": 0.129586660297,
+      "cube_z_m": 0.20499999990200096,
+      "receive_ns": 19521000000,
+      "stream": "cube_pose",
+      "time_ns": 19520000000
+    },
+    "final_pose": {
+      "cube_x_m": 0.2222406806102954,
+      "cube_y_m": 0.11695469545548667,
+      "cube_z_m": 0.2123627752186724,
+      "receive_ns": 42651000000,
+      "stream": "cube_pose",
+      "time_ns": 42650000000
+    },
+    "final_xy_drift_m": 0.02268585662432386,
+    "peak_lift_m": 0.028847785404281234,
+    "peak_pose": {
+      "cube_x_m": 0.2346872865656216,
+      "cube_y_m": 0.12746960627594656,
+      "cube_z_m": 0.2338477853062822,
+      "receive_ns": 37200000000,
+      "stream": "cube_pose",
+      "time_ns": 37200000000
+    }
+  },
+  "provenance": {
+    "claim": "recorded_atomic_source_provenance_only",
+    "total": 641,
+    "active": 387,
+    "active_three_inputs": true,
+    "active_tracked_centers_match": true,
+    "sources_strictly_increasing": true,
+    "active_interval_ns": [
+      24025000000,
+      36896000000
+    ]
+  },
+  "spatial_evaluation": {
+    "claim": "offline_independent_spatial_evaluation_only",
+    "samples": 641,
+    "passed": 639,
+    "max_error_m": 0.0006537288411739509,
+    "interpolation_missing_count": 0,
+    "max_interpolated_error_m": 5.537128159564131e-05
+  },
+  "nearest_truth_failures": [
+    {
+      "source_ns": 34585000000,
+      "truth_source_ns": 34580000000,
+      "error_m": 0.0003078584458658217,
+      "passed": false,
+      "interpolated_error_m": 5.537128159564131e-05,
+      "bracketing_truth_ns": [
+        34580000000,
+        34590000000
+      ]
+    },
+    {
+      "source_ns": 39634000000,
+      "truth_source_ns": 39630000000,
+      "error_m": 0.0006537288411739509,
+      "passed": false,
+      "interpolated_error_m": 3.1259009369100934e-05,
+      "bracketing_truth_ns": [
+        39630000000,
+        39640000000
+      ]
+    }
+  ],
+  "temporal_alignment_boundary": "Nearest samples retain two failures, including one at close. Interpolated comparisons are supplementary, not exact-same-source ground truth.",
+  "release": {
+    "typed_exit_code": 2,
+    "fallback_status": "CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED"
+  },
+  "cleanup_zero": true,
+  "preceding_failure": {
+    "artifact_dir": "/home/edgegrasp/ros2_ws/test_results/rgbd_measured_pad_trial_20260906a",
+    "trial_exit_code": 9,
+    "peak_lift_m": 0.0,
+    "cleanup_zero": true,
+    "lock_order_regression_failed_as_expected": true
+  },
+  "generated_positions": {
+    "claim": "generated_inputs_only_no_motion_or_success",
+    "positions": [
+      {
+        "position_id": "x_minus_1mm",
+        "center_m": [
+          0.24008428841333182,
+          0.12958666029737353,
+          0.205
+        ],
+        "scene_digest": "d704c547e14c87a5f588c91a2669a0c9d6a93dc143f45e26ae56b5e1159cca48",
+        "files": {
+          "scene_rgbd_x_minus_1mm.json": "6fe3ddba3cd7af94a2ea5415051c14304b4ce93c68914767c1760c210dd207d6",
+          "so101_rgbd_x_minus_1mm.json": "5df6fcda25bd3156da1937e527220367977911b517e58501729d2109a35527f4",
+          "table_cube_rgbd_x_minus_1mm.sdf": "e2501a833ef828033d58bfff0a69cc1ae31d9c700fdc1eef6b16611784db26c1"
+        }
+      },
+      {
+        "position_id": "x_plus_1mm",
+        "center_m": [
+          0.24208428841333182,
+          0.12958666029737353,
+          0.205
+        ],
+        "scene_digest": "9b41c0a7e07d02a60e503d4956d8bbbe129aa2dd348892e92f8feae61d43fb60",
+        "files": {
+          "scene_rgbd_x_plus_1mm.json": "3954b5c8de1decdd0eaf7de58759c519bd73de72a5ba9c82bdc14e13b40a7af7",
+          "so101_rgbd_x_plus_1mm.json": "cf223586d8b1e7bcab288dcbf138cced92efe97686107fd96feaf850b03c4edb",
+          "table_cube_rgbd_x_plus_1mm.sdf": "cdcbd41e1e05a93d62b9378a25884ac12d73412868d846c2c70705a7092e0cbf"
+        }
+      }
+    ]
+  },
+  "claims": {
+    "control_simulation_physics_grasp_verified": true,
+    "translated_positions_verified": false,
+    "hardware_verified": false,
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false
+  },
+  "source_artifact_sha256": {
+    "rgbd_measured_pad_trial_20260906b/trial.log": "e76cf2a6584c9ff00b3fb4c03387b4a28f2645b08ee1c6c76807f400650f2d94",
+    "rgbd_measured_pad_trial_20260906b/mcap/mcap_0.mcap": "7544bc1095ffa5057a860afb3b9b87e2cd8ecc0d1967b1c5adcbe988acff0126",
+    "rgbd_measured_pad_trial_20260906b/live_rgbd_evaluation/spatial_evaluation.json": "77be9576f00cdd6dc7834387d9c144f7e6743a4658c6d8562b6ad14e120d1e22",
+    "rgbd_measured_pad_trial_20260906b/live_rgbd_evaluation/provenance.json": "1b0cfe887a0a3d406e4c27ec937607691314cb14d3fdbd2e8ef0352e3f40f7b6",
+    "rgbd_measured_pad_trial_20260906a/old_lock_order_regression.log": "a112dace1f63a415a81c2f8a0f3e541fdef93c6397f4829653dfc7405bf9ff54"
+  }
+}

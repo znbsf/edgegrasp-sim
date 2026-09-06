@@ -151,3 +151,20 @@ def test_candidate_harness_records_and_preflights_material_profile() -> None:
     assert "gz sdf -p" in harness
     assert "validate_pad_contact_material_sdf.py" in harness
     assert "pad_contact_material_mapping.json" in harness
+
+@pytest.mark.parametrize("branch", ["<ode />", "<ode><mu>1</mu></ode>", '<ode mu="1" />'])
+def test_converter_placeholder_does_not_hide_real_friction_settings(branch):
+    profile = select_pad_contact_material_profile(
+        load_pad_contact_material_contract(CONTRACT), "candidate012_control_mu1p0")
+    root = ET.fromstring(_converted_sdf(
+        target_collision_tokens=profile.target_collisions, coefficient=1.0))
+    collision = root.findall(".//collision")[-1]
+    surface = ET.SubElement(collision, "surface")
+    surface.append(ET.fromstring("<friction>" + branch + "</friction>"))
+    text = ET.tostring(root, encoding="unicode")
+    if branch == "<ode />":
+        report = validate_converted_pad_contact_material(text, profile)
+        assert len(report["explicit_friction_collision_names"]) == 2
+    else:
+        with pytest.raises(ContactMaterialError, match="leaked"):
+            validate_converted_pad_contact_material(text, profile)
