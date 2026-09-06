@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "protected": [
+    "%USERPROFILE%/Documents/edgegrasp-tools/blender-4.5.13-windows-x64",
+    "%USERPROFILE%/Documents/edgegrasp-tools/blender-install.json",
+    "%USERPROFILE%/Documents/edgegrasp-tools/blender-4.5.13.sha256",
+    "%USERPROFILE%/Documents/edgegrasp-replays/success",
+    "%USERPROFILE%/Documents/edgegrasp-replays/failed-service",
+    "//wsl.localhost/Ubuntu-24.04/home/edgegrasp/ros2_ws/test_results"
+  ],
+  "candidates": [
+    {
+      "path": "%USERPROFILE%/AppData/Local/Packages/OpenAI.Codex_2p2nqsd0c76g0/LocalCache/Local/EdgeGrasp/tools",
+      "kind": "failed_install",
+      "reason": "Task-created failed portable installations and duplicate downloads; check exact children against the current inventory"
+    },
+    {
+      "path": "%USERPROFILE%/Documents/edgegrasp-tools/blender-4.5.13-windows-x64.zip",
+      "kind": "download_archive",
+      "reason": "Verified portable installation is retained separately with its checksum receipt"
+    },
+    {
+      "path": "%USERPROFILE%/Documents/edgegrasp-replays/control",
+      "kind": "intermediate_replay",
+      "reason": "Initial export superseded by verified success replay"
+    },
+    {
+      "path": "%USERPROFILE%/Documents/edgegrasp-replays/control-final",
+      "kind": "intermediate_replay",
+      "reason": "Intermediate rendering superseded by verified success replay"
+    },
+    {
+      "path": "%USERPROFILE%/Documents/edgegrasp-replays/control-verified",
+      "kind": "intermediate_replay",
+      "reason": "Intermediate rendering superseded by verified success replay"
+    }
+  ]
+}

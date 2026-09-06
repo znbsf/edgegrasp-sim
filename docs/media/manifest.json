@@ -1,0 +1,21 @@
+{
+  "claim": "compressed_recorded_simulation_replay_demo_only",
+  "source_run": "rgbd_measured_pad_trial_20260906b",
+  "duration_seconds": 23.1,
+  "frames": 693,
+  "fps": 30,
+  "width": 768,
+  "height": 432,
+  "full_decode_passed": true,
+  "source_video_sha256": "9eab0a12f69367e40cdb50ef856c87853d43f0b2cd83611c6861488a932c3939",
+  "files": {
+    "rgbd-grasp-replay.mp4": {
+      "bytes": 92521,
+      "sha256": "335e98b977def0857b57e71d2d4b5958ce943b913c52b0a130ead78bcdc59a43"
+    },
+    "rgbd-grasp-replay.jpg": {
+      "bytes": 18090,
+      "sha256": "9cbeef9ea065f7b5129a60f235f65be72a5adf3552b435e6dd3f619016e020a9"
+    }
+  }
+}

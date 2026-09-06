@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "claim": "recorded_simulation_visual_replay_only",
+  "physics_recomputed": false,
+  "hardware_verified": false,
+  "accepted_goal_result_timeout_verified": false,
+  "strong_move_group_request_id_correlation": false,
+  "blender_install": {
+    "source": "https://download.blender.org/release/Blender4.5/blender-4.5.13-windows-x64.zip",
+    "version": "4.5.13",
+    "executable": "C:\\Users\\huang\\Documents\\edgegrasp-tools\\blender-4.5.13-windows-x64\\blender.exe",
+    "sha256": "b5fdf800ce65fa2f209e8f68d02667e4d720fa1c42f247c72d1882ab04decba6"
+  },
+  "tests": {
+    "windows_passed": 346,
+    "windows_skipped": 3,
+    "ruff": "passed",
+    "shell_syntax": "passed",
+    "powershell_syntax": "passed",
+    "success_mp4_full_decode": "passed"
+  },
+  "success_workflow_wall_seconds": 68.76877,
+  "cases": [
+    {
+      "name": "success",
+      "directory": "C:\\Users\\huang\\Documents\\edgegrasp-replays\\success",
+      "source_run": "/home/edgegrasp/ros2_ws/test_results/rgbd_measured_pad_trial_20260906b",
+      "source_interval_ns": [
+        19520000000,
+        42618000000
+      ],
+      "gap_frames": [],
+      "recorded_physics_grasp_verified": true,
+      "typed_release_exit_code": 2,
+      "build": {
+        "blend": "C:\\Users\\huang\\Documents\\edgegrasp-replays\\success\\replay.blend",
+        "frames": 693,
+        "objects": 755,
+        "preview_frame": 508,
+        "gap_frames": [],
+        "render_engine": "BLENDER_WORKBENCH",
+        "builder_sha256": "d682fd23975e7fd5e39e434a743095243ea6de1393cc7ef15cd2a25178d80054",
+        "replay_json_sha256": "e9d4a2b0e64f369e3bcae0533ce53268709687b22541cdceedb67b8a324e3d43"
+      },
+      "verification": {
+        "claim": "baked_display_transform_roundtrip_only",
+        "checked_transforms": 5494,
+        "frames": 693,
+        "max_position_error_m": 0.0,
+        "max_rotation_error_rad": 0.0,
+        "passed": true,
+        "physics_recomputed": false
+      },
+      "files": {
+        "replay.json": {
+          "bytes": 2317112,
+          "sha256": "e9d4a2b0e64f369e3bcae0533ce53268709687b22541cdceedb67b8a324e3d43"
+        },
+        "replay.blend": {
+          "bytes": 39394967,
+          "sha256": "38faf4214012c1a39d1b47201d4f7ca3ed72ddbc4802fb40dee1d01d4a990040"
+        },
+        "overview.png": {
+          "bytes": 954766,
+          "sha256": "6d9943eea4459fb36129724c4f101a43c6afd5f6132669aa11d4b1cede57986a"
+        },
+        "gripper.png": {
+          "bytes": 1093846,
+          "sha256": "60d426f474028ddd6b7c897666bb23d7b12e185914698dfae6197584521a860c"
+        },
+        "replay.mp4": {
+          "bytes": 935609,
+          "sha256": "9eab0a12f69367e40cdb50ef856c87853d43f0b2cd83611c6861488a932c3939"
+        }
+      }
+    },
+    {
+      "name": "failed-service",
+      "directory": "C:\\Users\\huang\\Documents\\edgegrasp-replays\\failed-service",
+      "source_run": "/home/edgegrasp/ros2_ws/test_results/rgbd_x_minus_trial_20260906a",
+      "source_interval_ns": [
+        15770000000,
+        32299000000
+      ],
+      "gap_frames": [],
+      "recorded_physics_grasp_verified": false,
+      "typed_release_exit_code": 0,
+      "build": {
+        "blend": "C:\\Users\\huang\\Documents\\edgegrasp-replays\\failed-service\\replay.blend",
+        "frames": 496,
+        "objects": 556,
+        "preview_frame": 378,
+        "gap_frames": [],
+        "render_engine": "BLENDER_WORKBENCH",
+        "builder_sha256": "d682fd23975e7fd5e39e434a743095243ea6de1393cc7ef15cd2a25178d80054",
+        "replay_json_sha256": "5c33f4965dd980f788732b80783af7062507361afb19d7d7f44928bbae938aa1"
+      },
+      "verification": {
+        "claim": "baked_display_transform_roundtrip_only",
+        "checked_transforms": 3968,
+        "frames": 496,
+        "max_position_error_m": 0.0,
+        "max_rotation_error_rad": 0.0,
+        "passed": true,
+        "physics_recomputed": false
+      },
+      "files": {
+        "replay.json": {
+          "bytes": 1583581,
+          "sha256": "5c33f4965dd980f788732b80783af7062507361afb19d7d7f44928bbae938aa1"
+        },
+        "replay.blend": {
+          "bytes": 37026837,
+          "sha256": "efbc1204b433d74915c4427ce9f7dfba5507e4cabcef2774466c8e497d128c1f"
+        },
+        "overview.png": {
+          "bytes": 950039,
+          "sha256": "a769727233b5839c92c045751189ec9bf36488bef058f3500d34e2d8909d08af"
+        },
+        "gripper.png": {
+          "bytes": 1010560,
+          "sha256": "68aa9489c3afa34b1250b58a571d7b4d217e88040cb7285e5e18f495cc988d87"
+        }
+      }
+    }
+  ],
+  "workflow_sha256": {
+    "scripts/build_blender_replay.py": "d682fd23975e7fd5e39e434a743095243ea6de1393cc7ef15cd2a25178d80054",
+    "scripts/export_blender_replay.py": "59f2dcb619a97ffd006ef10a8a421a35cf6ea05ed7aebb53949ccccbdad8641a",
+    "scripts/export_blender_replay.sh": "7ee05cecd6be2f4cf5ab58543379cb967cd931346ccb45ac7331c91ded654f53",
+    "scripts/install_blender_portable.ps1": "ff11b07bfbce7b78e4b2c676dae17931a5aca67f52443a5b936a3608687f6b43",
+    "scripts/render_blender_replay.py": "e2f11d5cbc999b34377766ec53488da778606d54a470a467d54b59a0861801f8",
+    "scripts/run_blender_replay.ps1": "66d67c2baf96d14764f17e20f39c6b06f3781796a910d625957d13e2453e4635",
+    "scripts/verify_blender_replay.py": "aed401033ae3407c72b522bcfccf1de230bcbfc9df3e848c333b1e264d5ce48f",
+    "src/edgegrasp/replay_sampling.py": "275101a5e28794635b40f4f49db9ea6b5e07e91085525b457d8bba4ce9642147",
+    "tests/test_replay_sampling.py": "750002ba2fb9a530472b3e3ca884e9e1dec4a19261a6d07cba65e2b9b90e1ede"
+  }
+}

@@ -1,21 +1,106 @@
 # EdgeGrasp Sim
 
-EdgeGrasp Sim is a safety-first SO-101 simulation portfolio project. It starts
-with a deterministic ROS-independent core, then adds a ROS 2 command gate and
-a MoveIt plan-only adapter without copying the upstream robot configuration.
+EdgeGrasp 是基于 SO-101 的机器人仿真与验证项目：从 RGB-D 定位，经 MoveIt
+规划和受控执行完成抓取，再由独立物理观察器判断是否真的接触、抬升和保持。
+已有录包可以自动转换成 Blender 动画，直观看到动作、识别偏差和停止原因。
 
-For a source-traceable, beginner-friendly Chinese walkthrough of the full learning
-path, see the [中文图文学习博客](docs/learning-blog/README.md). It keeps core/static,
-plan-only, injected fake, controller, simulation-physics, and hardware evidence
-in separate claim classes.
+## 当前进度（2026-09-06）
 
-## Current evidence
+**限定三位置的模拟抓取已经成功；抓取后的正常释放仍未成功，真实机器人尚未验证。**
 
-Baseline snapshot: 2026-08-30, Asia/Shanghai. A focused injected provenance
-update dated 2026-09-05 is linked below. Simulator runtime counts remain
-from the 2026-08-29 snapshot. The latest additions are the current Windows
-static/replay rerun, the P12d in-process fail-closed artifact, and its
-package-scoped verification.
+| 工作项 | 当前结果 | 限制 / 下一步 |
+| --- | --- | --- |
+| RGB-D 定位 | 固定桌面、单个初始静止的 50 mm 红色方块；感知使用 RGB、深度、标定和相机 TF | 只验证了声明的视角和范围，不是任意物体识别 |
+| 规划与抓取 | control、X−1 mm、X+1 mm 均完成规划和有界执行 | 两个平移位置使用已验证的小角度夹爪偏航调整；原始无解规划保留 |
+| 独立物理判定 | 三位置均通过同帧双指接触、≥20 mm 抬升和 ≥0.5 s 保持；保持抬升分别为 28.85、28.91、28.68 mm | COMPLETE 与物理 VERIFIED 分开判断，不代表整个工作空间成功 |
+| 正常释放 | 三次成功抓取的类型化释放均未成功，使用既有回退完成运行清理 | 待修复并独立验证释放流程，尚不是完整 pick-and-place |
+| Blender 回放 | 成功与安全停止样例均已生成，支持 .blend、预览图和 MP4 | 只回放记录，不重新计算物理，也不补充实机证据 |
+| 可复用流程 | 项目 Skill、转换/校验脚本、清理盘点和 runbook 已提供 | 清理盘点不等于删除；此前工具拒绝的清理仍未完成 |
+| 真实硬件 | 未运行 | 需要另行授权和校准、停止/释放等实机验证 |
+
+三个成功录包的 1821 条原子观测中，1817 条通过最近邻真值精度比较；
+4 条超限以及所有历史失败均保留。详见 [抓取结果](docs/rgbd-static-grasp-result.md)、
+[逐位置验证](docs/observations/2026-09-06-rgbd-final-validation.json) 和
+[41 个实验目录索引](docs/observations/2026-09-06-rgbd-artifact-inventory.json)。
+
+## 回放演示
+
+[![点击查看约 23 秒的 Blender 抓取回放：机械臂、方块与识别框](docs/media/rgbd-grasp-replay.jpg)](docs/media/rgbd-grasp-replay.mp4)
+
+[播放或下载压缩 MP4](docs/media/rgbd-grasp-replay.mp4) · 23.10 秒 · 768×432 · 30 FPS · 约 90 KiB。
+点击预览图进入视频文件；若页面未内嵌播放，下载后播放即可。
+红色是记录的方块位姿，青色是 RGB-D 识别框，绿色是有接触样本的碰撞代理区域。
+字幕分别显示动作阶段和整次实验的历史物理结果；`physics_unverified` 的序列终态文字
+不等同于右下角独立观察器的 VERIFIED。视频保留抓取后的变化，没有截去释放阶段。
+[媒体来源与压缩命令](docs/media/README.md)。
+
+## 完整工作流
+
+```text
+固定场景与相机 → RGB / 深度 / 标定 / TF → 方块中心与姿态
+       → 身份、时间、坐标和新鲜度检查 → MoveIt 无执行规划
+       → 类型化轨迹门控 → 接近 → 下探 → 闭合 → 抬升
+       → 独立接触 / 抬升 / 保持判定 → 释放与清理结果分别记录
+       → MCAP + 模型 + 日志 → 离线转换 → Blender 烘焙动画
+       → 重新打开逐帧核对 → 预览 / MP4 → 临时文件盘点与受限清理
+```
+
+1. **准备环境与检查代码**：Windows 可做静态/单元检查；实际实验依赖现有
+   Ubuntu 24.04 / ROS Jazzy、Gazebo、固定上游 SO-101 工作区和 NumPy 感知依赖。
+   见下方 core quick start 和 [Ubuntu runbook](docs/ubuntu-jazzy-runbook.md)。
+2. **执行一个获授权的本地实验**：先通过对应场景的无执行规划，再做有界抓取；
+   每次写入新的外部实验目录。完整参数和三个位置的命令见
+   [RGB-D 复现说明](docs/rgbd-static-grasp-result.md#复现)。
+3. **核对结果**：分别检查序列、独立物理判定、观测精度、正常释放与回退日志。
+   不用“程序退出”或“动画看起来夹住了”替代物理判定。
+4. **离线制作回放**：输入已有实验目录和匹配 SDF，使用新输出目录运行下列命令。
+   转换不启动 ROS 节点、Gazebo 或控制器，不发送动作。
+5. **交付与维护**：保留源录包、最终成功/失败回放、校验记录；只审核冗余下载与
+   已被替代的中间产物。见 [清理 runbook](docs/blender-replay-cleanup.md)。
+
+```powershell
+# 已有可用 Blender 时直接使用，不必重复下载安装。
+powershell -NoProfile -File scripts/install_blender_portable.ps1
+
+# Run / World 为现有 WSL 路径；Output 必须是新的 Windows 目录。
+powershell -NoProfile -File scripts/run_blender_replay.ps1 `
+  -Run /home/edgegrasp/ros2_ws/test_results/rgbd_measured_pad_trial_20260906b `
+  -World /home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/worlds/table_cube_candidate024_face_aligned.sdf `
+  -Output C:/Users/huang/Documents/edgegrasp-replays/my-new-replay `
+  -RenderVideo
+```
+
+这些路径是已验证机器的示例，换机器需准备依赖和源数据并修改路径。
+**仅克隆仓库可以看演示、检查代码；不能凭空重建未上传的原始录包。**
+省略 `-RenderVideo` 可只生成 `.blend`、两张预览和验证报告。
+[完整 Blender 使用说明](docs/blender-replay.md) 包含视角切换、时间插值和缺口显示规则。
+
+## Skill、验证和交付范围
+
+在本项目可调用 `$edgegrasp-blender-replay`，或直接读取
+[SKILL.md](.agents/skills/edgegrasp-blender-replay/SKILL.md)。它复用项目脚本，
+覆盖回放、验证和清理审核；清理盘点脚本不执行删除，也不能改变工具权限。
+
+- Windows 全量检查：`powershell -NoProfile -File scripts/check.ps1`；本次发布前
+  348 项通过、3 项明确跳过，三个场景各 100 次确定性回放通过。
+- WSL RGB-D/ROS 检查：`bash scripts/check_rgbd.sh`；此前验证 26 项通过。
+- 回放校验：成功/失败样例分别核对 5,494 / 3,968 个变换，无覆盖区间内缺口；
+  见 [回放验证收据](docs/observations/2026-09-06-blender-replay-validation.json)。
+- 仓库包含代码、测试、Skill、runbook、证据摘要/索引与压缩演示；
+  Blender 安装目录、原始 MCAP、完整 .blend 和全部原始日志保留在本地。
+- 仍待解决：正常释放、扩大姿态/物体范围的独立实验，以及另行授权的硬件阶段。
+  `accepted_goal_result_timeout_verified=false` 和
+  `strong_move_group_request_id_correlation=false` 保持不变。
+
+学习背景见 [中文图文学习博客](docs/learning-blog/README.md)。以下旧基线单独保留，
+其中的测试数量和 runtime 状态属于其标注日期，不覆盖上面的最新 RGB-D 与回放结果。
+
+<details>
+<summary>历史证据基线：2026-08-30，含 2026-09-05 注入来源更新</summary>
+
+Baseline snapshot: 2026-08-30, Asia/Shanghai. Simulator counts below are from
+the 2026-08-29 snapshot; the injected provenance update is dated 2026-09-05.
+References to "current" inside this historical section refer to those snapshots.
 
 | Layer | Observed result | Claim boundary |
 | --- | --- | --- |
@@ -99,6 +184,8 @@ For the candidate-by-candidate experiments, including rejected hypotheses and
 retained failures, see the [candidate lab](docs/learning-blog/07-candidate-lab.md),
 [observations](docs/observations/), and [reproduction runbook](docs/ubuntu-jazzy-runbook.md).
 The current scoped results and limitations are summarized above.
+
+</details>
 
 ## Quick start: deterministic core
 
