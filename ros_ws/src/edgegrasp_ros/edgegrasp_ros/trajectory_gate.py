@@ -58,6 +58,8 @@ TYPED_STAGE_CONTROLLERS = {
     "descend": "arm_controller",
     "close_gripper": "gripper_controller",
     "lift": "arm_controller",
+    "place": "arm_controller",
+    "retreat": "arm_controller",
     "diagnostic": None,
 }
 

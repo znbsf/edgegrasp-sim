@@ -296,7 +296,7 @@ class PhysicsObserverHarness:
             gripper_effort_sample_count=result.gripper_effort_sample_count,
         )
 
-    def start_goal(self):
+    def start_goal(self, *, started_offset_ns=0, after_send=None):
         self.publish_clock(BASE_NS)
         goal = GraspPhysicsEvidence.Goal()
         goal.task_id = "task-001"
@@ -307,7 +307,7 @@ class PhysicsObserverHarness:
             goal.task_id, "lift", 3
         )
         goal.scene_digest = self.scene.digest
-        goal.started_at = stamp(BASE_NS)
+        goal.started_at = stamp(BASE_NS + started_offset_ns)
         goal.target_source_timestamp_ns = TARGET_SOURCE_NS
         goal.clock_domain = "ros_sim"
         goal.clock_epoch = 0
@@ -318,8 +318,11 @@ class PhysicsObserverHarness:
         goal.max_xy_drift_m = 0.01
         goal.freshness_timeout = duration(FRESHNESS_NS)
         goal.observation_timeout = duration(2_000_000_000)
+        sent = self.action.send_goal_async(goal)
+        if after_send is not None:
+            after_send(sent)
         goal_handle = wait_future(
-            self.action.send_goal_async(goal),
+            sent,
             reason="observer goal acceptance",
         )
         assert goal_handle.accepted, "observer rejected a valid evidence goal"
@@ -461,6 +464,27 @@ def harness():
         yield instance
     finally:
         instance.close()
+
+
+def test_future_goal_waits_for_clock_callback_before_acceptance(harness, monkeypatch):
+    entered = threading.Event()
+    observed = []
+    original = harness.observer._wait_for_admission_clock
+    def wait_for_clock(started, freshness):
+        assert harness.observer.get_clock().now().nanoseconds < started
+        entered.set()
+        result = original(started, freshness)
+        observed.append(result)
+        return result
+    monkeypatch.setattr(harness.observer, '_wait_for_admission_clock', wait_for_clock)
+    def advance(sent):
+        assert entered.wait(timeout=1.)
+        assert not sent.done()
+        harness.publish_clock(BASE_NS + 1_000_000)
+    goal, result = harness.start_goal(started_offset_ns=1_000_000, after_send=advance)
+    assert observed and observed[0] >= BASE_NS + 1_000_000
+    wait_future(goal.cancel_goal_async(), reason='cancel read-only observer')
+    wait_future(result, reason='cancelled observer terminal')
 
 
 def test_baseline_contact_sequence_lift_retention_succeeds_and_observer_is_read_only(

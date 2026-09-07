@@ -68,7 +68,7 @@ def test_moveit_adapter_requires_recent_confirmed_planning_scene() -> None:
     assert "planning_scene:safety_unknown" not in source
     assert 'return f"planning_scene:{planning_scene.reason}"' in source
     assert "_planning_scene_permission.reset_epoch" in source
-    assert 'allow = request.stage == "lift"' in source
+    assert 'allow = request.stage in {"lift", "place", "retreat"}' in source
     assert "status_generation > status_generation_before_call" in source
     assert '"configuring_contact_policy"' in source
     assert "planning_scene_ready_topic" in launch

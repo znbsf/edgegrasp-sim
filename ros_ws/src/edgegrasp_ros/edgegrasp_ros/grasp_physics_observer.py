@@ -169,7 +169,7 @@ class GraspPhysicsObserver(Node):
         self._reserved_task_id: str | None = None
         self._clock_fault: str | None = None
         self._last_clock_ns: int | None = None
-        self._last_feedback: tuple[str, str, int, int] | None = None
+        self._last_feedback: dict[str, tuple[str, str, int, int]] = {}
         self._active_freshness_ns: int | None = None
         self._pending_sequence_no = 0
         self._pending_observations: list[_PendingObservation] = []
@@ -280,6 +280,21 @@ class GraspPhysicsObserver(Node):
             self._last_clock_ns = now_ns
         return now_ns
 
+    def _wait_for_admission_clock(self, started_ns: int, freshness_ns: int) -> int:
+        """Buffer a just-arrived request until /clock catches up; never accept future time."""
+        now_ns = self._now_ns()
+        if started_ns <= now_ns or started_ns-now_ns > freshness_ns:
+            return now_ns
+        deadline = time.monotonic() + min(.2, freshness_ns/1_000_000_000)
+        # The action callback is reentrant and the executor has independent
+        # clock callbacks. No state lock is held while waiting for delivery.
+        while now_ns < started_ns and time.monotonic() < deadline:
+            if self._clock_fault is not None:
+                break
+            time.sleep(.002)
+            now_ns = self._now_ns()
+        return now_ns
+
     def _goal_reason(self, request: GraspPhysicsEvidence.Goal) -> str | None:
         with self._lock:
             if self._reserved_task_id is not None or self._active_goal_handle is not None:
@@ -309,7 +324,12 @@ class GraspPhysicsObserver(Node):
             observation_ns = self._duration_ns(request.observation_timeout)
         except ValueError as error:
             return str(error).replace(" ", "_")
-        now_ns = self._now_ns()
+        now_ns = self._wait_for_admission_clock(started_ns, freshness_ns)
+        with self._lock:
+            if self._clock_fault is not None:
+                return self._clock_fault
+            if int(request.clock_epoch) != self._clock_epoch:
+                return "clock_epoch_mismatch"
         if started_ns > now_ns:
             return "started_at_in_future"
         if now_ns - started_ns > freshness_ns:
@@ -353,7 +373,8 @@ class GraspPhysicsObserver(Node):
             self._publish_status("REJECTED", reason, request.task_id)
             return GoalResponse.REJECT
         with self._lock:
-            if self._reserved_task_id is not None:
+            if (self._reserved_task_id is not None or self._active_goal_handle is not None
+                    or self._clock_fault is not None or int(request.clock_epoch) != self._clock_epoch):
                 return GoalResponse.REJECT
             self._reserved_task_id = request.task_id
         return GoalResponse.ACCEPT
@@ -407,7 +428,7 @@ class GraspPhysicsObserver(Node):
                     return self._result(False)
                 self._active_goal_handle = goal_handle
                 self._core = GraspPhysicsEvidenceController()
-                self._last_feedback = None
+                self._last_feedback = {}
                 self._active_freshness_ns = self._duration_ns(
                     request.freshness_timeout
                 )
@@ -743,9 +764,11 @@ class GraspPhysicsObserver(Node):
                 # are measuring.
                 1 if result.gripper_contact_count > 0 else 0,
             )
-            if current == self._last_feedback:
+            # Pose and effort callbacks alternate their reason strings. One
+            # global previous key defeats the bucket on every alternation.
+            if current == self._last_feedback.get(reason):
                 return
-            self._last_feedback = current
+            self._last_feedback[reason] = current
         feedback = GraspPhysicsEvidence.Feedback()
         feedback.task_id = result.task_id
         feedback.phase = result.phase.value

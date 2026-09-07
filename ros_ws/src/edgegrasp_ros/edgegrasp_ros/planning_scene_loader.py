@@ -37,6 +37,7 @@ _GEOMETRY_COMPONENTS = (
     PlanningSceneComponents.WORLD_OBJECT_NAMES
     | PlanningSceneComponents.WORLD_OBJECT_GEOMETRY
     | PlanningSceneComponents.ALLOWED_COLLISION_MATRIX
+    | PlanningSceneComponents.ROBOT_STATE_ATTACHED_OBJECTS
 )
 _ABS_TOL = 1e-7
 
@@ -109,6 +110,8 @@ def verify_planning_scene_objects(
     """Require expected geometry and absence of disabled managed objects."""
 
     by_id = {item.id: item for item in observed}
+    if len(by_id) != len(observed):
+        return "duplicate_world_object"
     for object_id in forbidden_ids:
         if object_id in by_id:
             return f"unexpected_object:{object_id}"
@@ -480,6 +483,8 @@ class PlanningSceneLoader(Node):
         self._desired_acm: AllowedCollisionMatrix | None = None
         self._ready = False
         self._last_reason = "initializing"
+        from edgegrasp_ros.carried_scene_policy import CarriedScenePolicy
+        self._carried = CarriedScenePolicy(self)
         self._publish_ready(False, self._last_reason)
         tick_period = min(0.1, max(0.02, self._retry_s / 4.0))
         self._timer = self.create_timer(tick_period, self._tick)
@@ -570,6 +575,8 @@ class PlanningSceneLoader(Node):
                 self._object_publisher.publish(message)
             if self._desired_acm is not None:
                 self._publish_acm_diff(self._desired_acm)
+            if self._carried.diff is not None:
+                self._scene_diff_publisher.publish(self._carried.diff)
         if not self._client.service_is_ready():
             self._ready = False
             self._last_reason = "get_planning_scene_unavailable"
@@ -614,6 +621,8 @@ class PlanningSceneLoader(Node):
             )
             self._last_observed_acm = response.scene.allowed_collision_matrix
             if reason is None:
+                reason = self._carried.verify(response.scene)
+            if reason is None:
                 reason = verify_target_pad_collision_policy(
                     self._last_observed_acm,
                     target_object_id=self._target_object_id,
@@ -654,6 +663,10 @@ class PlanningSceneLoader(Node):
                 "target_frame": self._target_frame,
                 "clock_domain": self._clock_domain,
                 "clock_epoch": self._clock_epoch,
+                "carried_state": self._carried.state,
+                "scene_generation": self._carried.generation,
+                "allow_target_table_contact": self._carried.table_contact,
+                "carried_evidence": self._carried.evidence,
             },
             sort_keys=True,
         )
@@ -663,6 +676,10 @@ class PlanningSceneLoader(Node):
         self, request: Trigger.Request, response: Trigger.Response
     ) -> Trigger.Response:
         del request
+        if self._carried.generation:
+            response.success = False
+            response.message = "epoch reset refused with carried-scene history"
+            return response
         if self._pending is not None and not self._pending.done():
             response.success = False
             response.message = "reset refused while planning-scene query is pending"
@@ -681,6 +698,10 @@ class PlanningSceneLoader(Node):
     def _on_set_optional_cube(
         self, request: SetBool.Request, response: SetBool.Response
     ) -> SetBool.Response:
+        if self._carried.generation:
+            response.success = False
+            response.message = "optional-cube replacement refused with carried-scene history"
+            return response
         if self._fault_latched is not None:
             response.success = False
             response.message = f"fault_latched:{self._fault_latched}"
@@ -736,6 +757,10 @@ class PlanningSceneLoader(Node):
     def _on_set_target_pad_contacts(
         self, request: SetBool.Request, response: SetBool.Response
     ) -> SetBool.Response:
+        if self._carried.attached and not request.data:
+            response.success = False
+            response.message = "cannot revoke pad policy while target remains attached"
+            return response
         if self._fault_latched is not None:
             response.success = False
             response.message = f"fault_latched:{self._fault_latched}"

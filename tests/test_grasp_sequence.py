@@ -262,6 +262,27 @@ def test_four_correlated_stages_complete_without_claiming_physical_grasp() -> No
     assert not controller.outcome.physics_grasp_verified
 
 
+def test_successful_cycle_handoff_preserves_epoch_history_and_used_ids():
+    controller, arm, gripper, stop = make_controller()
+    assert not controller.finish_completed_cycle(health(NOW_NS), NOW_NS).accepted
+    controller.start(task(), health(NOW_NS), NOW_NS)
+    assert not controller.finish_completed_cycle(health(NOW_NS), NOW_NS).accepted
+    controller.on_arm_terminal(arm_terminal(arm.commands[0]), health(NOW_NS+1), NOW_NS+1)
+    controller.on_arm_terminal(arm_terminal(arm.commands[1]), health(NOW_NS+2), NOW_NS+2)
+    controller.on_gripper_terminal(gripper_terminal(gripper.commands[0]), health(NOW_NS+3), NOW_NS+3)
+    controller.on_arm_terminal(arm_terminal(arm.commands[2]), health(NOW_NS+4), NOW_NS+4)
+    history = tuple(controller._history)
+    completed = set(controller._completed_commands)
+    assert controller.finish_completed_cycle(health(NOW_NS+5), NOW_NS+5).accepted
+    assert controller.phase is GraspPhase.IDLE and controller.clock_epoch == 0
+    assert tuple(controller._history[:-1]) == history
+    assert controller._completed_commands == completed
+    assert task().task_id in controller._used_task_ids
+    assert not stop.calls
+    assert controller.start(task(), health(NOW_NS+6), NOW_NS+6).reason == 'task_id_reuse'
+    assert not controller.finish_completed_cycle(health(NOW_NS+7), NOW_NS+7).accepted
+
+
 def test_each_stage_binds_a_fresh_target_source_timestamp() -> None:
     controller, arm, gripper, _ = make_controller()
     initial_source_ns = NOW_NS - 10_000_000

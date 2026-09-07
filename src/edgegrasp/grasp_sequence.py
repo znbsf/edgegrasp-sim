@@ -694,6 +694,23 @@ class GraspSequenceController:
         return self._fail_closed(f"stop_requested:{reason.strip()}", now_ns)
 
     @_serialized
+    def finish_completed_cycle(self, health: SequenceHealth, now_ns: int) -> SequenceDecision:
+        """Successful handoff only; preserve epoch, history and anti-replay identities."""
+        if (self._phase is not GraspPhase.COMPLETE or self._active is not None
+                or self._recovery_required or self._clock_fault or self._fault_evidence):
+            return self._decision(False, "handoff_requires_unfaulted_completion")
+        reason = self._observe_clock(now_ns)
+        if reason is not None:
+            return self._fail_closed(reason, now_ns, clock_fault=True)
+        reason = self._health_reason(health, now_ns)
+        if reason is not None:
+            return self._decision(False, "handoff_health:" + reason)
+        self._transition(GraspPhase.IDLE, "completed_cycle_handoff", now_ns)
+        self._task = None
+        self._outcome = None
+        return self._decision(True, "completed_cycle_handoff")
+
+    @_serialized
     def reset(
         self,
         now_ns: int,

@@ -157,7 +157,13 @@ import hashlib,json,sys,os
 from pathlib import Path
 r=json.loads(Path(sys.argv[1]).read_text())
 assert r["status"] == "PLAN_ONLY_PASS" and not r["execution_attempted"]
-assert r["config"]["recorded_rgbd_observation"] and len(r["segments"]) == 3
+expected_segments = 5 if os.environ.get("EDGEGRASP_RELEASE_CYCLE") == "1" else 3
+assert r["config"]["recorded_rgbd_observation"] and len(r["segments"]) == expected_segments
+assert r["config"].get("bounded_control_pan", False) == (os.environ.get("EDGEGRASP_BOUNDED_CONTROL_PAN") == "1"), "bounded pan planning/runtime mismatch"
+if expected_segments == 5:
+    assert r["config"].get("release_cycle") is True
+    assert r["config"].get("carried_scene") is True
+    assert not os.environ.get("EDGEGRASP_CARRIED_PLAN_EVIDENCE"), "recorded geometry forbidden in execution"
 assert all(r[key] == 0 for key in ("trajectory_publication_count", "execute_trajectory_goal_count", "fjt_goal_count"))
 assert all(row["validator_accepted"] for row in r["segments"])
 assert r["config"].get("velocity_scaling", 0.1) == float(os.environ.get("EDGEGRASP_RGBD_VELOCITY_SCALING", "0.1")), "velocity scaling mismatch"
@@ -238,7 +244,7 @@ import hashlib,importlib,inspect,json,sys
 from pathlib import Path
 root=Path(sys.argv[1]).resolve()
 rows=[]
-for name in ("edgegrasp.action_readiness", "edgegrasp.camera", "edgegrasp.rgbd", "edgegrasp.target_motion", "edgegrasp.contact_material", "edgegrasp_ros.rgbd_target_publisher", "edgegrasp_grasp_sequence.node", "edgegrasp_grasp_sequence.trial_client"):
+for name in ("edgegrasp.action_readiness", "edgegrasp.grasp_geometry", "edgegrasp.camera", "edgegrasp.rgbd", "edgegrasp.target_motion", "edgegrasp.contact_material", "edgegrasp.release_cycle", "edgegrasp.carried_scene", "edgegrasp_ros.carried_scene_policy", "edgegrasp_ros.grasp_physics_observer", "edgegrasp_ros.planning_scene_loader", "edgegrasp_ros.trajectory_gate", "edgegrasp_moveit_adapter.adapter_node", "edgegrasp_ros.rgbd_target_publisher", "edgegrasp_grasp_sequence.node", "edgegrasp_grasp_sequence.trial_client"):
     path=Path(inspect.getfile(importlib.import_module(name))).resolve()
     assert path.is_relative_to(root), str(path)
     rows.append(dict(module=name,path=str(path),sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
@@ -358,6 +364,16 @@ fi
 if timeout 8s ros2 topic info /clock > "$trial_artifact_dir/clock_preflight.log" 2>&1; then
   echo "pre-existing /clock graph detected; refusing to start" >&2
   exit 3
+fi
+
+trial_cycle_count=${EDGEGRASP_RELEASE_CYCLE_COUNT:-1}
+if [[ "$trial_cycle_count" != 1 && "$trial_cycle_count" != 3 ]]; then
+  echo "cycle count must be predeclared as 1 or 3" >&2
+  exit 2
+fi
+if [[ "$trial_cycle_count" == 3 && ( "${EDGEGRASP_RELEASE_CYCLE:-0}" != 1 || "$trial_gripper_control_profile" != effort_pid_preload ) ]]; then
+  echo "three cycles require the complete release-cycle contract" >&2
+  exit 2
 fi
 
 echo "STAGE validate_pad_contact_material_mapping"
@@ -541,6 +557,26 @@ python3 scripts/prepare_so101_trial.py --gripper-only --gripper 1.5 \
   --target-id target_cube --task-id "${trial_task_id}-prep" --timeout-s 20 \
   > "$trial_artifact_dir/gripper_prep.log" 2>&1
 
+trial_base_task_id=$trial_task_id
+trial_fixed_control_geometry=false
+trial_bounded_control_pan=false
+if [[ "${EDGEGRASP_BOUNDED_CONTROL_PAN:-0}" == 1 ]]; then
+  [[ "${EDGEGRASP_RELEASE_CYCLE:-0}" == 1 ]] || exit 2
+  trial_bounded_control_pan=true
+fi
+if [[ "${EDGEGRASP_RELEASE_CYCLE:-0}" == 1 ]]; then
+  trial_fixed_control_geometry=true
+fi
+trial_completed_count=0
+trial_attempted_count=0
+for trial_cycle_index in $(seq 1 "$trial_cycle_count"); do
+  trial_cycle_dir=$trial_artifact_dir
+  if [[ "$trial_cycle_count" == 3 ]]; then
+    trial_cycle_dir="$trial_artifact_dir/cycle_$trial_cycle_index"
+    mkdir "$trial_cycle_dir"
+    trial_task_id="${trial_base_task_id}-cycle-${trial_cycle_index}"
+  fi
+  trial_attempted_count=$trial_cycle_index
 echo "STAGE contact_quality_timing_trial"
 set +e
 timeout 260s ros2 run edgegrasp_grasp_sequence grasp_trial_client --ros-args \
@@ -554,16 +590,19 @@ timeout 260s ros2 run edgegrasp_grasp_sequence grasp_trial_client --ros-args \
   -p grasp_geometry_filename:="$trial_grasp_geometry_filename" \
   -p scene_config_filename:="$trial_scene_config_filename" \
   -p derive_descend_and_lift_from_profile:="$trial_derive_descend_lift" \
+  -p require_measured_geometry:="$trial_camera" \
+  -p fixed_control_stage_geometry:="$trial_fixed_control_geometry" \
+  -p bounded_control_pan:="$trial_bounded_control_pan" \
   -p gripper_closed_position_rad:="$trial_gripper_closed_rad" \
   -p pipeline_id:=pilz_industrial_motion_planner -p planner_id:=PTP \
   -p planning_timeout_s:=2.0 -p sequence_timeout_s:=90.0 \
   -p physics_timeout_s:=100.0 \
   -p observation_timeout_s:="$trial_observation_timeout_s" \
   -p velocity_scaling:="$trial_velocity_scaling" -p acceleration_scaling:=0.1 \
-  > "$trial_artifact_dir/trial.log" 2>&1
+  > "$trial_cycle_dir/trial.log" 2>&1
 trial_result_code=$?
 set -e
-printf '%s\n' "$trial_result_code" > "$trial_artifact_dir/trial_exit_code.txt"
+printf '%s\n' "$trial_result_code" > "$trial_cycle_dir/trial_exit_code.txt"
 printf 'TRIAL_RC=%s\n' "$trial_result_code"
 
 trial_release_code=0
@@ -571,14 +610,28 @@ trial_release_fallback_code=0
 if [ "$trial_gripper_control_profile" = "effort_pid_preload" ]; then
   echo "STAGE bounded_zero_effort_release"
   set +e
+  if [ "${EDGEGRASP_RELEASE_CYCLE:-0}" = "1" ]; then
+    if [ "$trial_result_code" -eq 0 ]; then
+      timeout 160s python3 scripts/complete_release_cycle.py \
+        --plan "$EDGEGRASP_RGBD_PLAN_RESULT" --task-id "$trial_task_id" \
+        --output "$trial_cycle_dir/release_cycle.jsonl" \
+        > "$trial_cycle_dir/gripper_release.log" 2>&1
+      trial_release_code=$?
+    else
+      printf '%s\n' 'grasp_not_independently_verified;no_place_or_release_command' \
+        > "$trial_cycle_dir/gripper_release.log"
+      trial_release_code=2
+    fi
+  else
   python3 scripts/prepare_so101_trial.py --gripper-only --gripper 1.5 \
     --gripper-effort 0.0 --target-id target_cube \
     --task-id "${trial_task_id}-release" --timeout-s 20 \
-    > "$trial_artifact_dir/gripper_release.log" 2>&1
+    > "$trial_cycle_dir/gripper_release.log" 2>&1
   trial_release_code=$?
+  fi
   set -e
   printf '%s\n' "$trial_release_code" \
-    > "$trial_artifact_dir/gripper_release_exit_code.txt"
+    > "$trial_cycle_dir/gripper_release_exit_code.txt"
   if [ "$trial_release_code" -ne 0 ]; then
     # A downstream FJT failure deliberately latches the typed gate. Do not
     # weaken that latch merely to send another motion goal. Instead stop the
@@ -589,13 +642,13 @@ if [ "$trial_gripper_control_profile" = "effort_pid_preload" ]; then
     timeout 15s ros2 control switch_controllers \
       --deactivate gripper_controller --strict \
       -c /controller_manager \
-      > "$trial_artifact_dir/gripper_deactivate.log" 2>&1
+      > "$trial_cycle_dir/gripper_deactivate.log" 2>&1
     trial_release_fallback_code=$?
     timeout 10s ros2 control list_controllers -c /controller_manager \
-      > "$trial_artifact_dir/controllers_after_gripper_deactivate.log" 2>&1
+      > "$trial_cycle_dir/controllers_after_gripper_deactivate.log" 2>&1
     trial_controller_state_code=$?
     timeout 10s ros2 control list_hardware_interfaces -c /controller_manager \
-      > "$trial_artifact_dir/hardware_interfaces_after_gripper_deactivate.log" \
+      > "$trial_cycle_dir/hardware_interfaces_after_gripper_deactivate.log" \
       2>&1
     trial_interface_state_code=$?
     set -e
@@ -603,20 +656,49 @@ if [ "$trial_gripper_control_profile" = "effort_pid_preload" ]; then
       && [ "$trial_controller_state_code" -eq 0 ] \
       && [ "$trial_interface_state_code" -eq 0 ] \
       && grep -Eq '^gripper_controller[[:space:]]+joint_trajectory_controller/JointTrajectoryController[[:space:]]+inactive$' \
-        "$trial_artifact_dir/controllers_after_gripper_deactivate.log" \
+        "$trial_cycle_dir/controllers_after_gripper_deactivate.log" \
       && grep -Eq 'gripper/effort[[:space:]]+\[available\][[:space:]]+\[unclaimed\]' \
-        "$trial_artifact_dir/hardware_interfaces_after_gripper_deactivate.log"; then
+        "$trial_cycle_dir/hardware_interfaces_after_gripper_deactivate.log"; then
       printf '%s\n' 'CONTROLLER_DEACTIVATED_AND_EFFORT_UNCLAIMED' \
-        > "$trial_artifact_dir/gripper_release_fallback_status.txt"
+        > "$trial_cycle_dir/gripper_release_fallback_status.txt"
     else
       trial_release_fallback_code=1
       printf '%s\n' 'GRIPPER_RELEASE_FALLBACK_UNCONFIRMED' \
-        > "$trial_artifact_dir/gripper_release_fallback_status.txt"
+        > "$trial_cycle_dir/gripper_release_fallback_status.txt"
     fi
     printf '%s\n' "$trial_release_fallback_code" \
-      > "$trial_artifact_dir/gripper_release_fallback_exit_code.txt"
+      > "$trial_cycle_dir/gripper_release_fallback_exit_code.txt"
   fi
 fi
+
+
+  if [[ "$trial_result_code" != 0 || "$trial_release_code" != 0 ]]; then
+    break
+  fi
+  trial_completed_count=$((trial_completed_count + 1))
+done
+trial_task_id=$trial_base_task_id
+python3 - "$trial_artifact_dir/cycle_summary.json" "$trial_cycle_count" "$trial_attempted_count" "$trial_completed_count" <<'PYCYCLES'
+import json,sys
+from pathlib import Path
+requested,attempted,completed=map(int,sys.argv[2:])
+root=Path(sys.argv[1]).parent
+renewals=[]
+for index in range(1,attempted+1):
+    log=(root/f"cycle_{index}" if requested==3 else root)/"trial.log"
+    count=0
+    for line in log.read_text().splitlines():
+        try:
+            count += json.loads(line).get("type") == "physics_baseline_restart"
+        except (ValueError, AttributeError):
+            pass
+    renewals.append(count)
+with Path(sys.argv[1]).open('x') as stream:
+    json.dump(dict(requested=requested,attempted=attempted,completed=completed,
+                   complete=requested==completed,cycle_retry_count=0,
+                   physics_baseline_request_renewals=renewals,
+                   controller_restart_between_cycles=False),stream,indent=2)
+PYCYCLES
 
 echo "STAGE finalize_single_clock_mcap"
 trial_mcap_pgid=$(ps -o pgid= -p "$trial_mcap_pid" 2>/dev/null \
@@ -655,19 +737,28 @@ if [ -d "$trial_artifact_dir/mcap" ]; then
     > "$trial_artifact_dir/mcap_sha256sums.txt"
 fi
 
+for trial_cycle_index in $(seq 1 "$trial_attempted_count"); do
+  trial_cycle_dir=$trial_artifact_dir
+  trial_analysis_task_id=$trial_base_task_id
+  if [[ "$trial_cycle_count" == 3 ]]; then
+    trial_cycle_dir="$trial_artifact_dir/cycle_$trial_cycle_index"
+    trial_analysis_task_id="${trial_base_task_id}-cycle-${trial_cycle_index}"
+  fi
 echo "STAGE analyze_single_clock_timeline"
 set +e
 python3 scripts/analyze_grasp_mcap.py \
   --bag "$trial_artifact_dir/mcap" \
-  --task-id "$trial_task_id" \
-  --output "$trial_artifact_dir/grasp_timeline_summary.json" \
-  --csv "$trial_artifact_dir/grasp_timeline.csv" \
-  > "$trial_artifact_dir/grasp_timeline_stdout.json" \
-  2> "$trial_artifact_dir/grasp_timeline_stderr.log"
+  --task-id "$trial_analysis_task_id" \
+  --output "$trial_cycle_dir/grasp_timeline_summary.json" \
+  --csv "$trial_cycle_dir/grasp_timeline.csv" \
+  > "$trial_cycle_dir/grasp_timeline_stdout.json" \
+  2> "$trial_cycle_dir/grasp_timeline_stderr.log"
 trial_timeline_analysis_code=$?
 set -e
 printf '%s\n' "$trial_timeline_analysis_code" \
-  > "$trial_artifact_dir/grasp_timeline_exit_code.txt"
+  > "$trial_cycle_dir/grasp_timeline_exit_code.txt"
+
+done
 
 echo "STAGE final_capture"
 timeout 10s ros2 control list_controllers -c /controller_manager \

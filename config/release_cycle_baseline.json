@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "baseline_id": "candidate024-am-20260906-v1",
+  "base_head": "e58586f8d7dfa294697c2f7cb5525cf995e73613",
+  "source_state": "base HEAD plus verified baseline-handoff-20260907 uncommitted changes; source hashes in adjacent lock",
+  "criteria_version": "am-independent-geometry-v1",
+  "environment": {
+    "EDGEGRASP_RGBD_TRIAL": "1",
+    "EDGEGRASP_RELEASE_CYCLE": "1",
+    "EDGEGRASP_BOUNDED_CONTROL_PAN": "1",
+    "EDGEGRASP_RELEASE_CYCLE_COUNT": "3",
+    "EDGEGRASP_RGBD_ROTATION_BOUND_DEG": "40.0",
+    "EDGEGRASP_RGBD_CAMERA_HZ": "30",
+    "EDGEGRASP_RGBD_CAMERA_VIEW": "opposite_table_edge",
+    "EDGEGRASP_RGBD_CAMERA_RESOLUTION": "upstream",
+    "EDGEGRASP_RGBD_VELOCITY_SCALING": "0.15",
+    "EDGEGRASP_RGBD_MOTION_MODE": "measured_pad",
+    "EDGEGRASP_OBSERVATION_TIMEOUT_S": "30.0"
+  },
+  "cases": [
+    {
+      "id": "control",
+      "offset_x_m": 0.0,
+      "planned_cycles": 3,
+      "ready": true,
+      "plan": "release_cycle_plan_20260906aj/plan_only_result.json",
+      "scene": "scene_candidate024_face_aligned.json",
+      "world": "table_cube_candidate024_face_aligned.sdf",
+      "missing": [],
+      "existing_full_cycle_evidence": "AM 3/3 same simulation"
+    },
+    {
+      "id": "x_minus_1mm",
+      "offset_x_m": -0.001,
+      "planned_cycles": 3,
+      "ready": false,
+      "plan": null,
+      "scene": null,
+      "world": null,
+      "missing": [
+        "position-specific scene/world and full-cycle release configuration",
+        "matching five-segment no-execution plan with unchanged candidate024 geometry",
+        "independent release and ready criteria for this position"
+      ],
+      "existing_full_cycle_evidence": "not_executed; prior grasp-only success is separate"
+    },
+    {
+      "id": "x_plus_1mm",
+      "offset_x_m": 0.001,
+      "planned_cycles": 3,
+      "ready": false,
+      "plan": null,
+      "scene": null,
+      "world": null,
+      "missing": [
+        "position-specific scene/world and full-cycle release configuration",
+        "matching five-segment no-execution plan with unchanged candidate024 geometry",
+        "independent release and ready criteria for this position"
+      ],
+      "existing_full_cycle_evidence": "not_executed; prior grasp-only success is separate"
+    }
+  ],
+  "runtime_required_paths": [
+    "opt/ros/jazzy/setup.bash",
+    "home/edgegrasp/ros2_ws/install/setup.bash",
+    "home/edgegrasp/ros2_ws/install/so101_description/share/so101_description/urdf/robots/so101.urdf.xacro"
+  ],
+  "claims": {
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false,
+    "hardware_verified": false
+  },
+  "runner_arguments": [
+    "so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+    "0.40",
+    "true",
+    "candidate012_control_mu1p0",
+    "0.0",
+    "effort_pid_preload",
+    "-0.02",
+    "so101_side_grasp_candidate024_face_aligned.json",
+    "scene_candidate024_face_aligned.json",
+    "table_cube_candidate024_face_aligned.sdf"
+  ],
+  "runtime_package_versions": {
+    "rclpy": "7.1.11",
+    "moveit_ros_move_group": "2.12.4",
+    "ros_gz_sim": "1.0.22",
+    "gz_ros2_control": "1.2.19",
+    "joint_trajectory_controller": "4.40.1",
+    "rosbag2_storage_mcap": "0.26.11"
+  },
+  "runtime_version_provenance": "Read-only local package.xml inventory 2026-09-07; numpy import 1.26.4, Python 3.12.3. Presence/version is not live health or a clean-machine reproduction.",
+  "criteria": {
+    "grasp": {
+      "independent_observer_required": true,
+      "simultaneous_both_pad_contact_required": true,
+      "minimum_lift_m": 0.02,
+      "minimum_retention_s": 0.5
+    },
+    "support": {
+      "real_table_contact_required": true,
+      "stable_duration_s": 0.5,
+      "max_position_drift_m": 0.001,
+      "minimum_quaternion_abs_dot": 0.99995,
+      "region_xy_half_width_m": 0.015,
+      "table_height_m": 0.18,
+      "bottom_tolerance_m": 0.001,
+      "max_age_ms": 200,
+      "max_causal_pair_difference_ms": 50,
+      "max_sample_interval_ms": 100
+    },
+    "release": {
+      "open_position_rad": 1.5,
+      "tolerance_rad": 0.08,
+      "moving_pad_contact_absent": true,
+      "retreat_all_pad_contact_absent": true,
+      "retreat_minimum_clearance_m": 0.08
+    },
+    "ready": {
+      "center_per_axis_limit_m": 0.001,
+      "stage_position_limit_m": 0.001,
+      "fixed_pad_gap_m": [
+        0.0005,
+        0.0015
+      ],
+      "bounded_pan_limit_deg": 0.5,
+      "bounded_pan_step_deg": 0.01,
+      "original_candidate024_full_geometry_required": true,
+      "handoff_epoch_unchanged": true
+    },
+    "failure_policy": {
+      "whole_cycle_retries": 0,
+      "controller_restart_between_cycles": false,
+      "stop_group_on_first_failure": true
+    },
+    "stage_budgets_s": {
+      "sequence": 90,
+      "physics": 100,
+      "trial_wall": 260,
+      "release_cycle_wall": 160,
+      "each_support_wall": 20
+    }
+  }
+}

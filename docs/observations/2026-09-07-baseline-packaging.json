@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-07",
+  "scope": "offline_baseline_packaging_and_zero_motion_tests",
+  "work_started_utc": "2026-09-07T13:03:22Z",
+  "recorded_at_utc": "2026-09-07T13:25:37.224965+00:00",
+  "work_budget_seconds": 7200,
+  "new_experiments": 0,
+  "source_restore": {
+    "base_head": "e58586f8d7dfa294697c2f7cb5525cf995e73613",
+    "initial_worktree_clean": true,
+    "current_worktree_detached_head": true,
+    "tracked_files_restored": 18,
+    "untracked_files_restored": 24,
+    "snapshot": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\06\\01a07557-51c4-7440-93e9-b2f625df97a6\\baseline-handoff-20260907",
+    "manifest_sha256": "400ed0e0a63082584b2aa707f9ff58a803e41dfb5d4f8fd8651c3435f45b6acf",
+    "tracked_patch_sha256": "776a9fb3237b7ba1363b4836521b76d712f2bcf5010bb69a92d39fc293ee1c7d",
+    "all_snapshot_hashes_verified_before_restore": true,
+    "all_24_restored_untracked_files_still_match": true,
+    "source_worktree_modified": false
+  },
+  "baseline_id": "candidate024-am-20260906-v1",
+  "runtime_source_files_matched": 20,
+  "repository_assets_locked": 5,
+  "local_runtime_file_check": "files_present",
+  "local_command_preparation_ready": true,
+  "local_live_runtime_health_checked": false,
+  "original_log_hash_checks": 222,
+  "original_log_hash_checks_passed": 222,
+  "summary": {
+    "release_attempted": 37,
+    "release_grasp_successes": 29,
+    "release_full_cycle_successes_current_criteria": 11,
+    "release_not_successful_current_criteria": 26,
+    "release_historical_complete_missing_current_geometry": 3,
+    "release_recorded_failed": 23,
+    "release_not_executed": 10,
+    "failure_stages": {
+      "supported_before_release": 2,
+      "supported_and_open": 1,
+      "supported_after_retreat": 1,
+      "ready": 5,
+      "regrasp_geometry_not_recorded": 3,
+      "carried_transition_rejected": 1,
+      "preclose_fixed_pad_clearance": 4,
+      "admission_or_evidence": 4,
+      "SAFE_STOP": 4,
+      "retreat": 1
+    },
+    "planning_attempted": 20,
+    "planning_rejected": 4,
+    "legacy_inventory_count": 41
+  },
+  "groups": [
+    {
+      "candidate": "l",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "within_group_retry_count": 0,
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 2,
+      "not_executed": 1,
+      "independent_full_cycle_successes": 0,
+      "grasp_successes": 1
+    },
+    {
+      "candidate": "m",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 2,
+      "not_executed": 1,
+      "independent_full_cycle_successes": 0,
+      "grasp_successes": 1
+    },
+    {
+      "candidate": "t",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 2,
+      "not_executed": 1,
+      "independent_full_cycle_successes": 1,
+      "grasp_successes": 1
+    },
+    {
+      "candidate": "y",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 1,
+        "completed": 0,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 1,
+      "not_executed": 2,
+      "independent_full_cycle_successes": 0,
+      "grasp_successes": 1
+    },
+    {
+      "candidate": "ab",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 1,
+        "completed": 0,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          0
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 1,
+      "not_executed": 2,
+      "independent_full_cycle_successes": 0,
+      "grasp_successes": 0
+    },
+    {
+      "candidate": "ac",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 1,
+        "completed": 0,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 1,
+      "not_executed": 2,
+      "independent_full_cycle_successes": 0,
+      "grasp_successes": 1
+    },
+    {
+      "candidate": "ai",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          0,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 2,
+      "not_executed": 1,
+      "independent_full_cycle_successes": 1,
+      "grasp_successes": 2
+    },
+    {
+      "candidate": "am",
+      "recorded_summary": {
+        "requested": 3,
+        "attempted": 3,
+        "completed": 3,
+        "complete": true,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          0,
+          0,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "planned": 3,
+      "attempted": 3,
+      "not_executed": 0,
+      "independent_full_cycle_successes": 3,
+      "grasp_successes": 3
+    }
+  ],
+  "output_rows": 113,
+  "tests": {
+    "windows": {
+      "passed": 409,
+      "skipped": 3,
+      "skip_reasons": [
+        "Windows perception extra absent",
+        "pinned local SO-101 checkout absent (two tests)"
+      ],
+      "structure": "PASS",
+      "deterministic_replay_runs_per_scenario": 100,
+      "deterministic_replay_scenarios": [
+        "linear_0mm_s",
+        "linear_20mm_s",
+        "linear_40mm_s"
+      ]
+    },
+    "wsl_zero_motion": {
+      "passed": 198,
+      "scope": "original 171 zero-motion regression tests plus 27 baseline tests; in-process fake dependencies, no real MoveGroup/Gazebo/controllers"
+    },
+    "new_baseline_tests_passed": 27,
+    "ruff_new_files": "PASS",
+    "generated_script_bash_syntax": "PASS",
+    "generated_script_default_dry_run": "PASS; no experiment started",
+    "offset_cases_exit_code": {
+      "x_minus_1mm": 2,
+      "x_plus_1mm": 2
+    },
+    "json_files_parsed": 92,
+    "new_runbook_handoff_links": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "artifacts": [
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\baseline-evidence\\report.json",
+      "sha256": "8cbd3f2b32706500a408c16275f54d6580b29f9429034bb12da89008eb0df00f"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\baseline-evidence\\report.md",
+      "sha256": "8b2070654ec567ff1dbbf4aab2ec07301890b6e8dad4c3d1aee8c7d0303eaf54"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\baseline-evidence\\rounds.csv",
+      "sha256": "496bc35fccc6cdc7f80b287d5d2cef51e7c44a8e873fe9a5bb5f8e3942bbb0a0"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\command-review-01\\check.json",
+      "sha256": "94fba1ba2288cf7db630afa28fc6e6d0f273c476c3232ac43634d9aa58d26e79"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\command-review-01\\reviewed-command.sh",
+      "sha256": "77c8d5ff26cf4bc839cdcee8b6d67c9847d21790e35dd8a1172431cd0c841231"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\windows-check-final.log",
+      "sha256": "b4bd1749b23d260d35df232b0331c754c2d652bd3c9b251ca55bd14b815f4905"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\wsl-zero-motion-final.log",
+      "sha256": "b391dacfeb4ad7a545eff764e205ff80303f138a1272ac40412ebcddf14d96c9"
+    },
+    {
+      "path": "C:\\Users\\huang\\.codex\\visualizations\\2026\\09\\07\\01a07bf7-1a1e-7720-b8dc-c7e4c9ffca84\\check_baseline_zero_motion.sh",
+      "sha256": "f308126eba12c2c36d4a433535de6ab67ec00c4d3eb2aaf14276859ba3e3927d"
+    }
+  ],
+  "runtime_sdf_diagnosis": {
+    "initial_check": "raw_hash_mismatch; retained runtime-check-01/check.json",
+    "cause": "installed 128-line CRLF versus repository LF; normalized text equal",
+    "repository_sha256": "058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba",
+    "installed_sha256": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5",
+    "runtime_file_modified": false
+  },
+  "limitations": [
+    "X +/- 1 mm full-cycle scene/config/plan not prepared; prior grasp success kept separate",
+    "Local raw data, AJ plan and installed workspace required; no clean-machine reproduction",
+    "Offline log reduction does not recompute MCAP physics or imply hardware verification",
+    "No new ROS/MoveGroup/Gazebo/controller experiment; command generation is not execution",
+    "Historical cross-version aggregate is not AM baseline success rate",
+    "Package/file presence checks do not recursively audit all model meshes or prove live runtime health"
+  ],
+  "claims": {
+    "accepted_goal_result_timeout_verified": false,
+    "strong_move_group_request_id_correlation": false,
+    "hardware_verified": false
+  },
+  "committed": false,
+  "pushed": false,
+  "work_completed_utc": "2026-09-07T13:28:27.690779+00:00"
+}

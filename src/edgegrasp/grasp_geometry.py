@@ -939,3 +939,82 @@ def validate_routed_grasp_stage_geometry(
         grasp_orientation_xyzw=grasp_orientation_xyzw,
         cube_center_in_frame_at_descend_m=relative,
     )
+
+
+def select_so101_control_grasp(
+    *, nominal_center_m, cube_center_m, cube_orientation_xyzw,
+    approach_position_m, approach_orientation_xyzw, grasp_orientation_xyzw,
+    profile,
+):
+    """Select a bounded shoulder-pan variant, retaining every geometry gate.
+
+    Only the pinned SO-101 shoulder joint is varied, by at most 0.5 degrees
+    in 0.01-degree steps. Its URDF origin is xyz=(.0388353,-8.97657e-9,.0624),
+    rpy=(3.14159,4.18253e-17,-3.14159), axis=(0,0,1). This preserves the five
+    other joint coordinates of each declared stage; swept-path planning is
+    still mandatory. The actual cube must remain within the original 1 mm
+    control scene and pass the unchanged 1 mm stage-position envelope.
+    """
+    if (profile.end_effector_frame != 'gripper_frame_link'
+            or profile.target_id != 'target_cube' or profile.cube_size_m != (.05, .05, .05)
+            or profile.stage_position_tolerance_m != .001):
+        raise GraspGeometryError('bounded_pan_requires_fixed_so101_cube')
+    if any(not math.isfinite(v) for v in (*cube_center_m, *nominal_center_m)):
+        raise GraspGeometryError('invalid_control_center')
+    if any(abs(a-b) > .001 for a, b in zip(cube_center_m, nominal_center_m, strict=True)):
+        raise GraspGeometryError('ready:target_outside_predeclared_control_scene')
+    pivot = (.0388353, -8.97657e-9, .0624)
+    roll, pitch, yaw = 3.14159, 4.18253e-17, -3.14159
+    axis = (math.cos(yaw)*math.sin(pitch)*math.cos(roll)+math.sin(yaw)*math.sin(roll),
+            math.sin(yaw)*math.sin(pitch)*math.cos(roll)-math.cos(yaw)*math.sin(roll),
+            math.cos(pitch)*math.cos(roll))
+    nominal = derive_grasp_stage_geometry(nominal_center_m, grasp_orientation_xyzw, profile)
+    def multiply(a, b):
+        x,y,z,w=a; X,Y,Z,W=b
+        return (w*X+x*W+y*Z-z*Y, w*Y-x*Z+y*W+z*X,
+                w*Z+x*Y-y*X+z*W, w*W-x*X-y*Y-z*Z)
+    policy = profile.preclose_contact_policy
+    if policy is None:
+        raise GraspGeometryError('bounded_pan_requires_preclose_policy')
+    pad = next(p for p in profile.required_contact_pad_obbs if p.name == policy.fixed_pad_name)
+    midpoint = (policy.minimum_fixed_pad_clearance_m + policy.maximum_fixed_pad_clearance_m)/2
+    ranked = []
+    for step in range(-50, 51):
+        delta = math.radians(step / 100)
+        sine = math.sin(delta/2)
+        rotation_q = (*[v*sine for v in axis], math.cos(delta/2))
+        rotation = _rotation_matrix(rotation_q)
+        def position(p):
+            offset = _rotate(rotation, tuple(a-b for a,b in zip(p,pivot,strict=True)))
+            return tuple(a+b for a,b in zip(offset,pivot,strict=True))
+        a = position(approach_position_m)
+        d = position(nominal.descend_position_m)
+        l = position(nominal.lift_position_m)
+        aq = multiply(rotation_q, approach_orientation_xyzw)
+        gq = multiply(rotation_q, grasp_orientation_xyzw)
+        cube = cube_obb_in_frame(
+            center_in_frame_m=_inverse_rotate(_rotation_matrix(gq),
+                tuple(x-y for x,y in zip(cube_center_m,d,strict=True))),
+            cube_size_m=profile.cube_size_m, frame_orientation_xyzw=gq,
+            cube_orientation_xyzw=cube_orientation_xyzw)
+        clearance = -min(oriented_box_overlap_margins(cube, pad))
+        if policy.minimum_fixed_pad_clearance_m <= clearance <= policy.maximum_fixed_pad_clearance_m:
+            ranked.append((abs(clearance-midpoint), abs(step), step, a,d,l,aq,gq,clearance))
+    # This is equivalent to validating every candidate and then minimizing the
+    # same score. Never return a partial envelope check as a valid candidate.
+    for count, row in enumerate(sorted(ranked, key=lambda r: r[:3]), 1):
+        _, _, step, a,d,l,aq,gq,clearance = row
+        try:
+            geometry = validate_routed_grasp_stage_geometry(
+                cube_center_m=cube_center_m, cube_orientation_xyzw=cube_orientation_xyzw,
+                approach_position_m=a, descend_position_m=d, lift_position_m=l,
+                approach_orientation_xyzw=aq, grasp_orientation_xyzw=gq,
+                gripper_position_rad=profile.gripper_contact_position_rad, profile=profile)
+        except GraspGeometryError:
+            continue
+        return geometry, {'shoulder_pan_delta_deg': step/100,
+                      'fixed_pad_clearance_m': clearance,
+                      'candidate_count': 101, 'gap_candidates': len(ranked),
+                      'full_checks_attempted': count,
+                      'center_limit_m': .001, 'pan_limit_deg': .5}
+    raise GraspGeometryError('no_bounded_pan_variant_passes_original_geometry')

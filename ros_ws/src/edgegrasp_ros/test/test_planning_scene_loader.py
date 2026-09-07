@@ -11,6 +11,7 @@ from moveit_msgs.msg import (
     AllowedCollisionMatrix,
     CollisionObject,
     PlanningScene,
+    PlanningSceneComponents,
 )
 from moveit_msgs.srv import GetPlanningScene
 import pytest
@@ -154,7 +155,11 @@ def test_loader_reports_ready_only_after_service_echo(
         assert set(fake.objects) == expected_ids
         assert fake.object_messages == published_after_confirmation
         assert fake.requests
-        assert all(mask == 152 for mask in fake.requests)
+        expected_mask = (PlanningSceneComponents.WORLD_OBJECT_NAMES
+                         | PlanningSceneComponents.WORLD_OBJECT_GEOMETRY
+                         | PlanningSceneComponents.ALLOWED_COLLISION_MATRIX
+                         | PlanningSceneComponents.ROBOT_STATE_ATTACHED_OBJECTS)
+        assert all(mask == expected_mask for mask in fake.requests)
         assert loader._last_reason in {
             "confirmed",
             "confirmed_revalidation_pending",

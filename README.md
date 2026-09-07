@@ -4,27 +4,37 @@ EdgeGrasp 是基于 SO-101 的机器人仿真与验证项目：从 RGB-D 定位�
 规划和受控执行完成抓取，再由独立物理观察器判断是否真的接触、抬升和保持。
 已有录包可以自动转换成 Blender 动画，直观看到动作、识别偏差和停止原因。
 
-后续安排见 [项目路线图](docs/roadmap.md)；下一阶段是
-[正常释放与完整操作循环](docs/tasks/next-release-cycle.md)。
+后续安排见 [项目路线图](docs/roadmap.md)；当前入口是
+[AM 基线检查与评测](docs/release-cycle-baseline.md) 和 [下一步交接](docs/tasks/next-release-cycle.md)。
 
-## 当前进度（2026-09-06）
+## 当前进度（2026-09-07）
 
-**限定三位置的模拟抓取已经成功；抓取后的正常释放仍未成功，真实机器人尚未验证。**
+**control 已在同一仿真连续 3/3 轮完成独立抓取、放回、张开、撤离与再抓取几何验证；两个 X±1 mm 位置仅有早期抓取成功，完整循环尚未验证。真实机器人尚未验证。**
 
 | 工作项 | 当前结果 | 限制 / 下一步 |
 | --- | --- | --- |
 | RGB-D 定位 | 固定桌面、单个初始静止的 50 mm 红色方块；感知使用 RGB、深度、标定和相机 TF | 只验证了声明的视角和范围，不是任意物体识别 |
 | 规划与抓取 | control、X−1 mm、X+1 mm 均完成规划和有界执行 | 两个平移位置使用已验证的小角度夹爪偏航调整；原始无解规划保留 |
 | 独立物理判定 | 三位置均通过同帧双指接触、≥20 mm 抬升和 ≥0.5 s 保持；保持抬升分别为 28.85、28.91、28.68 mm | COMPLETE 与物理 VERIFIED 分开判断，不代表整个工作空间成功 |
-| 正常释放 | 三次成功抓取的类型化释放均未成功，使用既有回退完成运行清理 | 待修复并独立验证释放流程，尚不是完整 pick-and-place |
+| 完整循环 | AM 控制位置同一仿真连续 3/3 轮通过；每轮独立抓取/保持、放回/支撑、张开/撤离、ready 与再抓取几何通过 | 整轮重试 0、轮间控制器重启 0；旧释放失败和旧几何未验证 COMPLETE 均保留，不推广到平移位置 |
 | Blender 回放 | 成功与安全停止样例均已生成，支持 .blend、预览图和 MP4 | 只回放记录，不重新计算物理，也不补充实机证据 |
-| 可复用流程 | 项目 Skill、转换/校验脚本、清理盘点和 runbook 已提供 | 清理盘点不等于删除；此前工具拒绝的清理仍未完成 |
+| 可复用流程 | 固定配置、来源锁、默认零运动检查、命令生成及逐轮证据汇总已提供 | 依赖本机 AJ 规划、原始日志和安装工作区；两个偏移位置返回 NOT_READY，尚未完成干净机器复现 |
 | 真实硬件 | 未运行 | 需要另行授权和校准、停止/释放等实机验证 |
 
 三个成功录包的 1821 条原子观测中，1817 条通过最近邻真值精度比较；
 4 条超限以及所有历史失败均保留。详见 [抓取结果](docs/rgbd-static-grasp-result.md)、
 [逐位置验证](docs/observations/2026-09-06-rgbd-final-validation.json) 和
 [41 个实验目录索引](docs/observations/2026-09-06-rgbd-artifact-inventory.json)。
+
+AM 的完整循环见 [迭代记录](docs/release-cycle-iteration.md)；本次只读整理见
+[交接报告](docs/tasks/baseline-handoff-20260907.md)。安全的首条命令：
+
+```powershell
+python scripts/baseline.py
+```
+
+它只检查配置与源文件，不启动 ROS。生成新实验命令和从已有日志汇总的方法见
+[基线 runbook](docs/release-cycle-baseline.md)。本次整理未进行新仿真实验。
 
 ## 回放演示
 
@@ -43,7 +53,8 @@ EdgeGrasp 是基于 SO-101 的机器人仿真与验证项目：从 RGB-D 定位�
 固定场景与相机 → RGB / 深度 / 标定 / TF → 方块中心与姿态
        → 身份、时间、坐标和新鲜度检查 → MoveIt 无执行规划
        → 类型化轨迹门控 → 接近 → 下探 → 闭合 → 抬升
-       → 独立接触 / 抬升 / 保持判定 → 释放与清理结果分别记录
+       → 独立接触 / 抬升 / 保持判定 → 放回 / 支撑 / 张开 / 撤离 / 再抓取几何
+       → 完整循环、失败阶段与清理结果分别记录
        → MCAP + 模型 + 日志 → 离线转换 → Blender 烘焙动画
        → 重新打开逐帧核对 → 预览 / MP4 → 临时文件盘点与受限清理
 ```
@@ -85,13 +96,13 @@ powershell -NoProfile -File scripts/run_blender_replay.ps1 `
 覆盖回放、验证和清理审核；清理盘点脚本不执行删除，也不能改变工具权限。
 
 - Windows 全量检查：`powershell -NoProfile -File scripts/check.ps1`；本次发布前
-  348 项通过、3 项明确跳过，三个场景各 100 次确定性回放通过。
-- WSL RGB-D/ROS 检查：`bash scripts/check_rgbd.sh`；此前验证 26 项通过。
+  基线整理的最新测试结果及原始日志见 [检查交接](docs/tasks/baseline-handoff-20260907.md)，三个场景各 100 次确定性回放通过。
+- WSL RGB-D/ROS 检查：`bash scripts/check_rgbd.sh`；其子集与完整零运动回归分开记录在检查交接中。
 - 回放校验：成功/失败样例分别核对 5,494 / 3,968 个变换，无覆盖区间内缺口；
   见 [回放验证收据](docs/observations/2026-09-06-blender-replay-validation.json)。
 - 仓库包含代码、测试、Skill、runbook、证据摘要/索引与压缩演示；
   Blender 安装目录、原始 MCAP、完整 .blend 和全部原始日志保留在本地。
-- 仍待解决：正常释放、扩大姿态/物体范围的独立实验，以及另行授权的硬件阶段。
+- 仍待解决：两个偏移位置的完整循环配置/规划/验证、干净机器复现、扩大姿态/物体范围的独立实验，以及另行授权的硬件阶段。
   `accepted_goal_result_timeout_verified=false` 和
   `strong_move_group_request_id_correlation=false` 保持不变。
 

@@ -20,6 +20,8 @@ from pathlib import Path
 import sys
 import time
 from typing import Any
+from carried_scene_client import transition
+from edgegrasp.grasp_geometry import select_so101_control_grasp
 
 from ament_index_python.packages import get_package_share_directory
 from edgegrasp.grasp_geometry import (
@@ -86,6 +88,17 @@ def _arguments(argv: list[str]) -> argparse.Namespace:
         ),
     )
     parser.add_argument("--attempts", type=int, default=1)
+    parser.add_argument("--release-cycle", action="store_true",
+                        default=os.environ.get("EDGEGRASP_RELEASE_CYCLE_PLAN") == "1",
+                        help="append fixed control-position place and open retreat plans")
+    parser.add_argument("--place-drop-m", type=float, choices=(0.018, 0.0185),
+                        default=float(os.environ.get("EDGEGRASP_PLACE_DROP_M", "0.018")))
+    parser.add_argument("--placement-compensation-json", type=Path,
+                        default=os.environ.get("EDGEGRASP_PLACEMENT_COMPENSATION"))
+    parser.add_argument("--upright-placement-json", type=Path,
+                        default=os.environ.get("EDGEGRASP_UPRIGHT_PLACEMENT"))
+    parser.add_argument("--vertical-retreat", action="store_true",
+                        default=os.environ.get("EDGEGRASP_VERTICAL_RETREAT") == "1")
     parser.add_argument("--joint-state-timeout-s", type=float, default=15.0)
     parser.add_argument("--max-joint-state-age-ms", type=float, default=200.0)
     parser.add_argument("--service-timeout-s", type=float, default=10.0)
@@ -100,6 +113,8 @@ def _arguments(argv: list[str]) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.attempts < 1 or args.attempts > 100:
         parser.error("--attempts must be in [1, 100]")
+    if args.place_drop_m not in (0.018, 0.0185):
+        parser.error("place drop must be one of the predeclared control candidates")
     positive = (
         args.joint_state_timeout_s,
         args.max_joint_state_age_ms,
@@ -234,6 +249,19 @@ def _load_stages(
         profile=profile,
         cube_orientation_xyzw=cube.pose_world.quaternion_xyzw,
     )
+    bounded_pan = os.environ.get('EDGEGRASP_BOUNDED_CONTROL_PAN') == '1'
+    pan_seed = dict(approach_position_m=approach_position,
+                    approach_orientation_xyzw=approach_orientation,
+                    grasp_orientation_xyzw=grasp_orientation)
+    pan_selection = None
+    if bounded_pan:
+        if not getattr(args, 'release_cycle', False):
+            raise ValueError('bounded pan requires the fixed release-cycle scope')
+        routed, pan_selection = select_so101_control_grasp(
+            nominal_center_m=cube.pose_world.position_m,
+            cube_center_m=planning_center,
+            cube_orientation_xyzw=cube.pose_world.quaternion_xyzw,
+            profile=profile, **pan_seed)
     stage_rows = (
         Stage(
             "home_to_approach",
@@ -257,8 +285,62 @@ def _load_stages(
             True,
         ),
     )
+    compensation = None
+    if getattr(args, "release_cycle", False):
+        if args.candidate_filename != "so101_side_grasp_candidate024_face_aligned.json" or offset_x != 0.0:
+            raise ValueError("release cycle planning is restricted to the control candidate")
+        place = (*routed.lift_position_m[:2], routed.lift_position_m[2] - args.place_drop_m)
+        place_orientation = routed.grasp_orientation_xyzw
+        compensation_path = getattr(args, "placement_compensation_json", None)
+        upright_path = getattr(args, "upright_placement_json", None)
+        if upright_path and compensation_path:
+            raise ValueError("select exactly one placement candidate")
+        if compensation_path:
+            compensation = json.loads(compensation_path.read_text())
+            shift = compensation["translation_m"]
+            yaw = compensation["yaw_delta_deg"]
+            if (compensation["scope"] != "fixed_place_compensation_from_recorded_rgbd"
+                    or len(shift) != 3 or not all(math.isfinite(v) for v in (*shift, yaw))
+                    or shift[2] != 0 or math.dist(shift, (0, 0, 0)) > .025
+                    or abs(yaw) > 1):
+                raise ValueError("placement candidate exceeds its declared 25 mm / 1 degree bound")
+            measurement = Path(compensation["measurement_file"])
+            if _sha256(measurement) != compensation["measurement_sha256"]:
+                raise ValueError("placement measurement provenance mismatch")
+            place = tuple(a+b for a, b in zip(place, shift))
+            x, y, z, w = place_orientation
+            c, s = math.cos(math.radians(yaw)/2), math.sin(math.radians(yaw)/2)
+            place_orientation = (c*x-s*y, c*y+s*x, c*z+s*w, c*w-s*z)
+            compensation = {**compensation, "candidate_sha256": _sha256(compensation_path)}
+        if upright_path:
+            compensation = json.loads(upright_path.read_text())
+            position = compensation["position_m"]
+            orientation = compensation["orientation_xyzw"]
+            if (compensation["scope"] != "fixed_upright_place_from_recorded_rgbd"
+                    or len(position) != 3 or len(orientation) != 4
+                    or not all(math.isfinite(v) for v in (*position, *orientation))
+                    or math.dist(place, position) > .02
+                    or abs(sum(v*v for v in orientation)-1) > 1e-6
+                    or abs(sum(a*b for a, b in zip(orientation, place_orientation)))
+                    < math.cos(math.radians(40)/2)):
+                raise ValueError("upright placement exceeds declared 20 mm / 40 degree bound")
+            if _sha256(Path(compensation["measurement_file"])) != compensation["measurement_sha256"]:
+                raise ValueError("upright placement measurement provenance mismatch")
+            place, place_orientation = tuple(position), tuple(orientation)
+            compensation = {**compensation, "candidate_sha256": _sha256(upright_path)}
+        retreat_position = routed.approach_position_m
+        retreat_orientation = routed.approach_orientation_xyzw
+        if getattr(args, 'vertical_retreat', False):
+            retreat_position = (place[0], place[1], place[2] + .10)
+            retreat_orientation = place_orientation
+        stage_rows += (
+            Stage("lift_to_place_closed", place, place_orientation, 0.796, True),
+            Stage("place_to_retreat_open", retreat_position,
+                  retreat_orientation, profile.gripper_open_position_rad, True),
+        )
     config_evidence: dict[str, object] = {
         "candidate_path": str(candidate_path),
+        "vertical_retreat": bool(getattr(args, 'vertical_retreat', False)),
         "candidate_sha256": _sha256(candidate_path),
         "grasp_geometry_path": str(profile_path),
         "grasp_geometry_sha256": _sha256(profile_path),
@@ -279,6 +361,13 @@ def _load_stages(
         "cube_orientation_xyzw": list(cube.pose_world.quaternion_xyzw),
         "gripper_open_position_rad": profile.gripper_open_position_rad,
         "gripper_contact_position_rad": profile.gripper_contact_position_rad,
+        "release_cycle": bool(getattr(args, "release_cycle", False)),
+        "bounded_control_pan": bounded_pan,
+        "bounded_pan_seed": pan_seed if bounded_pan else None,
+        "bounded_pan_selection": pan_selection,
+        "release_place_drop_m": getattr(args, "place_drop_m", 0.018),
+        "placement_compensation": compensation,
+        "carried_scene": bool(os.environ.get("EDGEGRASP_CARRIED_PLAN_EVIDENCE")),
     }
     return stage_rows, config_evidence
 
@@ -481,7 +570,9 @@ class CandidatePlanOnlyProbe(Node):
         start.joint_state.header.frame_id = PLANNING_FRAME
         start.joint_state.name = [*SO101_ARM_JOINTS, GRIPPER_JOINT]
         start.joint_state.position = [*start_positions, stage.start_gripper_rad]
-        start.is_diff = False
+        # Preserve the confirmed carried body while supplying every arm and
+        # gripper position for this chained, non-executing start state.
+        start.is_diff = bool(getattr(args, 'carried_scene', False))
         motion.start_state = start
 
         region = BoundingVolume()
@@ -611,6 +702,7 @@ class CandidatePlanOnlyProbe(Node):
 def _run(args: argparse.Namespace) -> int:
     config_dir = Path(get_package_share_directory("edgegrasp_ros")) / "config"
     stages, config_evidence = _load_stages(config_dir, args)
+    args.carried_scene = config_evidence['carried_scene']
     node = CandidatePlanOnlyProbe()
     started = time.monotonic()
     report: dict[str, object] = {
@@ -658,6 +750,13 @@ def _run(args: argparse.Namespace) -> int:
         for attempt in range(1, args.attempts + 1):
             chained_start = arm_start
             for stage in stages:
+                if config_evidence['carried_scene']:
+                    operations = {'lift_to_place_closed': ('attach', 'place_contact'),
+                                  'place_to_retreat_open': ('detach',)}.get(stage.name, ())
+                    for operation in operations:
+                        report['contact_policy_events'].append({
+                            'operation': operation, 'confirmation': transition(
+                                node, operation, scope='recorded_geometry_only')})
                 allow_contacts = stage.allow_target_pad_contacts
                 policy_status = node.set_target_pad_contacts(
                     allow=allow_contacts,

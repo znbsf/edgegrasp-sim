@@ -4,6 +4,12 @@ This runbook keeps the pinned SO-101 source, the EdgeGrasp monorepo adapter,
 and every generated ROS artifact isolated from the Windows checkout. Commands
 that bypass the EdgeGrasp trajectory gate are labeled explicitly.
 
+For the recorded AM control pick/place baseline, start with the
+[offline baseline check and evidence runbook](release-cycle-baseline.md).
+`python3 scripts/baseline.py` performs source/config checks only. It does not
+install dependencies or start ROS; command generation and existing-log reduction
+are separate explicit actions. The two translated full-cycle cases are not ready.
+
 ## Evidence levels
 
 1. Package inventory proves only that binaries are installed.

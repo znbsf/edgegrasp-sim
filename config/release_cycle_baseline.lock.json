@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "baseline_id": "candidate024-am-20260906-v1",
+  "plan_sha256": "7b8bb568b4104d4cf0f5f50449c684218b98d080671452afa4a944c0690902c3",
+  "source_snapshot_sha256": "f5b8d360c992c52e3b62fe9ae8c1b0e1082e84c58118e8fbece17f0a7809e1c5",
+  "repository_files": [
+    {
+      "path": "src/edgegrasp/action_readiness.py",
+      "sha256": "157591bfe1b3bf2c2cfdff5907a4599e724c30e9dd637da7cd8debeedf66da67",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/grasp_geometry.py",
+      "sha256": "540c2b15f359bc8b69f24fb8d6e0ca2ebfd50e60cf0e04f2e4513c6ba3afa5d7",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/camera.py",
+      "sha256": "b1cd9ca7fccaa76fab580ef55eda7f4de125367f0903f7d3790ee3044429abc3",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/rgbd.py",
+      "sha256": "91529f4da491cfc585493eb62b251d21f6466e96a8c68c6c6294aea3a9eda450",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/target_motion.py",
+      "sha256": "22085e19cb6d572a4edb2fa7a164ec67d2312c9d6dd2adf61c111a0346916dd2",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/contact_material.py",
+      "sha256": "4b058c072ab22c8203c372db1bc30c968b729d991df0b2d8370e0683a83501d3",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/release_cycle.py",
+      "sha256": "d460404998bc5ea51eadaa2307b86bb285954a47f1f31aaca1da5b6cb5d53855",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "src/edgegrasp/carried_scene.py",
+      "sha256": "9b1711e9ec061e31e3c3b5bc5941e274dd818aad6bc6d8db21693854e844efc6",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/edgegrasp_ros/carried_scene_policy.py",
+      "sha256": "6d3e31586ed7395322dda627468b164c51744fedc68dc12b9c18c6d69a8b8431",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/edgegrasp_ros/grasp_physics_observer.py",
+      "sha256": "fa7ed465f15dac32286c096056b5b48435ea0876e94feea4300f71e2fb71c67c",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/edgegrasp_ros/planning_scene_loader.py",
+      "sha256": "ffa13ef6f1d1e58ceeb1dffe89dfe492bdb2a4c633cf0452f4e70d9ecd3cd3aa",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/edgegrasp_ros/trajectory_gate.py",
+      "sha256": "56492eb60768c06f5e4a13d64824d928044340d5af38d9131a734163631a8353",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_moveit_adapter/edgegrasp_moveit_adapter/adapter_node.py",
+      "sha256": "9b2ee943a8bb1ee6a213baf643f94a8e5220a7dcb1b6e9940b2ecc3d7810667f",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/edgegrasp_ros/rgbd_target_publisher.py",
+      "sha256": "82c3033b33d5147170838d7a27f46d70eec55e4842530dbd1ca1727be919f529",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_grasp_sequence/edgegrasp_grasp_sequence/node.py",
+      "sha256": "50658f35db128f2e662195d421a7dc9d19247db96e4d40362bf14ac56ddaf7de",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_grasp_sequence/edgegrasp_grasp_sequence/trial_client.py",
+      "sha256": "56650eb7281a70d997127bfad6c493060dc509e9f5654a1119894a8ac57f435f",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "scripts/run_candidate005_contact_quality.sh",
+      "sha256": "3464e72b28ab95cf8099819e8629c3485541336b649b1ea9735fc3b040f9ce44",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "scripts/complete_release_cycle.py",
+      "sha256": "548c1101df6926d2139974066e53aab77de4829d1435b9aa6eb0b90e2db5fae7",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "scripts/carried_scene_client.py",
+      "sha256": "876c5e076c81cb91ebcafd2e01af6a59b6ad0855e05c78ca7a8618b334d1ee97",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "scripts/probe_grasp_candidate_plan_only.py",
+      "sha256": "3392cc0fe8413071ef78b3a2a6ab50a8c969883f775f87c3c8e29c633cb55b13",
+      "provenance": "AM source_snapshot"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/config/so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+      "sha256": "19b44e2b56cc1841e073166e94125eca73579f44efc831514e4f169ef3ffe22e",
+      "provenance": "repository asset pinned 2026-09-07; installed copy checked separately"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/config/so101_side_grasp_candidate024_face_aligned.json",
+      "sha256": "e1209fdea7a0e1d079f0d7d77025f30664f9fbad399a6d81a50b1b1cd70eb2c5",
+      "provenance": "repository asset pinned 2026-09-07; installed copy checked separately"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/config/scene_candidate024_face_aligned.json",
+      "sha256": "e99ae900971772b33eed3707d189f1719b9a3a92c19c5875a6d0ac8675751701",
+      "provenance": "repository asset pinned 2026-09-07; installed copy checked separately"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/worlds/table_cube_candidate024_face_aligned.sdf",
+      "sha256": "058e3237b430c56dbcfcde1091573bf8ce6827e6322114c094011a16095af0ba",
+      "provenance": "repository asset pinned 2026-09-07; installed copy checked separately"
+    },
+    {
+      "path": "ros_ws/src/edgegrasp_ros/config/so101_pad_contact_materials.json",
+      "sha256": "588bce5751e11947a8bfdc059e6ad247565f61e0de7ced19a86a166c62c90a93",
+      "provenance": "repository asset pinned 2026-09-07; installed copy checked separately"
+    }
+  ],
+  "runtime_files": [
+    {
+      "path": "home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/so101_grasp_geometry_candidate024_face_aligned_q0p40.json",
+      "sha256": "19b44e2b56cc1841e073166e94125eca73579f44efc831514e4f169ef3ffe22e"
+    },
+    {
+      "path": "home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/so101_side_grasp_candidate024_face_aligned.json",
+      "sha256": "e1209fdea7a0e1d079f0d7d77025f30664f9fbad399a6d81a50b1b1cd70eb2c5"
+    },
+    {
+      "path": "home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/scene_candidate024_face_aligned.json",
+      "sha256": "e99ae900971772b33eed3707d189f1719b9a3a92c19c5875a6d0ac8675751701"
+    },
+    {
+      "path": "home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/worlds/table_cube_candidate024_face_aligned.sdf",
+      "sha256": "14312067a8b3c861265c1a69ec7d007178a6cdcff48ac4d2377dbd505c9115f5",
+      "provenance": "2026-09-07 read-only WSL verification: installed file has 128 CRLF lines; normalized text exactly equals pinned repository LF file. Both raw hashes retained, no runtime file changed."
+    },
+    {
+      "path": "home/edgegrasp/ros2_ws/install/edgegrasp_ros/share/edgegrasp_ros/config/so101_pad_contact_materials.json",
+      "sha256": "588bce5751e11947a8bfdc059e6ad247565f61e0de7ced19a86a166c62c90a93"
+    }
+  ],
+  "config_sha256": "686a7b4d81fd8df7e32aa95eccbe1de6ff544f93cbd10a437eed82fbb7c0d6b5"
+}

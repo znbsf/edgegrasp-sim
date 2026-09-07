@@ -1,0 +1,2419 @@
+{
+  "date": "2026-09-06",
+  "scope": "recorded_simulation_and_plan_only",
+  "user_confirmed_carried_scene": true,
+  "full_cycle_position_ready_verified": true,
+  "regrasp_geometry_added_after_m": true,
+  "consecutive_three_attempted": true,
+  "consecutive_three_verified": true,
+  "accepted_goal_result_timeout_verified": false,
+  "strong_move_group_request_id_correlation": false,
+  "tests": {
+    "windows_passed": 382,
+    "windows_skipped": 3,
+    "wsl_zero_motion_passed": 171
+  },
+  "planning_attempts": [
+    {
+      "candidate": "c",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906c",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "d5debb0289469f7b3b61b9470eeb2236411de0c86a0631d47c8787f93f298aed",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "e",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906e",
+      "status": "PLAN_ONLY_REJECTED",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "69652ed5f3df7b30880ccaa20cec21fc1a817bde54b2864ccd8c41e0c8d00067",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": false,
+          "moveit_error_code": 99999
+        }
+      ]
+    },
+    {
+      "candidate": "f",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906f",
+      "status": "PLAN_ONLY_REJECTED",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "5d1bf98ba8841e2cfb17c637f245428f8053a96175b82017297acf74e2f56e64",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": false,
+          "moveit_error_code": 99999
+        }
+      ]
+    },
+    {
+      "candidate": "g",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906g",
+      "status": "PLAN_ONLY_REJECTED",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "d766bcef0471f169bc357259457d2fd81cc8128a280eaef0754f084f975ff647",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": false,
+          "moveit_error_code": 99999
+        }
+      ]
+    },
+    {
+      "candidate": "h",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906h",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "decf95e5451dc72422d62c730e0fb94e4008bf80197dfa8222570a7df88b1698",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "j",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906j",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "93e4ca0e3a5a6bddc0ce1e9c3efdfb17a11bc9ecb41fbe90bd928a728b7ae64f",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "k",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906k",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "f5efd2f5fa9846b27c24824f4cd2c47dfc0e7a341a68978a8448f421649f27b8",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "q",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906q",
+      "status": "PLAN_ONLY_REJECTED",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "17cbbe21555724f9049514776c754b1fdb6efd4ba0e97e9917b7d4acdbfa2daf",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": false,
+          "moveit_error_code": 99999
+        }
+      ]
+    },
+    {
+      "candidate": "r",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906r",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "ef5bcd3d9567079786dfc026ec9682ff76a8c031f1984e3e98d047dccf913f74",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "s",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906s",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "f3625bd8ce78b05e162f1a845ae516b3c8078d7abf81457257625714e220a8b7",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "u",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906u",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "80937d1be46eabd975750db0da90e97dfb8d0ff3407178e40e0a7e3c61ac7a1f",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "v",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906v",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "b4c1fda7f591905e393296234fddd8fd5dbdee020fe9b2263ce4831f550925a3",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "x",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906x",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "5616cf507459a5ca87df9bb4616efaf3dbed6178dacd625a92c0ae6b390587f9",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "z",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906z",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "faede131dea7b184306ab9d1229629c59a502df5c8e6f22dbbbebcca952a599d",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "ad",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906ad",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "8f9f4e106d13f5c85e42ef9edb517a5d3e58f4331fafce2a9ead9ad773e1b464",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "ae",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906ae",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "954cfa1a75d85aa344054478eb9a4c8c4e6db11dbb631f5137f1daa354b3a6ff",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "ag",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906ag",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "64026f25b94766b9f10f7bfc59712b2e7188d8351f967d93d5be234868d280fa",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "ah",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906ah",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "bb7924aefdfa7e698c7d93f86c0837175214f6dbf437936cf8600177f4f3ffad",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    },
+    {
+      "candidate": "aj",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_plan_20260906aj",
+      "status": "PLAN_ONLY_PASS",
+      "execution_attempted": false,
+      "trajectory_publication_count": 0,
+      "result_sha256": "7b8bb568b4104d4cf0f5f50449c684218b98d080671452afa4a944c0690902c3",
+      "segments": [
+        {
+          "segment": "home_to_approach",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "approach_to_descend",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "descend_to_lift_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "lift_to_place_closed",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        },
+        {
+          "segment": "place_to_retreat_open",
+          "plan_accepted": true,
+          "moveit_error_code": 1
+        }
+      ]
+    }
+  ],
+  "executions": [
+    {
+      "candidate": "a",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906a",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 2,
+      "last_release_event": {
+        "status": "STOPPED",
+        "reason": "supported_before_release:continuous_support_evidence_timeout",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-control-a",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1679,
+      "lift_m": 0.028734976882442448,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "e2c270802dacd1eedbbe16f8b704fa32b8ec518a44952a3d0b44aab937e4a3d3",
+      "release_cycle.jsonl_sha256": "fd491d0cb40d12cc7a68e789e00f0f188b1b12e0e58f62a85d19ff7f56b97cad",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "b",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906b",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 408,
+      "last_release_event": {
+        "observed_now_ns": 37950000000,
+        "status": "STOPPED",
+        "reason": "supported_before_release:continuous_support_evidence_timeout",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-control-b",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1670,
+      "lift_m": 0.028884797305622267,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "f32c53eb3b50911cde7d33f8f3491f0e6dec9365b7474221ada796db982f1c79",
+      "release_cycle.jsonl_sha256": "e599c4a58280a9d275b6597832812c78972b51235ae9154717435bd96306b181",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "c",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906c",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 458,
+      "last_release_event": {
+        "observed_now_ns": 39601000000,
+        "status": "STOPPED",
+        "reason": "supported_and_open:continuous_support_evidence_timeout",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-control-c",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1675,
+      "lift_m": 0.028854988537630827,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "443f5cc655707aa72fed9bcd76a9b2ce922a7184e292d9b483a2aff4d2962aa3",
+      "release_cycle.jsonl_sha256": "37041298e3d097a5272a3fbe22ae8c3f0f7942b37ef2400b788d736e78755531",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "d",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906d",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 473,
+      "last_release_event": {
+        "observed_now_ns": 43495000000,
+        "status": "STOPPED",
+        "reason": "supported_after_retreat:continuous_support_evidence_timeout",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-control-d",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1657,
+      "lift_m": 0.02875210212551732,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "ae96c1f7fc906fd839c7bca206db9ca1a9c9f79955b9a5e1e95b34b72d780315",
+      "release_cycle.jsonl_sha256": "dff6430f14ffe48e20898b7dac38b650746b762526249a184ca109183c7bf5a8",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "h",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906h",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 166,
+      "last_release_event": {
+        "observed_now_ns": 40131000000,
+        "status": "STOPPED",
+        "reason": "ready:target_outside_predeclared_control_scene",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 40131000000,
+        "stage": "ready",
+        "target_source_ns": 40063000000,
+        "measured_center_m": [
+          0.2397316085753015,
+          0.12889743867227593,
+          0.2049998837719067
+        ],
+        "scene_errors_m": [
+          0.0013526798380303073,
+          0.0006892216250976024,
+          1.1622809328870609e-07
+        ]
+      },
+      "task_id": "release-cycle-control-h",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1676,
+      "lift_m": 0.028974470616490194,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "a5d88de286de2d48d17c23b21082884c55c527b2c4aaeba973a19083d41a92a1",
+      "release_cycle.jsonl_sha256": "4887688d877171ceaecbe96efaea0b16efa9863589e9bfe0b4bf1d3cdf8743e8",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "j",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906j",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 161,
+      "last_release_event": {
+        "observed_now_ns": 56311000000,
+        "status": "STOPPED",
+        "reason": "ready:target_outside_predeclared_control_scene",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 56311000000,
+        "stage": "ready",
+        "target_source_ns": 56233000000,
+        "measured_center_m": [
+          0.24254656261018917,
+          0.12919725735113138,
+          0.2050001089591151
+        ],
+        "scene_errors_m": [
+          0.0014622741968573494,
+          0.0003894029462421511,
+          1.0895911511932255e-07
+        ]
+      },
+      "task_id": "release-cycle-control-j",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1663,
+      "lift_m": 0.029286152246295966,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "8f8030624085fe1f1f595a5559cfef9daf3b41b9f333badc5acb4e530b08fe20",
+      "release_cycle.jsonl_sha256": "a4a2d7d9de7110b93949c6103495ccd31df5e57a278a1cadcf552f52aecb3fc3",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "k",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906k",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 163,
+      "last_release_event": {
+        "observed_now_ns": 48705000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 48392000000,
+        "stage": "ready",
+        "target_source_ns": 48313000000,
+        "measured_center_m": [
+          0.2414594954675598,
+          0.1294950718365364,
+          0.205000132454142
+        ],
+        "scene_errors_m": [
+          0.00037520705422797174,
+          9.158846083712202e-05,
+          1.3245414201557004e-07
+        ]
+      },
+      "task_id": "release-cycle-control-k",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1644,
+      "lift_m": 0.028710602583848027,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "af4888bd955295316a164b376286a1753af69e7291e92da6c175878358e6d7d9",
+      "release_cycle.jsonl_sha256": "f7bdcae9137fbc96c28a62c8e5f0f0f45f09fafb6931512b6bd6edd3d33c4efb",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "candidate": "r",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906r",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 161,
+      "last_release_event": {
+        "observed_now_ns": 43021000000,
+        "status": "STOPPED",
+        "reason": "ready:target_outside_predeclared_control_scene",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 43021000000,
+        "stage": "ready",
+        "target_source_ns": 42967000000,
+        "measured_center_m": [
+          0.24264774985933799,
+          0.13015377213366974,
+          0.20499974797137852
+        ],
+        "scene_errors_m": [
+          0.0015634614460061647,
+          0.000567111836296208,
+          2.520286214724443e-07
+        ]
+      },
+      "task_id": "release-cycle-r",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1627,
+      "lift_m": 0.029067038113242655,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "ac0efdca00c59d1329cae66bbd973166aec6ce401a5948a948a638e0c2a79a5b",
+      "release_cycle.jsonl_sha256": "a86621e56239e71e501ac55c7f1a082b09ddbb74a783beb4587ba2f2c655bafb",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "s",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906s",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 164,
+      "last_release_event": {
+        "observed_now_ns": 46300000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": true,
+      "ready": {
+        "observed_now_ns": 45980000000,
+        "stage": "ready",
+        "target_source_ns": 45904000000,
+        "measured_center_m": [
+          0.2418789763224765,
+          0.12888312920407216,
+          0.20500015753978307
+        ],
+        "scene_errors_m": [
+          0.0007946879091446923,
+          0.0007035310933013739,
+          1.5753978307997407e-07
+        ]
+      },
+      "task_id": "release-cycle-s",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1625,
+      "lift_m": 0.028824689749134685,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "fc0844188b61819c044362ab02f82a6b7d93900bd6d260ea40b0573e130815bd",
+      "release_cycle.jsonl_sha256": "9902a74ca3c369e0e17d07813057c5aae65d92088f93207130cb5aa8b65ab472",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "candidate": "u",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906u",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 164,
+      "last_release_event": {
+        "observed_now_ns": 43305000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": true,
+      "ready": {
+        "observed_now_ns": 42912000000,
+        "stage": "ready",
+        "target_source_ns": 42835000000,
+        "measured_center_m": [
+          0.24203636207560866,
+          0.12957580984845268,
+          0.20500010589648063
+        ],
+        "scene_errors_m": [
+          0.0009520736622768422,
+          1.085044892085163e-05,
+          1.0589648063996648e-07
+        ]
+      },
+      "task_id": "release-cycle-u",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1647,
+      "lift_m": 0.029300799513531622,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "916e258f3d6ece6d2337736aba9bdc94d74858f5428c159e13bc8bd9e8254f63",
+      "release_cycle.jsonl_sha256": "9d80a2eed38c4f7c44c008425b48433eb3116a879749077e32a4dbcc73da2c7d",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "candidate": "v",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906v",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 107,
+      "last_release_event": {
+        "observed_now_ns": 46946000000,
+        "status": "STOPPED",
+        "reason": "carried_transition_rejected:fresh_measured_cube_and_causal_tf_missing",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-v",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1634,
+      "lift_m": 0.029314757252265428,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "4cfb3bc265ec3cf36f9a555638c3f76e632b4b613f03fcee1b9ae96736668a6d",
+      "release_cycle.jsonl_sha256": "4dc404a7ae5095caf4be51f627d733f1a686ae92677999a864bad4ff537f8674",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "w",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906w",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 163,
+      "last_release_event": {
+        "observed_now_ns": 44002000000,
+        "status": "STOPPED",
+        "reason": "preclose_fixed_pad_clearance:edgegrasp_grasp_proxy_fixed_finger_pad:-0.000245206",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 43842000000,
+        "stage": "ready",
+        "target_source_ns": 43759000000,
+        "measured_center_m": [
+          0.2413782397416543,
+          0.13028277233001012,
+          0.20499925735843583
+        ],
+        "scene_errors_m": [
+          0.00029395132832246706,
+          0.0006961120326365866,
+          7.426415641609285e-07
+        ]
+      },
+      "task_id": "release-cycle-w",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [
+        {
+          "operation": "attach",
+          "attempt": 1,
+          "reason": "fresh_measured_cube_and_causal_tf_missing",
+          "prior_source_ns": -1
+        }
+      ],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1649,
+      "lift_m": 0.028978137354249006,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "f694203ebb4ce633dbcaeb19c9b8d2b84b3c49bdd9f2fc17d17caf5929146331",
+      "release_cycle.jsonl_sha256": "84b82127816f9efcd1b989d5a88396fbd5390b1da572e83204cfc002520f4e38",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "x",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906x",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 164,
+      "last_release_event": {
+        "observed_now_ns": 52207000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": true,
+      "ready": {
+        "observed_now_ns": 51822000000,
+        "stage": "ready",
+        "target_source_ns": 51745000000,
+        "measured_center_m": [
+          0.24153487424206654,
+          0.12913989120055172,
+          0.20500017424133266
+        ],
+        "scene_errors_m": [
+          0.0004505858287347231,
+          0.0004467690968218141,
+          1.742413326677461e-07
+        ]
+      },
+      "task_id": "release-cycle-x",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1554,
+      "lift_m": 0.029399263126604125,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "70cc13e6122323e9b7f28cbf9fabae065809ac01165a287090a5010f7f9afb15",
+      "release_cycle.jsonl_sha256": "e27151b557aa0569fc65a80afda8dc7fc2464cfff736bcf36795b24cc1578107",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "candidate": "z",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906z",
+      "physics_grasp_verified": false,
+      "sequence_reason": null,
+      "release_events": 0,
+      "last_release_event": null,
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": null,
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": false,
+      "simultaneous_gripper_contact_sample_count": 0,
+      "lift_m": null,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "f4f8fb279e0aed32808af0f412de3d0229db3a1130473080a5b25d0a1c9e9d4e",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "aa",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906aa",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 164,
+      "last_release_event": {
+        "observed_now_ns": 64506000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": true,
+      "ready": {
+        "observed_now_ns": 64101000000,
+        "stage": "ready",
+        "target_source_ns": 64054000000,
+        "measured_center_m": [
+          0.241833755899352,
+          0.1290067161460271,
+          0.2050001151108443
+        ],
+        "scene_errors_m": [
+          0.0007494674860201722,
+          0.0005799441513464343,
+          1.1511084430093632e-07
+        ]
+      },
+      "task_id": "release-cycle-aa",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1734,
+      "lift_m": 0.029410861722333398,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "b4e41460a168272f2108bcf9753c79ce6faae54d8c537963976de1bbe5cc4672",
+      "release_cycle.jsonl_sha256": "bb5e82e80df58e8140c07a5ccb0184d7f26056233279b33ca3f284cb04291393",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "candidate": "ad",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906ad",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 162,
+      "last_release_event": {
+        "observed_now_ns": 44690000000,
+        "status": "STOPPED",
+        "reason": "ready:target_outside_predeclared_control_scene",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 44690000000,
+        "stage": "ready",
+        "target_source_ns": 44617000000,
+        "measured_center_m": [
+          0.24137404473836324,
+          0.13163257237274964,
+          0.20500005650404188
+        ],
+        "scene_errors_m": [
+          0.00028975632503142057,
+          0.002045912075376105,
+          5.650404188983771e-08
+        ]
+      },
+      "task_id": "release-cycle-ad",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [
+        {
+          "operation": "attach",
+          "attempt": 1,
+          "reason": "fresh_measured_cube_and_causal_tf_missing",
+          "prior_source_ns": -1
+        }
+      ],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1758,
+      "lift_m": 0.028886124170066918,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "1d3139a86e361129dc72e77f121910734336dcfc5dd4e253833223aeb2ded093",
+      "release_cycle.jsonl_sha256": "7d23a1e47283661e872d580031f1ffd5784871c220ad2b5766629ffdbbc6d2f2",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "ae",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906ae",
+      "physics_grasp_verified": false,
+      "sequence_reason": "target_source_timestamp_rollback",
+      "release_events": 0,
+      "last_release_event": null,
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-ae",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": false,
+      "simultaneous_gripper_contact_sample_count": 53,
+      "lift_m": 2.5595860688482075e-05,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "7f64b1b2c917c7dba9771c6ff6bbecbf8fc2a33886a15c1345e4b277acb6591c",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "af",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906af",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 109,
+      "last_release_event": {
+        "observed_now_ns": 37446000000,
+        "status": "STOPPED",
+        "reason": "retreat:move_group_action_status:6",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": "release-cycle-af",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1759,
+      "lift_m": 0.02884216899923142,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "48ec03a22d0329f49cb480a1fa5cb7e7d87995880c5f61c85b8c641e4eb56e49",
+      "release_cycle.jsonl_sha256": "5c58188bdd6c06a81a32a2df9b3363d774f1db8ef4a5308fd774b2d4977bddc4",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "ag",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906ag",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 162,
+      "last_release_event": {
+        "observed_now_ns": 43100000000,
+        "status": "STOPPED",
+        "reason": "preclose_fixed_pad_clearance:edgegrasp_grasp_proxy_fixed_finger_pad:-0.000695284",
+        "retry_count": 0
+      },
+      "regrasp_geometry_verified": false,
+      "ready": {
+        "observed_now_ns": 42981000000,
+        "stage": "ready",
+        "target_source_ns": 42901000000,
+        "measured_center_m": [
+          0.24075748365975247,
+          0.130022609432382,
+          0.20499845990354398
+        ],
+        "scene_errors_m": [
+          0.0003268047535793517,
+          0.00043594913500846766,
+          1.5400964560041697e-06
+        ]
+      },
+      "task_id": "release-cycle-ag",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1733,
+      "lift_m": 0.028770123677222537,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "f7db8a5224b0bc5bd92a8ba8f856e1c11d6059a0d29dac0cc8674b2c538b7105",
+      "release_cycle.jsonl_sha256": "e5095849e240a113eb7724930c5e69090aec9077bb64c68e10273197b16ff187",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "ah",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906ah",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 164,
+      "last_release_event": {
+        "observed_now_ns": 47703000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": true,
+      "ready": {
+        "observed_now_ns": 47371000000,
+        "stage": "ready",
+        "target_source_ns": 47290000000,
+        "measured_center_m": [
+          0.24185840265051478,
+          0.12870622015089572,
+          0.2049998708879542
+        ],
+        "scene_errors_m": [
+          0.0007741142371829601,
+          0.0008804401464778122,
+          1.291120457769246e-07
+        ]
+      },
+      "task_id": "release-cycle-ah",
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1724,
+      "lift_m": 0.029072445137501457,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "b80c1259b70d30a99c8f22554ba9cbc27fac9765dd50b47778569441ea51e0d4",
+      "release_cycle.jsonl_sha256": "2b337cfda4fc73d5e0e5d2faca6e20c04e290b796be4bc57239931a4d313ed53",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "candidate": "aj",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906aj",
+      "physics_grasp_verified": false,
+      "sequence_reason": null,
+      "release_events": 0,
+      "last_release_event": null,
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": null,
+      "bounded_pan_selection": {
+        "candidate_count": 101,
+        "center_limit_m": 0.001,
+        "fixed_pad_clearance_m": 0.0010014192765024923,
+        "pan_limit_deg": 0.5,
+        "passing_candidates": 25,
+        "shoulder_pan_delta_deg": 0.0
+      },
+      "carried_admission_rejections": [],
+      "retention_observed": false,
+      "simultaneous_gripper_contact_sample_count": 0,
+      "lift_m": null,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "6830733010a7e4ecde7d811348e5a1b423e52bceda8fcf0ec574dda0ebb3b3bf",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "ak",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906ak",
+      "physics_grasp_verified": false,
+      "sequence_reason": null,
+      "release_events": 0,
+      "last_release_event": null,
+      "regrasp_geometry_verified": false,
+      "ready": null,
+      "task_id": null,
+      "bounded_pan_selection": null,
+      "carried_admission_rejections": [],
+      "retention_observed": false,
+      "simultaneous_gripper_contact_sample_count": 0,
+      "lift_m": null,
+      "final_scene_generation": null,
+      "completed_cycle_handoff": null,
+      "trial.log_sha256": "f0b325644c67ad7b309527b28855aa33ec4a6c99c13dae4a11cfe8dad2cf5ea1",
+      "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "candidate": "al",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906al",
+      "physics_grasp_verified": true,
+      "sequence_reason": "correlated_sequence_completed;physics_unverified",
+      "release_events": 165,
+      "last_release_event": {
+        "observed_now_ns": 47705000000,
+        "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+        "physics_grasp_claim": false
+      },
+      "regrasp_geometry_verified": true,
+      "ready": {
+        "observed_now_ns": 47371000000,
+        "stage": "ready",
+        "target_source_ns": 47290000000,
+        "measured_center_m": [
+          0.24161095728966062,
+          0.12925169110415743,
+          0.20500002696105474
+        ],
+        "scene_errors_m": [
+          0.0005266688763287952,
+          0.0003349691932161003,
+          2.6961054749863322e-08
+        ]
+      },
+      "task_id": "release-cycle-al",
+      "bounded_pan_selection": {
+        "candidate_count": 101,
+        "center_limit_m": 0.001,
+        "fixed_pad_clearance_m": 0.0010014192765024923,
+        "full_checks_attempted": 1,
+        "gap_candidates": 25,
+        "pan_limit_deg": 0.5,
+        "shoulder_pan_delta_deg": 0.0
+      },
+      "carried_admission_rejections": [
+        {
+          "operation": "attach",
+          "attempt": 1,
+          "reason": "fresh_measured_cube_and_causal_tf_missing",
+          "prior_source_ns": -1
+        }
+      ],
+      "retention_observed": true,
+      "simultaneous_gripper_contact_sample_count": 1703,
+      "lift_m": 0.02886743680825321,
+      "final_scene_generation": 4,
+      "completed_cycle_handoff": {
+        "success": true,
+        "reason": "completed_cycle_handoff",
+        "epoch_changed": false
+      },
+      "trial.log_sha256": "81191c3c5f3b75cd7f378b42210b6b0803e046f5068c0327a501010afddc35e4",
+      "release_cycle.jsonl_sha256": "79741b45f36484d6f6aa072fb6676ce8d0ef6b15f6afc64cd5a66d690788396a",
+      "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "groups": [
+    {
+      "candidate": "l",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906l",
+      "summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "within_group_retry_count": 0,
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906l/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 163,
+          "last_release_event": {
+            "observed_now_ns": 42002000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": false,
+          "ready": {
+            "observed_now_ns": 41592000000,
+            "stage": "ready",
+            "target_source_ns": 41515000000,
+            "measured_center_m": [
+              0.24142630000539647,
+              0.12939461265960406,
+              0.20499942955255834
+            ],
+            "scene_errors_m": [
+              0.0003420115920646505,
+              0.00019204763776947686,
+              5.704474416445837e-07
+            ]
+          },
+          "task_id": "release-cycle-three-l-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1676,
+          "lift_m": 0.02903132088224783,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "8be2537160e323b16af38bddc12f4fd489b9b41cd64c12b279303da6bc8a48a9",
+          "release_cycle.jsonl_sha256": "e1257adca0c1566b593b23951e136656185c2db6b7e7113cd26ac354cb13dc7f",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906l/cycle_2",
+          "physics_grasp_verified": false,
+          "sequence_reason": null,
+          "release_events": 0,
+          "last_release_event": null,
+          "regrasp_geometry_verified": false,
+          "ready": null,
+          "task_id": null,
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": false,
+          "simultaneous_gripper_contact_sample_count": 0,
+          "lift_m": null,
+          "final_scene_generation": null,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "a0dab0ec0a9e52048bf87b13e476b8a3fa6ae81114a4f1782c18e887e71f6696",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "m",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906m",
+      "summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906m/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 163,
+          "last_release_event": {
+            "observed_now_ns": 45407000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": false,
+          "ready": {
+            "observed_now_ns": 45021000000,
+            "stage": "ready",
+            "target_source_ns": 44947000000,
+            "measured_center_m": [
+              0.24147515551360582,
+              0.12948213525630275,
+              0.20500027026946513
+            ],
+            "scene_errors_m": [
+              0.0003908671002740005,
+              0.00010452504107077987,
+              2.70269465141304e-07
+            ]
+          },
+          "task_id": "release-cycle-three-m-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1631,
+          "lift_m": 0.028735687734284088,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "d1d9ee0b5a237cce994005aece3bc09ae969f8603dfe823eb77adcd2ddd99428",
+          "release_cycle.jsonl_sha256": "f997c69e9073ce29dfd6af57217f42f830e7d43639f30e6acc36a75def91cc7c",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906m/cycle_2",
+          "physics_grasp_verified": false,
+          "sequence_reason": "terminal_failure:plan_or_execution_failed:compute_ik_error:-31:",
+          "release_events": 0,
+          "last_release_event": null,
+          "regrasp_geometry_verified": false,
+          "ready": null,
+          "task_id": "release-cycle-three-m-cycle-2",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": false,
+          "simultaneous_gripper_contact_sample_count": 0,
+          "lift_m": 0.0,
+          "final_scene_generation": null,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "29806798fa1c4fb1aa2516f20591a53c8f5382a354539e01fc244712b971c8e3",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "t",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906t",
+      "summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906t/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 164,
+          "last_release_event": {
+            "observed_now_ns": 48205000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": true,
+          "ready": {
+            "observed_now_ns": 47851000000,
+            "stage": "ready",
+            "target_source_ns": 47785000000,
+            "measured_center_m": [
+              0.24187375363462554,
+              0.1288650921031377,
+              0.20500011650078734
+            ],
+            "scene_errors_m": [
+              0.0007894652212937225,
+              0.0007215681942358276,
+              1.1650078735048197e-07
+            ]
+          },
+          "task_id": "release-cycle-three-t-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1638,
+          "lift_m": 0.02880909732005829,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "2f3416847b5f8ccc042ec70f6ee25e33b88640b31a6f209a605eabd9687bbbd9",
+          "release_cycle.jsonl_sha256": "277c3b4663b9079451c1773ae53d54892923a871534dc89ed12ef0bb86ca9f02",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906t/cycle_2",
+          "physics_grasp_verified": false,
+          "sequence_reason": "target_source_stale",
+          "release_events": 0,
+          "last_release_event": null,
+          "regrasp_geometry_verified": false,
+          "ready": null,
+          "task_id": "release-cycle-three-t-cycle-2",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": false,
+          "simultaneous_gripper_contact_sample_count": 949,
+          "lift_m": 0.01530101917847293,
+          "final_scene_generation": null,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "8bb1fd02f9df5eb72f190be1c909ddd3a81206cf32418faacad2fd69ef8fa4e0",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "y",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906y",
+      "summary": {
+        "requested": 3,
+        "attempted": 1,
+        "completed": 0,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906y/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 162,
+          "last_release_event": {
+            "observed_now_ns": 43900000000,
+            "status": "STOPPED",
+            "reason": "preclose_fixed_pad_clearance:edgegrasp_grasp_proxy_fixed_finger_pad:0.000365815",
+            "retry_count": 0
+          },
+          "regrasp_geometry_verified": false,
+          "ready": {
+            "observed_now_ns": 43702000000,
+            "stage": "ready",
+            "target_source_ns": 43627000000,
+            "measured_center_m": [
+              0.24149173143149097,
+              0.1295240109209812,
+              0.20499997644203372
+            ],
+            "scene_errors_m": [
+              0.0004074430181591482,
+              6.264937639233192e-05,
+              2.3557966272180764e-08
+            ]
+          },
+          "task_id": "release-cycle-three-y-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1633,
+          "lift_m": 0.029017024393282825,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "c83df9a66bd85c636d3372e3d922cb4de25f970ed18712f4999151f2f9c67348",
+          "release_cycle.jsonl_sha256": "9f5b3a534c333cf4b5bb2e6efe9e82d358cd971a46e6de4afaf1cb35ab54dcc5",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "ab",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ab",
+      "summary": {
+        "requested": 3,
+        "attempted": 1,
+        "completed": 0,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          0
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ab/cycle_1",
+          "physics_grasp_verified": false,
+          "sequence_reason": "terminal_failure:plan_or_execution_failed:joint_states_missing_or_stale:trajectory_gate:canceled:client_cancel_requested",
+          "release_events": 0,
+          "last_release_event": null,
+          "regrasp_geometry_verified": false,
+          "ready": null,
+          "task_id": "release-cycle-three-ab-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": false,
+          "simultaneous_gripper_contact_sample_count": 844,
+          "lift_m": 0.013591915256335851,
+          "final_scene_generation": null,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "519ecc66a440dc97ae249d35d308daf56869e83611b4fe9df8841d947ee19746",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "ac",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ac",
+      "summary": {
+        "requested": 3,
+        "attempted": 1,
+        "completed": 0,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ac/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 163,
+          "last_release_event": {
+            "observed_now_ns": 46300000000,
+            "status": "STOPPED",
+            "reason": "preclose_fixed_pad_clearance:edgegrasp_grasp_proxy_fixed_finger_pad:0.000173382",
+            "retry_count": 0
+          },
+          "regrasp_geometry_verified": false,
+          "ready": {
+            "observed_now_ns": 46110000000,
+            "stage": "ready",
+            "target_source_ns": 46036000000,
+            "measured_center_m": [
+              0.24166649985858876,
+              0.12981734040569587,
+              0.20499992647972945
+            ],
+            "scene_errors_m": [
+              0.0005822114452569416,
+              0.0002306801083223342,
+              7.352027053819654e-08
+            ]
+          },
+          "task_id": "release-cycle-three-ac-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1773,
+          "lift_m": 0.028678737254182768,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "3f2f70efa402d001650017382c8fc1b57be762a4be52f359d9b375c9b45b2409",
+          "release_cycle.jsonl_sha256": "d69e5ea837774f8125fe2ab10cee25321cbb914697b9d8715981338e3946099b",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "ai",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ai",
+      "summary": {
+        "requested": 3,
+        "attempted": 2,
+        "completed": 1,
+        "complete": false,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          0,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ai/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 164,
+          "last_release_event": {
+            "observed_now_ns": 44507000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": true,
+          "ready": {
+            "observed_now_ns": 44172000000,
+            "stage": "ready",
+            "target_source_ns": 44122000000,
+            "measured_center_m": [
+              0.24187834429512697,
+              0.12865643549411987,
+              0.20500009199475663
+            ],
+            "scene_errors_m": [
+              0.0007940558817951526,
+              0.0009302248032536653,
+              9.199475664578571e-08
+            ]
+          },
+          "task_id": "release-cycle-three-ai-cycle-1",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1781,
+          "lift_m": 0.029097211760349823,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "04728369989d35e898d55c96a588d08f705ff424301a1b3fbe7041e014a9ead6",
+          "release_cycle.jsonl_sha256": "1a851a1a3d4c45ef8b39f653a98dc8a1ae3bb74c4e64e003368b5618ddff170b",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906ai/cycle_2",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 161,
+          "last_release_event": {
+            "observed_now_ns": 67071000000,
+            "status": "STOPPED",
+            "reason": "ready:target_outside_predeclared_control_scene",
+            "retry_count": 0
+          },
+          "regrasp_geometry_verified": false,
+          "ready": {
+            "observed_now_ns": 67071000000,
+            "stage": "ready",
+            "target_source_ns": 66991000000,
+            "measured_center_m": [
+              0.24170638389556443,
+              0.1283484613919592,
+              0.20500007211947605
+            ],
+            "scene_errors_m": [
+              0.0006220954822326041,
+              0.0012381989054143228,
+              7.21194760577859e-08
+            ]
+          },
+          "task_id": "release-cycle-three-ai-cycle-2",
+          "bounded_pan_selection": null,
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1785,
+          "lift_m": 0.029652027165828182,
+          "final_scene_generation": null,
+          "completed_cycle_handoff": null,
+          "trial.log_sha256": "a53cb7dad6b13475fcf013c26a48e4730eb6947eb3acf1dfb99a079bae70e48f",
+          "release_cycle.jsonl_sha256": "efd2bb7892550dd48469ee47532ca16140a7aa9b4ca9a6f00cdc375616ea030c",
+          "gripper_release_exit_code.txt_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        }
+      ]
+    },
+    {
+      "candidate": "am",
+      "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906am",
+      "summary": {
+        "requested": 3,
+        "attempted": 3,
+        "completed": 3,
+        "complete": true,
+        "cycle_retry_count": 0,
+        "physics_baseline_request_renewals": [
+          0,
+          0,
+          1
+        ],
+        "controller_restart_between_cycles": false
+      },
+      "cycles": [
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906am/cycle_1",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 164,
+          "last_release_event": {
+            "observed_now_ns": 45206000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": true,
+          "ready": {
+            "observed_now_ns": 44862000000,
+            "stage": "ready",
+            "target_source_ns": 44782000000,
+            "measured_center_m": [
+              0.2416175401122236,
+              0.12946867715288737,
+              0.20499987895018293
+            ],
+            "scene_errors_m": [
+              0.0005332516988917901,
+              0.0001179831444861612,
+              1.2104981705896023e-07
+            ]
+          },
+          "task_id": "release-cycle-three-am-cycle-1",
+          "bounded_pan_selection": {
+            "candidate_count": 101,
+            "center_limit_m": 0.001,
+            "fixed_pad_clearance_m": 0.0010014192765024923,
+            "full_checks_attempted": 1,
+            "gap_candidates": 25,
+            "pan_limit_deg": 0.5,
+            "shoulder_pan_delta_deg": 0.0
+          },
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1756,
+          "lift_m": 0.028803223349740503,
+          "final_scene_generation": 4,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "87347f9f2abe53a72aabf67c96bf4cd6ad0d51390e51b6d767590d7855fbe283",
+          "release_cycle.jsonl_sha256": "6612f78b96de39ba822ad7b78762ae7dd4054a67411b8c681ba962770f042f3e",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906am/cycle_2",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 164,
+          "last_release_event": {
+            "observed_now_ns": 68304000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": true,
+          "ready": {
+            "observed_now_ns": 67960000000,
+            "stage": "ready",
+            "target_source_ns": 67882000000,
+            "measured_center_m": [
+              0.2412982164340777,
+              0.12870573896982254,
+              0.2050000976604878
+            ],
+            "scene_errors_m": [
+              0.00021392802074587935,
+              0.0008809213275509931,
+              9.766048780779357e-08
+            ]
+          },
+          "task_id": "release-cycle-three-am-cycle-2",
+          "bounded_pan_selection": {
+            "candidate_count": 101,
+            "center_limit_m": 0.001,
+            "fixed_pad_clearance_m": 0.000989989627100299,
+            "full_checks_attempted": 1,
+            "gap_candidates": 27,
+            "pan_limit_deg": 0.5,
+            "shoulder_pan_delta_deg": -0.2
+          },
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1744,
+          "lift_m": 0.02963569256571169,
+          "final_scene_generation": 8,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "9670504e073752eed402f870937411695b5e0b20a2b73f72a48894b12315285f",
+          "release_cycle.jsonl_sha256": "349df74791fd6c36fef7f063aa7918a349279901b2107b77657f8481907e590d",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "source_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_three_20260906am/cycle_3",
+          "physics_grasp_verified": true,
+          "sequence_reason": "correlated_sequence_completed;physics_unverified",
+          "release_events": 164,
+          "last_release_event": {
+            "observed_now_ns": 90906000000,
+            "status": "PLACE_RELEASE_RETREAT_COMPLETE",
+            "physics_grasp_claim": false
+          },
+          "regrasp_geometry_verified": true,
+          "ready": {
+            "observed_now_ns": 90562000000,
+            "stage": "ready",
+            "target_source_ns": 90487000000,
+            "measured_center_m": [
+              0.2409882189695177,
+              0.12883098681254024,
+              0.2049999497190196
+            ],
+            "scene_errors_m": [
+              9.606944381412852e-05,
+              0.0007556734848332969,
+              5.028098037929141e-08
+            ]
+          },
+          "task_id": "release-cycle-three-am-cycle-3",
+          "bounded_pan_selection": {
+            "candidate_count": 101,
+            "center_limit_m": 0.001,
+            "fixed_pad_clearance_m": 0.000988917790823482,
+            "full_checks_attempted": 1,
+            "gap_candidates": 27,
+            "pan_limit_deg": 0.5,
+            "shoulder_pan_delta_deg": 0.11
+          },
+          "carried_admission_rejections": [],
+          "retention_observed": true,
+          "simultaneous_gripper_contact_sample_count": 1784,
+          "lift_m": 0.029036176230980593,
+          "final_scene_generation": 12,
+          "completed_cycle_handoff": {
+            "success": true,
+            "reason": "completed_cycle_handoff",
+            "epoch_changed": false
+          },
+          "trial.log_sha256": "b16b8d1cfdc93d5c8a37a00f3613ec15151575f9d58c4572e5ff93a4773b4fe1",
+          "release_cycle.jsonl_sha256": "b97e71064daf487276c6bbf8e0148db24591ad2240b18860511922865b90e6c5",
+          "gripper_release_exit_code.txt_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        }
+      ]
+    }
+  ],
+  "bootstrap_failures": [
+    {
+      "candidate": "aj",
+      "stage": "before_artifact_creation",
+      "error": "FileNotFoundError: pan",
+      "cause": "shell quoting in mode assertion",
+      "motion_started": false
+    }
+  ],
+  "kinematic_only_not_executed": [
+    "i",
+    "n",
+    "o",
+    "p"
+  ],
+  "full_cycle_with_regrasp_geometry_verified": true,
+  "final_verification": {
+    "source_files_verified": 20,
+    "al_am_sources_identical": true,
+    "current_runtime_source_hashes_match": true,
+    "wrapper_exit_code": 0,
+    "cycles": [
+      {
+        "cycle": 1,
+        "task_id": "release-cycle-three-am-cycle-1",
+        "release_exit_code": 0,
+        "typed_terminals": {
+          "place": {
+            "task_id": "release-cycle-three-am-cycle-1",
+            "command_id": "release-cycle-three-am-cycle-1|place|4",
+            "target_id": "target_cube",
+            "stage": "place",
+            "sequence_no": 4,
+            "accepted": true,
+            "success": true,
+            "reason": "trajectory_executed_through_gate",
+            "moveit_error_code": 1,
+            "requested_at": {
+              "sec": 33,
+              "nanosec": 1000000
+            },
+            "source_timestamp_ns": 32935000000,
+            "clock_domain": "ros_sim",
+            "clock_epoch": 0,
+            "trajectory_dispatched": true,
+            "trajectory_digest": "61545f77b0ca8cef4839d19cbcc7af2277f096f22d66c752fe3045ab9bb75fc3",
+            "gate_accepted": true,
+            "gate_terminal": true,
+            "downstream_terminal_observed": true,
+            "cancel_requested": false,
+            "action_goal_status": 4,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!"
+          },
+          "release": {
+            "command_id": "release-cycle-three-am-cycle-1|diagnostic|5",
+            "controller": "gripper_controller",
+            "downstream_terminal_observed": true,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!",
+            "reason": "succeeded",
+            "success": true,
+            "terminal_joint_positions_rad": {
+              "gripper": 1.5211705580994892
+            },
+            "terminal_position_errors_rad": {
+              "gripper": 0.0211705580994892
+            },
+            "terminal_position_tolerance_rad": 0.08,
+            "wrapper_status": 4
+          },
+          "retreat": {
+            "task_id": "release-cycle-three-am-cycle-1",
+            "command_id": "release-cycle-three-am-cycle-1|retreat|6",
+            "target_id": "target_cube",
+            "stage": "retreat",
+            "sequence_no": 6,
+            "accepted": true,
+            "success": true,
+            "reason": "trajectory_executed_through_gate",
+            "moveit_error_code": 1,
+            "requested_at": {
+              "sec": 39,
+              "nanosec": 700000000
+            },
+            "source_timestamp_ns": 39634000000,
+            "clock_domain": "ros_sim",
+            "clock_epoch": 0,
+            "trajectory_dispatched": true,
+            "trajectory_digest": "d50b256edb728655d976b36fa4ce426fc4875a04bdd6d256c3e7ffcd154a63f0",
+            "gate_accepted": true,
+            "gate_terminal": true,
+            "downstream_terminal_observed": true,
+            "cancel_requested": false,
+            "action_goal_status": 4,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!"
+          }
+        },
+        "support_stages_passed": true
+      },
+      {
+        "cycle": 2,
+        "task_id": "release-cycle-three-am-cycle-2",
+        "release_exit_code": 0,
+        "typed_terminals": {
+          "place": {
+            "task_id": "release-cycle-three-am-cycle-2",
+            "command_id": "release-cycle-three-am-cycle-2|place|4",
+            "target_id": "target_cube",
+            "stage": "place",
+            "sequence_no": 4,
+            "accepted": true,
+            "success": true,
+            "reason": "trajectory_executed_through_gate",
+            "moveit_error_code": 1,
+            "requested_at": {
+              "sec": 56,
+              "nanosec": 101000000
+            },
+            "source_timestamp_ns": 56035000000,
+            "clock_domain": "ros_sim",
+            "clock_epoch": 0,
+            "trajectory_dispatched": true,
+            "trajectory_digest": "bfc0871b791d5137fbd54f64391236e44339b49ff2d5999c1dffc79e08be1f9f",
+            "gate_accepted": true,
+            "gate_terminal": true,
+            "downstream_terminal_observed": true,
+            "cancel_requested": false,
+            "action_goal_status": 4,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!"
+          },
+          "release": {
+            "command_id": "release-cycle-three-am-cycle-2|diagnostic|5",
+            "controller": "gripper_controller",
+            "downstream_terminal_observed": true,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!",
+            "reason": "succeeded",
+            "success": true,
+            "terminal_joint_positions_rad": {
+              "gripper": 1.5216704408690287
+            },
+            "terminal_position_errors_rad": {
+              "gripper": 0.021670440869028695
+            },
+            "terminal_position_tolerance_rad": 0.08,
+            "wrapper_status": 4
+          },
+          "retreat": {
+            "task_id": "release-cycle-three-am-cycle-2",
+            "command_id": "release-cycle-three-am-cycle-2|retreat|6",
+            "target_id": "target_cube",
+            "stage": "retreat",
+            "sequence_no": 6,
+            "accepted": true,
+            "success": true,
+            "reason": "trajectory_executed_through_gate",
+            "moveit_error_code": 1,
+            "requested_at": {
+              "sec": 62,
+              "nanosec": 800000000
+            },
+            "source_timestamp_ns": 62734000000,
+            "clock_domain": "ros_sim",
+            "clock_epoch": 0,
+            "trajectory_dispatched": true,
+            "trajectory_digest": "974ce2973c5f516e4c1712345014515faec49ea63e24753c343ce2b506dcc4f6",
+            "gate_accepted": true,
+            "gate_terminal": true,
+            "downstream_terminal_observed": true,
+            "cancel_requested": false,
+            "action_goal_status": 4,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!"
+          }
+        },
+        "support_stages_passed": true
+      },
+      {
+        "cycle": 3,
+        "task_id": "release-cycle-three-am-cycle-3",
+        "release_exit_code": 0,
+        "typed_terminals": {
+          "place": {
+            "task_id": "release-cycle-three-am-cycle-3",
+            "command_id": "release-cycle-three-am-cycle-3|place|4",
+            "target_id": "target_cube",
+            "stage": "place",
+            "sequence_no": 4,
+            "accepted": true,
+            "success": true,
+            "reason": "trajectory_executed_through_gate",
+            "moveit_error_code": 1,
+            "requested_at": {
+              "sec": 78,
+              "nanosec": 706000000
+            },
+            "source_timestamp_ns": 78640000000,
+            "clock_domain": "ros_sim",
+            "clock_epoch": 0,
+            "trajectory_dispatched": true,
+            "trajectory_digest": "863d38282af72bba2d14420e624ca8dbeb533d2eae2996d508591fda322083b6",
+            "gate_accepted": true,
+            "gate_terminal": true,
+            "downstream_terminal_observed": true,
+            "cancel_requested": false,
+            "action_goal_status": 4,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!"
+          },
+          "release": {
+            "command_id": "release-cycle-three-am-cycle-3|diagnostic|5",
+            "controller": "gripper_controller",
+            "downstream_terminal_observed": true,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!",
+            "reason": "succeeded",
+            "success": true,
+            "terminal_joint_positions_rad": {
+              "gripper": 1.5198467876164088
+            },
+            "terminal_position_errors_rad": {
+              "gripper": 0.01984678761640879
+            },
+            "terminal_position_tolerance_rad": 0.08,
+            "wrapper_status": 4
+          },
+          "retreat": {
+            "task_id": "release-cycle-three-am-cycle-3",
+            "command_id": "release-cycle-three-am-cycle-3|retreat|6",
+            "target_id": "target_cube",
+            "stage": "retreat",
+            "sequence_no": 6,
+            "accepted": true,
+            "success": true,
+            "reason": "trajectory_executed_through_gate",
+            "moveit_error_code": 1,
+            "requested_at": {
+              "sec": 85,
+              "nanosec": 405000000
+            },
+            "source_timestamp_ns": 85339000000,
+            "clock_domain": "ros_sim",
+            "clock_epoch": 0,
+            "trajectory_dispatched": true,
+            "trajectory_digest": "c34dbcf222a79b1d384c1484447999009541ea8becb58986f2940c7a357404ea",
+            "gate_accepted": true,
+            "gate_terminal": true,
+            "downstream_terminal_observed": true,
+            "cancel_requested": false,
+            "action_goal_status": 4,
+            "fjt_error_code": 0,
+            "fjt_error_string": "Goal successfully reached!"
+          }
+        },
+        "support_stages_passed": true
+      }
+    ],
+    "cleanup": {
+      "domain": 226,
+      "remaining_count": 0,
+      "clock_absent": true,
+      "log_sha256": "c0cf4581f0441e4d97c2b12eaa89418ac503e515e2510cd6552ffc6b5293a6d5"
+    },
+    "representative_replay": {
+      "source": "release_cycle_trial_20260906al",
+      "three_cycle_video": false,
+      "output": "C:\\Users\\huang\\Documents\\edgegrasp-replays\\release-cycle-complete-20260906al",
+      "verification": {
+        "claim": "baked_display_transform_roundtrip_only",
+        "checked_transforms": 7961,
+        "frames": 996,
+        "max_position_error_m": 0.0,
+        "max_rotation_error_rad": 0.0,
+        "passed": true,
+        "physics_recomputed": false
+      },
+      "gap_frames": 0,
+      "visual_previews_reviewed": true,
+      "recorded_cycle_status": "PLACE_RELEASE_RETREAT_COMPLETE",
+      "unplaced_cycle_events": 0,
+      "hashes": {
+        "replay.json": "f21fe27658f078a02633ffbfa7c664feefb1b2822fcd2ee4961a77ac9b0a7f17",
+        "replay.blend": "2f9168001cb3aac440082c9434b85cff69869ec647f0f9a414a7f5c35f5b1369",
+        "replay.mp4": "499142ad97568a3a33732781d74be55fee6318854ce74f3db625f4150af52df1",
+        "blender-verification.json": "a36c211eb293d9ab578b54200724bcfcc51999995c007759f6fb4d4510a99b4d"
+      }
+    }
+  }
+}

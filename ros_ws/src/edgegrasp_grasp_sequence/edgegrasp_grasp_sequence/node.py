@@ -137,6 +137,7 @@ class _PlanningSceneStatus:
     reason: str
     scene_digest: str
     observed_at_ns: int
+    carried_state: str = "world"
 
 
 @dataclass(slots=True)
@@ -439,6 +440,8 @@ class GraspSequenceNode(Node):
             self._on_reset,
             callback_group=self._callback_group,
         )
+        self.create_service(Trigger, "/edgegrasp/finish_completed_grasp_cycle",
+                            self._on_finish_completed_cycle, callback_group=self._callback_group)
         self._sequence_server = ActionServer(
             self,
             GraspSequence,
@@ -594,6 +597,7 @@ class GraspSequenceNode(Node):
                 reason=payload["reason"],
                 scene_digest=payload["scene_digest"],
                 observed_at_ns=now_ns,
+                carried_state=str(payload.get("carried_state", "world")),
             )
         except (KeyError, TypeError, ValueError) as error:
             with self._state_lock:
@@ -1111,7 +1115,9 @@ class GraspSequenceNode(Node):
                 and target.clock_domain == self._clock_domain
                 and target.clock_epoch == self._clock_epoch
                 and self._observed_target_motion in ("rigid_lift", "measured_pad")
-                and self._core.phase is GraspPhase.LIFT_EXEC):
+                # Planning already advances the core source watermark. Use
+                # the same causal pair selection before execution starts.
+                and self._core.phase in (GraspPhase.LIFT_PLAN, GraspPhase.LIFT_EXEC)):
             target = self._coherent_lift_target(target, now_ns)
         target_ready = input_fault is None and target is not None
         target_reason = input_fault or "target_unknown"
@@ -2517,6 +2523,46 @@ class GraspSequenceNode(Node):
             if arm_stopped and gripper_stopped
             else "stop_requested_terminal_unconfirmed",
         )
+
+    def _on_finish_completed_cycle(self, request, response):
+        del request
+        with self._core_event_lock:
+            with self._state_lock:
+                busy = (self._active_goal_handle is not None or self._reserved_task_id is not None
+                        or self._arm_slot is not None or self._gripper_slot is not None)
+                target, joints, scene = self._latest_target, self._joint_state, self._planning_scene_status
+                active = self._active_request
+                uncertain = bool(self._uncertain_commands)
+            try:
+                if busy or uncertain or self._input_fault:
+                    raise ValueError("handoff_busy_or_faulted")
+                now = self._now_ns()
+                reason = self._planning_scene_policy_reason(allow=False, now_ns=now)
+                if reason or scene is None or scene.carried_state != 'placed':
+                    raise ValueError(reason or "handoff_requires_placed_scene")
+                if target is None or joints is None or active is None:
+                    raise ValueError("handoff_inputs_missing")
+                if abs(joints.positions.get('gripper', float('inf'))-1.5) > .08:
+                    raise ValueError("handoff_gripper_not_open")
+                p = active.target.observation.point
+                if any(abs(a-b) > .001 for a, b in zip(target.position, (p.x, p.y, p.z))):
+                    raise ValueError("handoff_target_outside_original_scene")
+                end, _ = self._observed_gripper_pose(target.source_timestamp_ns)
+                if math.dist(end, target.position) < .08:
+                    raise ValueError("handoff_gripper_not_clear")
+                result = self._core.finish_completed_cycle(self._health(now), now)
+                response.success = result.accepted
+                response.message = result.reason
+                if result.accepted:
+                    with self._state_lock:
+                        self._active_request = None
+                        self._active_anchor = None
+                        self._lift_observation_binding = None
+                    self._publish_status('IDLE', 'completed_cycle_handoff')
+            except Exception as error:
+                response.success = False
+                response.message = str(error)
+        return response
 
     def _on_reset(
         self, request: Trigger.Request, response: Trigger.Response

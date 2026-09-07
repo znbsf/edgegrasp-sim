@@ -59,7 +59,7 @@ from .trajectory_validation import validate_and_convert_robot_trajectory
 
 
 PINNED_PLANNING_PIPELINES = frozenset(SO101_PLANNING_PIPELINES)
-ARM_EXECUTION_STAGES = {"approach", "descend", "lift", "diagnostic"}
+ARM_EXECUTION_STAGES = {"approach", "descend", "lift", "place", "retreat", "diagnostic"}
 _STATUS_ATTEMPT_UNSET = object()
 
 
@@ -603,7 +603,7 @@ class MoveItPlanOnlyAdapter(Node):
         # target-pad ACM exemption.  Contacts are enabled only after the
         # correlated descend terminal, before close; lift then observes the
         # already-confirmed allowed policy.
-        allow = request.stage == "lift"
+        allow = request.stage in {"lift", "place", "retreat"}
         now_ns, fault = self._observe_now()
         if fault is not None:
             return f"fault_latched:{fault}"
@@ -785,11 +785,23 @@ class MoveItPlanOnlyAdapter(Node):
 
     def _fresh_start_positions(self, now_ns: int) -> tuple[float, ...] | None:
         with self._state_lock:
+            # A joint callback may have advanced receive time since the caller
+            # sampled now_ns. Compare one locked snapshot against the actual
+            # current clock; do not clamp negative ages or extend the timeout.
+            current_ns = self.get_clock().now().nanoseconds
+            if current_ns < now_ns or (
+                self._last_clock_ns is not None
+                and current_ns < self._last_clock_ns
+            ):
+                self._fault_latched = f"clock_rollback:{current_ns}"
+            self._last_clock_ns = current_ns
+            if self._fault_latched is not None:
+                return None
             receive_ns = self._last_joint_receive_ns
             positions = dict(self._joint_positions)
-        if receive_ns is None or now_ns - receive_ns < 0:
+        if receive_ns is None or current_ns - receive_ns < 0:
             return None
-        if now_ns - receive_ns > self._joint_timeout_ns:
+        if current_ns - receive_ns > self._joint_timeout_ns:
             return None
         try:
             return tuple(positions[joint] for joint in SO101_ARM_JOINTS)

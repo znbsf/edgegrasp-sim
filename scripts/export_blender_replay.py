@@ -84,7 +84,7 @@ def main():
         if 'scene_contract_sha256=' + result['scene_digest'] not in args.world.read_text():
             raise ValueError('World does not match recorded scene digest')
     for name in ('trial.log', 'grasp_timeline.csv', 'gripper_release_exit_code.txt',
-                 'gripper_release_fallback_status.txt', 'robot_pose_final.log'):
+                 'gripper_release_fallback_status.txt', 'robot_pose_final.log', 'release_cycle.jsonl'):
         if (run / name).exists():
             copy_source(run / name, args.output / name)
     # This exporter supports the fixed-base experiment contract only.
@@ -168,6 +168,25 @@ def main():
         raise ValueError('No common source time interval')
     timeline = list(csv.DictReader((run / 'grasp_timeline.csv').open()))
     events = [{k: v for k, v in row.items() if v} for row in timeline if row['stream'] == 'sequence']
+    cycle_rows = []
+    unplaced_cycle_events = []
+    if (run / 'release_cycle.jsonl').exists():
+        cycle_rows = [json.loads(line) for line in (run / 'release_cycle.jsonl').read_text().splitlines()]
+        previous_stage = None
+        for row in cycle_rows:
+            stage = row.get('status') or row.get('stage')
+            if stage != previous_stage and 'observed_now_ns' in row:
+                if row['observed_now_ns'] <= 0:
+                    # A newly joined client may not have received /clock yet.
+                    # Keep its record, but never invent a timeline placement.
+                    unplaced_cycle_events.append(row)
+                    previous_stage = stage
+                    continue
+                events.append({'time_ns': row['observed_now_ns'], 'phase': stage,
+                               'reason': row.get('reason', 'recorded post-grasp observation'),
+                               'time_basis': 'client_observed_ros_clock'})
+                previous_stage = stage
+        events.sort(key=lambda row: int(row['time_ns']))
     contacts = sorted((int(r['time_ns']), {'fixed': r['fixed_contact'] == 'True',
                         'moving': r['moving_contact'] == 'True'})
                       for r in timeline if r['stream'] == 'contact')
@@ -201,8 +220,10 @@ def main():
               'contact_display': 'latest source sample <=20 ms; sampled display can miss brief contacts',
               'source_hashes': hashes, 'parents': parents, 'static': static,
               'frames': frames, 'gap_frames': gaps, 'events': events, 'statuses': statuses,
+              'unplaced_cycle_events': unplaced_cycle_events,
               'spatial_failures': spatial_failures,
               'recorded_result': result,
+              'recorded_cycle_status': next((r['status'] for r in reversed(cycle_rows) if 'status' in r), 'NOT_RECORDED'),
               'typed_release_exit_code': int(release.read_text()) if release.exists() else None}
     (args.output / 'replay.json').write_text(json.dumps(report, allow_nan=False), encoding='utf-8')
     print(json.dumps({'output': str(args.output), 'frames': len(frames), 'gaps': len(gaps),

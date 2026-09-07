@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "scope": "local_gazebo_control_position_only",
+  "baseline": "e58586f8d7dfa294697c2f7cb5525cf995e73613",
+  "phase_one_complete": false,
+  "execution_attempts": 1,
+  "automatic_retries": 0,
+  "continuous_three_cycles_attempted": false,
+  "plan": {
+    "run": "release_cycle_plan_20260906a",
+    "status": "PLAN_ONLY_PASS",
+    "segments": 5,
+    "execution_attempted": false,
+    "sha256": "71531be8bd299f25412f333e0db7e27176ca1a0edbf96669c0cb914610a02133",
+    "domain": 171,
+    "remaining_processes": 0
+  },
+  "trial": {
+    "run": "release_cycle_trial_20260906a",
+    "domain": 172,
+    "physics_grasp_verified": true,
+    "lift_mm": 28.73497688244245,
+    "simultaneous_contact_samples": 1679,
+    "place_executed": true,
+    "release_command_sent": false,
+    "retreat_command_sent": false,
+    "complete_cycle": false,
+    "stop_reason": "supported_before_release:continuous_support_evidence_timeout",
+    "input_fault": "table_contacts_not_in_existing_ros_scene_bridge",
+    "gripper_controller_deactivation_fallback": true,
+    "effort_unclaimed": true,
+    "wrapper_original_exit": 24,
+    "outer_command_exit": 1,
+    "remaining_processes": 0,
+    "raw_directory": "/home/edgegrasp/ros2_ws/test_results/release_cycle_trial_20260906a",
+    "attempted_client_sha256": "41ba4e7004615a656290924269662aa5c62ae84b46b2e2aa97c3ffa1f1d4b4ba"
+  },
+  "correction": {
+    "input": "table_and_pad_pairs_from_existing_cube_contact_message",
+    "fresh_simulation_verified": false,
+    "offline_scored_samples": 632,
+    "offline_time_rejections": 130,
+    "offline_continuous_support_passed": 0,
+    "old_source_subscription_regression": "FAIL_EXPECTED",
+    "corrected_subscription_regression": "PASS"
+  },
+  "checks": {
+    "windows_passed": 355,
+    "windows_skipped": 3,
+    "wsl_related_passed": 10,
+    "ruff": "unavailable"
+  },
+  "replay": {
+    "directory": "C:/Users/huang/Documents/edgegrasp-replays/release-cycle-stopped-20260906a",
+    "frames": 775,
+    "checked_transforms": 6199,
+    "gap_frames": 0,
+    "transform_verification_passed": true,
+    "physics_recomputed": false
+  },
+  "accepted_goal_result_timeout_verified": false,
+  "strong_move_group_request_id_correlation": false,
+  "hardware_verified": false
+}

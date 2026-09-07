@@ -232,7 +232,11 @@ def main():
         visible(missing, row['observation'] is None, row['frame'])
     result = data.get('recorded_result') or {}
     status = 'VERIFIED' if result.get('physics_grasp_verified') else 'NOT VERIFIED'
-    text('Recorded outcome', 'RECORDED OUTCOME: ' + status + '\nTyped release exit: ' +
+    cycle_status = data.get('recorded_cycle_status', 'NOT_RECORDED')
+    if cycle_status == 'PLACE_RELEASE_RETREAT_COMPLETE':
+        cycle_status = 'COMPLETE'
+    text('Recorded outcome', 'GRASP: ' + status + '\nCYCLE: ' +
+         cycle_status + '\nPost-grasp exit: ' +
          str(data['typed_release_exit_code']) + ' (see source log)', camera,
          (0.245, -0.245, -0.65), 0.013, white)
     start = data['source_interval_ns'][0]
@@ -290,7 +294,7 @@ def main():
                  'TF and truth are interpolated only for display; exact source brackets are in replay.json.\n'
                  'Green pad outlines use latest recorded contact <=20ms, not continuous contact proof.\n'
                  'Recorded outcome is a whole-run result, not the verdict at the current frame.\n'
-                 'Normal typed release failed in the successful grasp recordings.\n')
+                 'Grasp verification and post-grasp cycle status are separate results.\n')
     for screen in bpy.data.screens:
         for area in screen.areas:
             if area.type == 'VIEW_3D':

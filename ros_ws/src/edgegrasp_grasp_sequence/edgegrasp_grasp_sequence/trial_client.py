@@ -18,9 +18,11 @@ from action_msgs.msg import GoalStatus
 from ament_index_python.packages import get_package_share_directory
 from builtin_interfaces.msg import Duration
 from edgegrasp.config import ROS_SIM_CLOCK_DOMAIN, validate_ros_clock_domain
+from edgegrasp.carried_scene import measured_pose
 from edgegrasp.grasp_geometry import (
     derive_grasp_stage_geometry,
     load_grasp_geometry_profile,
+    select_so101_control_grasp,
     validate_routed_grasp_stage_geometry,
 )
 from edgegrasp.scene import load_scene_contract
@@ -30,6 +32,7 @@ from edgegrasp_interfaces.msg import TrackedTarget
 import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
+from std_msgs.msg import String
 
 
 def _duration(seconds: float) -> Duration:
@@ -117,6 +120,8 @@ class GraspTrialClient(Node):
         )
         self.declare_parameter("scene_config_filename", "scene.json")
         self.declare_parameter("derive_descend_and_lift_from_profile", False)
+        self.declare_parameter("require_measured_geometry", False)
+        self.declare_parameter("fixed_control_stage_geometry", False)
         self.declare_parameter("pipeline_id", "pilz_industrial_motion_planner")
         self.declare_parameter("planner_id", "PTP")
         self.declare_parameter("planning_timeout_s", 2.0)
@@ -140,6 +145,20 @@ class GraspTrialClient(Node):
             raise ValueError("clock_epoch must be non-negative")
         self._target_id = str(self.get_parameter("target_id").value)
         self._latest: TrackedTarget | None = None
+        self._require_measured_geometry = bool(self.get_parameter("require_measured_geometry").value)
+        self._fixed_control_stage_geometry = bool(self.get_parameter("fixed_control_stage_geometry").value)
+        if self._fixed_control_stage_geometry and not self._require_measured_geometry:
+            raise ValueError('fixed control geometry requires measured geometry validation')
+        self._measured_geometry = {}
+        self.declare_parameter('bounded_control_pan', False)
+        self._bounded_control_pan = self.get_parameter('bounded_control_pan').value
+        if not isinstance(self._bounded_control_pan, bool):
+            raise ValueError('bounded_control_pan must be boolean')
+        if self._bounded_control_pan and not self._fixed_control_stage_geometry:
+            raise ValueError('bounded pan requires measured fixed control scope')
+        self._control_variant = None
+        if self._require_measured_geometry:
+            self.create_subscription(String, "/edgegrasp/measured_cube", self._on_measured_geometry, 16)
         self._physics_phase = ""
         self._physics_reason = ""
         self._physics_attempt_generation = 0
@@ -176,6 +195,10 @@ class GraspTrialClient(Node):
         self._grasp_geometry_filename = _config_basename(
             self.get_parameter("grasp_geometry_filename").value
         )
+        if self._bounded_control_pan and (
+                self._grasp_geometry_filename != 'so101_grasp_geometry_candidate024_face_aligned_q0p40.json'
+                or self._scene_config_filename != 'scene_candidate024_face_aligned.json'):
+            raise ValueError('bounded pan requires the pinned candidate024 configuration')
         grasp_profile_path = config_dir / self._grasp_geometry_filename
         if not grasp_profile_path.is_file():
             raise ValueError(
@@ -196,6 +219,33 @@ class GraspTrialClient(Node):
         if self._target_id != self._grasp_profile.target_id:
             raise ValueError("grasp trial target_id must match the grasp profile")
         self._cube = cube
+
+    def _on_measured_geometry(self, message) -> None:
+        try:
+            value = json.loads(message.data)
+            if (value['target_id'] != self._target_id
+                    or value['clock_domain'] != self._clock_domain
+                    or value['clock_epoch'] != self._clock_epoch
+                    or value['frame_id'] != 'base_link'
+                    or type(value['source_ns']) is not int):
+                return
+            pose = measured_pose(value)
+            self._measured_geometry[value['source_ns']] = pose
+            while len(self._measured_geometry) > 16:
+                del self._measured_geometry[next(iter(self._measured_geometry))]
+        except (KeyError, TypeError, ValueError):
+            return
+
+    def _geometry_pose(self, target):
+        if not getattr(self, '_require_measured_geometry', False):
+            return self._cube.pose_world.position_m, self._cube.pose_world.quaternion_xyzw
+        source = self._stamp_ns(target.observation.header.stamp)
+        pose = self._measured_geometry.get(source)
+        p = target.observation.point
+        if (pose is None or not self._target_is_recent(target)
+                or any(abs(a-b) > 1e-9 for a, b in zip(pose.position, (p.x, p.y, p.z)))):
+            raise ValueError('measured_geometry_target_source_mismatch')
+        return pose.position, pose.orientation
 
     def _on_target(self, message: TrackedTarget) -> None:
         if message.target_id != self._target_id:
@@ -240,6 +290,11 @@ class GraspTrialClient(Node):
     ]:
         """Resolve one immutable position triple for validation and dispatch."""
 
+        if getattr(self, '_bounded_control_pan', False):
+            geometry, _ = self._resolved_control_variant(target)
+            return (geometry.approach_position_m, geometry.descend_position_m,
+                    geometry.lift_position_m)
+
         approach = self._position("approach_position_m")
         derive_from_profile = self.get_parameter(
             "derive_descend_and_lift_from_profile"
@@ -252,12 +307,42 @@ class GraspTrialClient(Node):
                 self._position("descend_position_m"),
                 self._position("lift_position_m"),
             )
+        center = (target.observation.point.x, target.observation.point.y, target.observation.point.z)
+        if getattr(self, '_fixed_control_stage_geometry', False):
+            # Reuse the declared, reachable control candidate. The bound live
+            # cube pose must still pass the original 1 mm scene and OBB checks.
+            center = self._cube.pose_world.position_m
         derived = derive_grasp_stage_geometry(
-            (target.observation.point.x, target.observation.point.y, target.observation.point.z),
+            center,
             self._orientation("grasp_orientation_xyzw"),
             self._grasp_profile,
         )
         return approach, derived.descend_position_m, derived.lift_position_m
+
+    def _resolved_control_variant(self, target):
+        source = self._stamp_ns(target.observation.header.stamp)
+        center, orientation = self._geometry_pose(target)
+        key = (source, tuple(center), tuple(orientation))
+        if (self._control_variant is not None and self._control_variant[0][0] == source
+                and self._control_variant[0] != key):
+            raise ValueError('control_variant_source_conflict')
+        if self._control_variant is None or self._control_variant[0] != key:
+            value = select_so101_control_grasp(
+                nominal_center_m=self._cube.pose_world.position_m,
+                cube_center_m=center, cube_orientation_xyzw=orientation,
+                approach_position_m=self._position('approach_position_m'),
+                approach_orientation_xyzw=self._orientation('approach_orientation_xyzw'),
+                grasp_orientation_xyzw=self._orientation('grasp_orientation_xyzw'),
+                profile=self._grasp_profile)
+            self._control_variant = (key, value)
+        return self._control_variant[1]
+
+    def _resolved_orientation(self, target, parameter):
+        if not getattr(self, '_bounded_control_pan', False):
+            return self._orientation(parameter)
+        geometry, _ = self._resolved_control_variant(target)
+        return (geometry.approach_orientation_xyzw if parameter == 'approach_orientation_xyzw'
+                else geometry.grasp_orientation_xyzw)
 
     @staticmethod
     def _stamp_ns(stamp) -> int:
@@ -303,6 +388,13 @@ class GraspTrialClient(Node):
             rclpy.spin_once(self, timeout_sec=0.05)
             if self._latest_is_recent():
                 assert self._latest is not None
+                # Reserve half the unchanged pre-send budget for the baseline.
+                if self._target_age_ns(self._latest) > int(
+                        self._positive('max_target_age_before_send_ms') * 500_000):
+                    continue
+                if self._require_measured_geometry and self._stamp_ns(
+                        self._latest.observation.header.stamp) not in self._measured_geometry:
+                    continue
                 return self._latest
         raise TimeoutError("fresh matching TrackedTarget was not observed")
 
@@ -325,7 +417,7 @@ class GraspTrialClient(Node):
             (goal.approach_orientation, "approach_orientation_xyzw"),
             (goal.grasp_orientation, "grasp_orientation_xyzw"),
         ):
-            field.x, field.y, field.z, field.w = self._orientation(parameter)
+            field.x, field.y, field.z, field.w = self._resolved_orientation(target, parameter)
         goal.gripper_closed_position_rad = float(
             self.get_parameter("gripper_closed_position_rad").value
         )
@@ -355,28 +447,35 @@ class GraspTrialClient(Node):
         approach_position, descend_position, lift_position = (
             self._resolved_stage_positions(target)
         )
+        geometry_center, geometry_orientation = self._geometry_pose(target)
         geometry = validate_routed_grasp_stage_geometry(
-            cube_center_m=self._cube.pose_world.position_m,
+            cube_center_m=geometry_center,
             approach_position_m=approach_position,
             descend_position_m=descend_position,
             lift_position_m=lift_position,
-            approach_orientation_xyzw=self._orientation(
+            approach_orientation_xyzw=self._resolved_orientation(target,
                 "approach_orientation_xyzw"
             ),
-            grasp_orientation_xyzw=self._orientation(
+            grasp_orientation_xyzw=self._resolved_orientation(target,
                 "grasp_orientation_xyzw"
             ),
             gripper_position_rad=float(
                 self.get_parameter("gripper_closed_position_rad").value
             ),
             profile=self._grasp_profile,
-            cube_orientation_xyzw=self._cube.pose_world.quaternion_xyzw,
+            cube_orientation_xyzw=geometry_orientation,
         )
         print(
             json.dumps(
                 {
                     "type": "grasp_geometry_preflight",
                     "target_id": target.target_id,
+                    "cube_orientation_xyzw": geometry_orientation,
+                    "geometry_source_ns": self._stamp_ns(target.observation.header.stamp),
+                    "measured_geometry": getattr(self, '_require_measured_geometry', False),
+                    "fixed_control_stage_geometry": getattr(self, '_fixed_control_stage_geometry', False),
+                    "bounded_control_pan": (self._resolved_control_variant(target)[1]
+                        if getattr(self, '_bounded_control_pan', False) else None),
                     "end_effector_frame": self._grasp_profile.end_effector_frame,
                     "grasp_geometry_filename": self._grasp_geometry_filename,
                     "cube_center_in_frame_at_descend_m": (
@@ -609,7 +708,8 @@ class GraspTrialClient(Node):
         ready_phases = {"WAIT_CONTACT", "WAIT_LIFT", "RETENTION", "VERIFIED"}
         for baseline_attempt in range(max_restarts + 1):
             target = self._wait_target()
-            self._validate_physics_trial_geometry(target)
+            if not getattr(self, '_bounded_control_pan', False):
+                self._validate_physics_trial_geometry(target)
             self._physics_attempt_generation += 1
             attempt_generation = self._physics_attempt_generation
             self._physics_phase = ""
@@ -646,6 +746,17 @@ class GraspTrialClient(Node):
             baseline_deadline = time.monotonic() + self._positive(
                 "baseline_timeout_s"
             )
+            if getattr(self, '_bounded_control_pan', False):
+                # The observer only collects evidence. Overlap geometry work
+                # with its five baseline samples, never with a motion goal.
+                try:
+                    self._validate_physics_trial_geometry(target)
+                except (ValueError, TypeError) as error:
+                    self._cancel_and_confirm(
+                        physics_handle, physics_result_future, 'physics_geometry_preflight_failure')
+                    print(json.dumps({'error': f'geometry_preflight:{error}',
+                                      'sequence_dispatched': False}), flush=True)
+                    return 6
             while (
                 self._physics_phase not in ready_phases
                 and not physics_result_future.done()
